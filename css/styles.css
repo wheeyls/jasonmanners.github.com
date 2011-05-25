@@ -14,5 +14,5 @@ body {
 
 .title {
   left: 400px;
-  
+  position: absolute; 
 }
