@@ -47,12 +47,21 @@ header nav a:hover {
 }
 
 .title {
-  font: 20px Arial,Verdana,serif;
+  font-family: 'Merriweather', serif;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  text-shadow: none;
+  text-decoration: none;
+  letter-spacing: 0.456em;
+  word-spacing: 0.346em;
+  line-height: 0.82;
   float: left;
 }
 
 .fat {
   font-weight:bold;
+  text-transform: uppercase;
 }
 
 .skinny {
