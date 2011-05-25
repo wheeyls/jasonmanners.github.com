@@ -27,10 +27,10 @@ PacMonster.prototype.init_canvas = function() {
 
 
 function World() {
-  this.WORLD_WIDTH = 500;
-  this.WORLD_HEIGHT = 500;
+  this.WORLD_WIDTH = 600;
+  this.WORLD_HEIGHT = 300;
   this.context = null;
-  this.pacMonster = new PacMonster(50,300);
+  this.pacMonster = new PacMonster(50,100);
 }
 
 World.prototype.init_world = function() {
