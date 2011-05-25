@@ -42,7 +42,7 @@ header nav a {
   text-transform: uppercase;
 }
 header nav a:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(150, 150, 150, 0.9);
 }
 
 .title {
