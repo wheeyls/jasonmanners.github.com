@@ -77,10 +77,10 @@ World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   context.fillStyle = "rgb(255,255,255)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  context.drawImage(this.pacMonster.canvases[Math.floor(this.i/20)],this.pacMonster.x,this.pacMonster.y);
+  context.drawImage(this.pacMonster.canvases[Math.floor(this.i/10)],this.pacMonster.x,this.pacMonster.y);
   context.drawImage(this.block.canvas,this.block.x,this.block.y);
   this.i++;
-  this.i %= 40;
+  this.i %= 20;
 };
 
 World.prototype.run = function(timestamp) {
