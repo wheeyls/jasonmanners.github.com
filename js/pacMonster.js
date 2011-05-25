@@ -38,7 +38,7 @@ PacMonster.prototype.init_canvas = function() {
   this.context.save();
     this.context.fillStyle = "rgba(255,238,0,0.5)";
     this.context.beginPath();
-    this.context.arc(100, 100, 100, Math.PI*1.75, Math.PI*0.15, true);
+    this.context.arc(100, 100, 100, Math.PI*1.80, Math.PI*0.2, true);
     this.context.lineTo(100, 100);
     this.context.closePath();
     this.context.fill();
