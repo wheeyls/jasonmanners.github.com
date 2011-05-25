@@ -12,7 +12,7 @@ var startTime = window.mozAnimationStartTime || Date.now();
 function PacMonster(x,y) {
   this.x = x;
   this.y = y;
-  this.canvas = $("<canvas/>").attr("width", 100).attr("height", 100).get(0);
+  this.canvas = $("<canvas/>").attr("width", 200).attr("height", 200).get(0);
   this.context = this.canvas.getContext("2d");
 }
 
@@ -20,7 +20,7 @@ PacMonster.prototype.init_canvas = function() {
   this.context.save();
     this.context.fillStyle = "#FFEE00";
     this.context.beginPath();
-    this.context.arc(0, 0, 50, 0, Math.PI*2, true);
+    this.context.arc(100, 100, 50, 0, Math.PI*2, true);
     this.context.fill();
   this.context.restore();
 };
@@ -35,7 +35,6 @@ function World() {
 
 World.prototype.init_world = function() {
   $("#world").attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
-  $("#world").css("border","1px solid black");
   this.context = $('#world')[0].getContext("2d");
   this.pacMonster.init_canvas();
 };
