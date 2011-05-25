@@ -28,10 +28,12 @@ header nav {
   float: right;
 }
 header nav li {
-  /* border-left: 2px solid #000000; */
-  -moz-border-image:url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 none;
-  -webkit-border-image:url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 none;
-  border-image:  url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 none;
+  border-left: 2px solid #000000; 
+  /*
+ -moz-border-image:url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 stretch;
+  -webkit-border-image:url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 stretch;
+  border-image:  url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 stretch;
+  */
   display: block;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
   float: left;
