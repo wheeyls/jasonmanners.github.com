@@ -9,6 +9,23 @@ var requestAnimationFrame =   window.mozRequestAnimationFrame     ||
                             
 var startTime = window.mozAnimationStartTime || Date.now();
 
+
+function Block(x,y) {
+  this.x = x;
+  this.y = y;
+  this.canvas = $("<canvas/>").attr("width", 200).attr("height", 200).get(0);
+  this.context = this.canvas.getContext("2d");
+}
+
+Block.prototype.init_canvas = function() {
+  this.context.save();
+    this.context.fillStyle = "#FFEE00";
+    this.context.beginPath();
+    this.context.arc(100, 100, 50, 0, Math.PI*2, true);
+    this.context.fill();
+  this.context.restore();
+};
+
 function PacMonster(x,y) {
   this.x = x;
   this.y = y;
@@ -20,7 +37,7 @@ PacMonster.prototype.init_canvas = function() {
   this.context.save();
     this.context.fillStyle = "#FFEE00";
     this.context.beginPath();
-    this.context.arc(100, 100, 50, 0, Math.PI*2, true);
+    this.context.arc(100, 100, 100, 0, Math.PI*2, true);
     this.context.fill();
   this.context.restore();
 };
