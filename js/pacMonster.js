@@ -78,10 +78,11 @@ World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   context.fillStyle = "rgb(255,255,255)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
+  //Convert to own canvas for bg image
     context.save();
   // Create radial gradient
   grad = context.createRadialGradient(300,300,0,300,300,325); 
-  grad.addColorStop(0, "rgba(0,0,150,0.5)");
+  grad.addColorStop(0, "rgba(0,0,150,0.25)");
   grad.addColorStop(1, "rgba(255,255,255,0)");
  
   // assign gradients to fill
