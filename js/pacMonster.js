@@ -32,6 +32,9 @@ function PacMonster(x,y) {
   this.y = y;
   this.canvas = $("<canvas/>").attr("width", 200).attr("height", 200).get(0);
   this.context = this.canvas.getContext("2d");
+  this.canvas2 = $("<canvas/>").attr("width", 200).attr("height", 200).get(0);
+  this.context2 = this.canvas2.getContext("2d");
+  this.canvases = [this.canvas,this.canvas2];
 }
 
 PacMonster.prototype.init_canvas = function() {
@@ -43,6 +46,14 @@ PacMonster.prototype.init_canvas = function() {
     this.context.closePath();
     this.context.fill();
   this.context.restore();
+  
+  this.context2.save();
+    this.context2.fillStyle = "rgba(255,238,0,0.5)";
+    this.context2.beginPath();
+    this.context2.arc(100, 100, 100, 0, Math.PI*2, true);
+    this.context2.fill();
+  this.context2.restore();
+
 };
 
 
@@ -52,6 +63,7 @@ function World() {
   this.context = null;
   this.pacMonster = new PacMonster(50,100);
   this.block = new Block(300,170);
+  this.i = 0;
 }
 
 World.prototype.init_world = function() {
@@ -65,8 +77,10 @@ World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   context.fillStyle = "rgb(255,255,255)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  context.drawImage(this.pacMonster.canvas,this.pacMonster.x,this.pacMonster.y);
+  context.drawImage(this.pacMonster.canvases[Math.floor(this.i/20)],this.pacMonster.x,this.pacMonster.y);
   context.drawImage(this.block.canvas,this.block.x,this.block.y);
+  this.i++;
+  this.i %= 40;
 };
 
 World.prototype.run = function(timestamp) {
