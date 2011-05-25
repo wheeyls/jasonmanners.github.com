@@ -19,7 +19,7 @@ function Block(x,y) {
 
 Block.prototype.init_canvas = function() {
   this.context.save();
-    this.context.fillStyle = "rgb(130,130,255)";
+    this.context.fillStyle = "rgba(75,130,255,0.5)";
     this.context.fillRect (0, 0, 20, 20);
     this.context.fillRect (20, 0, 20, 20);
     this.context.fillRect (20, 20, 20, 20);
@@ -36,9 +36,11 @@ function PacMonster(x,y) {
 
 PacMonster.prototype.init_canvas = function() {
   this.context.save();
-    this.context.fillStyle = "#FFEE00";
+    this.context.fillStyle = "rgba(255,238,0,0.5)";
     this.context.beginPath();
-    this.context.arc(100, 100, 100, 0, Math.PI*2, true);
+    this.context.arc(100, 100, 100, Math.PI*1.75, Math.PI*0.15, true);
+    this.context.lineTo(100, 100);
+    this.context.closePath();
     this.context.fill();
   this.context.restore();
 };
