@@ -20,7 +20,7 @@ function Block(x,y) {
 Block.prototype.init_canvas = function() {
   this.context.save();
     this.context.fillStyle = "rgba(75,130,255,0.5)";
-    this.context.fillRect (0, 0, 20, 20);
+    this.context.fillRect (0, 40, 20, 20);
     this.context.fillRect (20, 0, 20, 20);
     this.context.fillRect (20, 20, 20, 20);
     this.context.fillRect (20, 40, 20, 20);
@@ -51,7 +51,7 @@ function World() {
   this.WORLD_HEIGHT = 300;
   this.context = null;
   this.pacMonster = new PacMonster(50,100);
-  this.block = new Block(300,200);
+  this.block = new Block(300,170);
 }
 
 World.prototype.init_world = function() {
