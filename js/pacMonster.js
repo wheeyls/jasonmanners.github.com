@@ -39,7 +39,7 @@ function PacMonster(x,y) {
 
 PacMonster.prototype.init_canvas = function() {
   this.context.save();
-    this.context.fillStyle = "rgba(255,238,0,0.5)";
+    this.context.fillStyle = "rgba(255,238,0,1.0)";
     this.context.beginPath();
     this.context.arc(100, 100, 100, Math.PI*1.80, Math.PI*0.2, true);
     this.context.lineTo(100, 100);
@@ -48,7 +48,7 @@ PacMonster.prototype.init_canvas = function() {
   this.context.restore();
   
   this.context2.save();
-    this.context2.fillStyle = "rgba(255,238,0,0.5)";
+    this.context2.fillStyle = "rgba(255,238,0,1.0)";
     this.context2.beginPath();
     this.context2.arc(100, 100, 100, 0, Math.PI*2, true);
     this.context2.fill();
@@ -60,6 +60,7 @@ PacMonster.prototype.init_canvas = function() {
 function World() {
   this.WORLD_WIDTH = 600;
   this.WORLD_HEIGHT = 300;
+  this.camera = {x : 0, y : 0};
   this.context = null;
   this.pacMonster = new PacMonster(50,100);
   this.block = new Block(300,170);
@@ -77,17 +78,26 @@ World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   context.fillStyle = "rgb(255,255,255)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  context.drawImage(this.pacMonster.canvases[Math.floor(this.i/10)],this.pacMonster.x,this.pacMonster.y);
-  context.drawImage(this.block.canvas,this.block.x,this.block.y);
+  
+  context.save();
+    context.translate(-this.camera.x,this.camera.y);
+    context.drawImage(this.block.canvas,this.block.x,this.block.y);
+    context.drawImage(this.pacMonster.canvases[Math.floor(this.i/10)],this.pacMonster.x,this.pacMonster.y);
+  context.restore();
+};
+
+World.prototype.update = function(timestamp) {
   this.i++;
   this.i %= 20;
+  this.camera.x += 0.2;
+  this.pacMonster.x += 0.2;
 };
 
 World.prototype.run = function(timestamp) {
   var drawStart   = (timestamp || Date.now());
   var delta_time  = drawStart - startTime;
   
-  //this.update(delta_time);
+  this.update(delta_time);
   this.draw(this.context);
   requestAnimationFrame(this.run.bind(this));
   
