@@ -60,12 +60,13 @@ header nav a:hover {
 
 #container {
   width: 800px;
+  height: 500px;
   margin: 0 auto;
   position: relative;
 }
 
 #content {
-  top:10px;
+  top:20px;
   left:10px;
   right:10px;
   bottom: 50px;
