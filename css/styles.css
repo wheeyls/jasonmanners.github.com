@@ -24,46 +24,57 @@ a {
 }
 
 header nav {
-    float: right;
+  float: right;
 }
 header nav li {
-    -moz-transition: border-color 0.15s linear 0s;
-    background: -moz-radial-gradient(50% 50% 90deg, ellipse closest-side, rgba(255, 255, 255, 0.2) 0pt, rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 #FF0000;
-    border: 2px solid #000000;
-    display: block;
-    padding: 1px;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-    float: left;
+  -moz-transition: border-color 0.15s linear 0s;
+  background: -moz-radial-gradient(50% 50% 90deg, ellipse closest-side, rgba(255, 255, 255, 0.2) 0pt, rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 #FF0000;
+  border: 2px solid #000000;
+  display: block;
+  padding: 1px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  float: left;
 }
 header nav a {
-    border: medium none;
-    color: rgba(255, 255, 255, 0.9);
-    display: table;
-    font-family: 'League Gothic',Arial,Helvetica,sans-serif;
-    font-size: 16px;
-    outline: medium none;
-    text-transform: uppercase;
+  border: medium none;
+  color: rgba(255, 255, 255, 0.9);
+  display: table;
+  font-family: 'League Gothic',Arial,Helvetica,sans-serif;
+  font-size: 16px;
+  outline: medium none;
+  text-transform: uppercase;
 }
 header nav a:hover {
-    color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 header nav li.projects {
-    background-color: #669966;
-    border-color: #586475;
+  background-color: #669966;
+  border-color: #586475;
 }
 header nav li.labs {
-    background-color: #6699CC;
-    border-color: #586475;
+  background-color: #6699CC;
+  border-color: #586475;
 }
 header nav li.blog {
-    background-color: #0099FF;
-    border-color: #586475;
+  background-color: #0099FF;
+  border-color: #586475;
 }
 header nav li.tutorials {
-    background-color: #00CCFF;
-    border-color: #586475;
+  background-color: #00CCFF;
+  border-color: #586475;
 }
 
 .title {
+  font: 20px Arial,Verdana,serif;
+  float: left;
 }
+
+.fat {
+  font-weight:bold;
+}
+
+.skinny {
+  font-weight:lighter;
+}
+
