@@ -28,7 +28,8 @@ header nav {
   float: right;
 }
 header nav li {
-  border-left: 2px solid #000000;
+  /* border-left: 2px solid #000000; */
+  border-left-image:  url(http://jasonmanners.info/media/zelda_sword.png) 10 none;
   display: block;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
   float: left;
