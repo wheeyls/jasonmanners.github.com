@@ -91,8 +91,8 @@ World.prototype.draw = function(context) {
   // draw 600x600 fill
   context.fillRect(0,0,this.WORLD_WIDTH,this.WORLD_HEIGHT);
   context.save();
-  
   context.save();
+    context.scale(0.25,0.25);
     context.translate(-this.camera.x,this.camera.y);
     context.drawImage(this.block.canvas,this.block.x,this.block.y);
     context.drawImage(this.pacMonster.canvases[Math.floor(this.i/10)],this.pacMonster.x,this.pacMonster.y);
