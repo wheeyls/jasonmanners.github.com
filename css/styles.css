@@ -9,4 +9,10 @@ body {
   right0px;
   height:30px;
   background: #222222;
+  position: relative;
+}
+
+.title {
+  left: 400px;
+  
 }
