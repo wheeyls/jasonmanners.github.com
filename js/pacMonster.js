@@ -34,9 +34,9 @@ function World() {
 }
 
 World.prototype.init_world = function() {
-  this.context = $('#world')[0].getContext("2d");
   $("#world").attr({ width: WORLD_WIDTH, height: WORLD_HEIGHT });
   $("#world").css("border","1px solid black");
+  this.context = $('#world')[0].getContext("2d");
   this.pacMonster.init_canvas();
 };
 
