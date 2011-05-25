@@ -1,5 +1,5 @@
 body {
-    background: none repeat scroll 0 0 #FFFFFF;
+    background: none repeat scroll 0 0 #666666;
     color: #222222;
     margin: 0 auto;
 }
@@ -18,9 +18,11 @@ a {
 #header {
     height: 30px;
     left: 0;
-    top: 10px;
+    / *top: 10px; */
+    padding-top:10px;
     position: relative;
     border-bottom: 1px solid #222244;
+    background: none repeat scroll 0 0 #FFFFFF;
 }
 
 header nav {
@@ -66,12 +68,13 @@ header nav a:hover {
 }
 
 #content {
-  top:20px;
+  top:0px;
   left:10px;
   right:10px;
   bottom: 50px;
   position: absolute;
   border-left: 1px solid #222244;
   border-right: 1px solid #222244;
+  background: none repeat scroll 0 0 #FFFFFF;
 }
 
