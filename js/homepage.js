@@ -11,10 +11,12 @@ var startTime = window.mozAnimationStartTime || Date.now();
 
 
 function World() {
-  this.WORLD_WIDTH = window.innerWidth - 10;
-  this.WORLD_HEIGHT = window.innerWidth - 10;
+  this.WORLD_WIDTH = 960;
+  this.WORLD_HEIGHT = window.innerHeight-10;
   this.camera = {x : 0, y : 0};
   this.context = null;
+  this.treePoints = [];
+  this.timePassed = 0;
 }
 
 World.prototype.init_world = function() {
@@ -24,11 +26,30 @@ World.prototype.init_world = function() {
 
 World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  context.fillStyle = "rgba(255,255,150,0.5)";
+  context.fillStyle = "rgba(255,255,250,0.5)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
+  context.save();
+    context.beginPath();
+    context.moveTo(0,0);
+    var x = 0;
+    var y = 0;
+    for(var i = 0; i < this.treePoints.length; i++) {
+      x += (this.treePoints[i].x * this.treePoints[i].frag);
+      y += (this.treePoints[i].y * this.treePoints[i].frag);
+      context.lineTo(x, y);
+    }
+    context.strokeStyle = "rgba(0,0,0,0.8)";
+    context.stroke();
+  context.restore();
 };
 
-World.prototype.update = function(timestamp) {
+World.prototype.update = function(delta_time) {
+  this.timePassed += delta_time;
+  this.treePoints[this.treePoints.length-1].frag += 0.1;
+  if(this.timePassed > 300) {
+    this.treePoints.push({x : Math.floor(Math.random()*10), y : Math.floor(Math.random()*10), frag: 0.1});
+    this.timePassed = 0;
+  }
 };
 
 World.prototype.run = function(timestamp) {

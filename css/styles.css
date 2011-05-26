@@ -18,8 +18,8 @@ a {
 #container {
   width: 960px;
   position: absolute;
-  top: 10px;
-  bottom: 10px;
+  top: 0px;
+  bottom: 0px;
 }
 
 nav li {
@@ -29,6 +29,7 @@ nav li {
   padding-left: 30px;
   padding-right: 30px;
 }
+
 nav a {
   border: medium none;
   display: table;
@@ -36,6 +37,7 @@ nav a {
   outline: medium none;
   text-transform: uppercase;
 }
+
 nav a:hover {
   color: rgba(150, 150, 150, 0.9);
 }
