@@ -29,6 +29,7 @@ World.prototype.draw = function(context) {
   context.fillStyle = "rgba(255,255,250,0.5)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   context.save();
+    context.lineWidth = 2;
     context.beginPath();
     context.moveTo(0,0);
     var x = 0;
@@ -38,12 +39,13 @@ World.prototype.draw = function(context) {
       y += (this.treePoints[i].y * this.treePoints[i].frag);
       context.lineTo(x, y);
     }
-    context.fillStyle = "rgba(0,0,0,0.5)";//context.strokeStyle = "rgba(0,0,0,0.5)";
-        context.shadowOffsetX = 0;
-    context.shadowOffsetY = 0;
-    context.shadowBlur = 20;
+    
+    context.strokeStyle = "rgba(0,0,0,0.5)";
     context.shadowColor = "#rgba(200,130,255,0.8)";
-    context.fill();//context.stroke();
+    context.shadowOffsetX = 2;
+    context.shadowOffsetY = 2;
+    context.shadowBlur = 20;
+    context.stroke();
   context.restore();
 };
 
