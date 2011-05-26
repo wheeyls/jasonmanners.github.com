@@ -15,7 +15,7 @@ function World() {
   this.WORLD_HEIGHT = window.innerHeight-10;
   this.camera = {x : 0, y : 0};
   this.context = null;
-  this.treePoints = [];
+  this.treePoints = [{x : Math.floor(Math.random()*10), y : Math.floor(Math.random()*10), frag: 0.1}];
   this.timePassed = 0;
 }
 
@@ -45,9 +45,9 @@ World.prototype.draw = function(context) {
 
 World.prototype.update = function(delta_time) {
   this.timePassed += delta_time;
-  this.treePoints[this.treePoints.length-1].frag += 0.1;
+  this.treePoints[this.treePoints.length-1].frag += 0.05;
   if(this.timePassed > 300) {
-    this.treePoints.push({x : Math.floor(Math.random()*10), y : Math.floor(Math.random()*10), frag: 0.1});
+    this.treePoints.push({x : Math.floor(Math.random()*10), y : Math.floor(Math.random()*10), frag: 0.05});
     this.timePassed = 0;
   }
 };
