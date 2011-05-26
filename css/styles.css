@@ -1,6 +1,7 @@
 body {
-    background: none repeat scroll 0 0 #FFFFFF;
-    background-image:url('media/background.png');
+    background: none no-repeat scroll 0 0 #FFFFFF;
+   /* background-image:url('./../media/background.png');
+    background-size: 100% 100%;*/
     color: #222222;
     margin: 0 auto;
 }
@@ -22,7 +23,7 @@ a {
     padding-top: 10px;
     position: relative;
     border-bottom: 1px solid #222244;
-    background: none repeat scroll 0 0 #FFFFFF;
+   /* background: none repeat scroll 0 0 #FFFFFF;*/
 }
 
 header nav {
@@ -89,6 +90,6 @@ header nav a:hover {
   position: absolute;
   border-left: 1px solid #222244;
   border-right: 1px solid #222244;
-  background: none repeat scroll 0 0 #FFFFFF;
+ /* background: none repeat scroll 0 0 #FFFFFF;*/
 }
 

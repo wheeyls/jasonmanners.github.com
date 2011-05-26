@@ -76,7 +76,7 @@ World.prototype.init_world = function() {
 
 World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  context.fillStyle = "rgb(255,255,255)";
+  context.fillStyle = "rgba(255,255,255,0)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   //Convert to own canvas for bg image
     context.save();
