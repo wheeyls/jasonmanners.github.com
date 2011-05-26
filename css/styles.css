@@ -29,7 +29,7 @@ a {
 header nav {
   float: right;
 }
-header nav li {
+nav li {
   border-left: 2px solid #000000; 
   /*
  -moz-border-image:url(http://jasonmanners.info/media/zelda_sword.png) 0 0 0 10 stretch;
@@ -42,14 +42,14 @@ header nav li {
   width: 100px;
   padding-left: 10px;
 }
-header nav a {
+nav a {
   border: medium none;
   display: table;
   font-size: 16px;
   outline: medium none;
   text-transform: uppercase;
 }
-header nav a:hover {
+nav a:hover {
   color: rgba(150, 150, 150, 0.9);
 }
 
@@ -63,7 +63,7 @@ header nav a:hover {
   letter-spacing: 0.456em;
   word-spacing: 0.346em;
   line-height: 0.82;
-  float: left;
+ /* float: left;*/
 }
 
 .fat {
@@ -77,7 +77,7 @@ header nav a:hover {
 
 #container {
   width: 800px;
-  height: 500px;
+  height: 600px;
   margin: 0 auto;
   position: relative;
 }
@@ -88,8 +88,12 @@ header nav a:hover {
   right:10px;
   bottom: 50px;
   position: absolute;
-  border-left: 1px solid #222244;
-  border-right: 1px solid #222244;
- /* background: none repeat scroll 0 0 #FFFFFF;*/
+  background: none no-repeat scroll 0 0 #FFFFFF;
+  background-image:url('./../media/city.png');
+}
+
+#menu {
+  position: absolute;
+  bottom: 10px;
 }
 
