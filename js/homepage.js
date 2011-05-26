@@ -38,8 +38,12 @@ World.prototype.draw = function(context) {
       y += (this.treePoints[i].y * this.treePoints[i].frag);
       context.lineTo(x, y);
     }
-    context.strokeStyle = "rgba(0,0,0,0.8)";
-    context.stroke();
+    context.fillStyle = "rgba(0,0,0,0.5)";//context.strokeStyle = "rgba(0,0,0,0.5)";
+        context.shadowOffsetX = 0;
+    context.shadowOffsetY = 0;
+    context.shadowBlur = 20;
+    context.shadowColor = "#rgba(200,130,255,0.8)";
+    context.fill();//context.stroke();
   context.restore();
 };
 
