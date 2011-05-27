@@ -81,3 +81,17 @@ nav a:hover {
 .skinny {
   font-weight:lighter;
 }
+
+#secret {
+  font-family: 'Merriweather', serif;
+  font-size:20px;
+  font-style: normal;
+  letter-spacing: 0.456em;
+  word-spacing: 0.346em;
+  line-height: 1.0;
+  text-align: center;
+  position: absolute;
+  bottom: 250px;
+  right: 50px;
+  color: #FFFFFF;
+}
