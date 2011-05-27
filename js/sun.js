@@ -42,8 +42,8 @@ Sun.prototype.draw = function(context) {
   World object declaration
 *************************************/
 function World() {
-  this.WORLD_WIDTH = window.innerWidth-10;
-  this.WORLD_HEIGHT = window.innerHeight-10;
+  this.WORLD_WIDTH = window.innerWidth-5;
+  this.WORLD_HEIGHT = window.innerHeight-5;
   this.camera = {x : 0, y : 0};
   this.context = null;
   this.timePassed = 0;
@@ -107,8 +107,8 @@ World.prototype.mouse_move = function (event) {
 };
 
 World.prototype.resize_window = function () {
-  this.WORLD_WIDTH = window.innerWidth-10;
-  this.WORLD_HEIGHT = window.innerHeight-10;
+  this.WORLD_WIDTH = window.innerWidth-5;
+  this.WORLD_HEIGHT = window.innerHeight-5;
   $("#world").attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
   for(var i = 0; i < 300; i++) {
     this.stars[i] = { x : Math.floor(Math.random() * this.WORLD_WIDTH),
