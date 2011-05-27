@@ -9,7 +9,31 @@ var requestAnimationFrame =   window.mozRequestAnimationFrame     ||
                             
 var startTime = window.mozAnimationStartTime || Date.now();
 
+/************************************
+  FractalPoint declaration
+*************************************/
+function FractalPoint(x,y) {
+  this.x = x;
+  this.y = y;
+  this.lifespan = 0;
+}
 
+FractalPoint.prototype.update = function(delat_time) {
+};
+
+FractalPoint.prototype.draw = function(context) {
+  context.save();
+    context.beginPath();
+    context.fillColor = "#rgba("+Math.floor(Math.random()*255)+","+Math.floor(Math.random()*255)+","+Math.floor(Math.random()*255)+",0.8)";
+    context.arc(this.x, this.y, 30, 0, Math.PI * 2, true);
+    context.closePath();
+    context.fill();
+  context.restore();
+};
+
+/************************************
+  World object declaration
+*************************************/
 function World() {
   this.WORLD_WIDTH = window.innerWidth-10;
   this.WORLD_HEIGHT = window.innerHeight-10;
@@ -17,6 +41,7 @@ function World() {
   this.context = null;
   this.treePoints = [{x : Math.floor(Math.random()*10), y : Math.floor(Math.random()*10), frag: 0.1}];
   this.timePassed = 0;
+  this.fractalPoint = new FractalPoint(this.WORLD_WIDTH,this.WORLD_HEIGHT);
 }
 
 World.prototype.init_world = function() {
@@ -47,6 +72,7 @@ World.prototype.draw = function(context) {
     context.shadowBlur = 20;
     context.stroke();
   context.restore();
+  this.fractalPoint.draw(context);
 };
 
 World.prototype.update = function(delta_time) {
