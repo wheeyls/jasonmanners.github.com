@@ -11,7 +11,7 @@ var startTime = window.mozAnimationStartTime || Date.now();
 
 
 function World() {
-  this.WORLD_WIDTH = 960;
+  this.WORLD_WIDTH = window.innerWidth-10;
   this.WORLD_HEIGHT = window.innerHeight-10;
   this.camera = {x : 0, y : 0};
   this.context = null;
