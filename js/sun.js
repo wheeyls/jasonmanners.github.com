@@ -24,13 +24,14 @@ Sun.prototype.update = function(mouse_x,width,height) {
   var final_y = (height / 2) - tmp_y;
   var tmpX = mouse_x - width/2;
   this.y = 1100 - Math.sqrt(1000*1000 - tmpX*tmpX);
+  this.color = "rgba(255,"+(238+(Math.floor(ratio*12)))+"238,"+(Math.floor(ratio*255))+",0.8)";
 };
 
 Sun.prototype.draw = function(context) {
   context.save();
     context.fillStyle = this.color;
     context.shadowColor = this.color;
-    context.shadowBlur = 15;
+    context.shadowBlur = 30;
     context.beginPath();
     context.arc(this.x, this.y, 40, 0, 2 * Math.PI, true);
     context.closePath();
