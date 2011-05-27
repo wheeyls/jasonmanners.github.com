@@ -9,7 +9,31 @@ var requestAnimationFrame =   window.mozRequestAnimationFrame     ||
 var startTime = window.mozAnimationStartTime || Date.now();
 
 /************************************
-  FractalPoint declaration
+  Gradient declaration
+*************************************/
+function GradientBack(x,y) {
+  this.x = x;
+  this.y = y;
+  this.canvas = $("<canvas/>").attr("width", x).attr("height", y).get(0);
+  this.context = this.canvas.getContext("2d");
+  
+  var placement = 0.85;
+  
+  var grad = this.context.createRadialGradient(this.x*placement,10,0,this.x*placement,10,600); 
+  grad.addColorStop(0, "rgba(0,0,100,0.25)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  this.context.fillStyle = grad;
+  this.context.fillRect (0, 0, this.x, this.y);
+  
+  /* cool corner gradient
+  this.context.createRadialGradient(this.x/2,0,this.x/2,300,300,325);
+  */
+  
+}
+
+
+/************************************
+  Sun declaration
 *************************************/
 function Sun(x,y) {
   this.x = x;
@@ -56,6 +80,7 @@ function World() {
                       y : Math.floor(Math.random() * this.WORLD_HEIGHT),
                       radius: Math.floor(Math.random() * 3) };
   }
+  this.gbackground = new GradientBack(this.WORLD_WIDTH,this.WORLD_HEIGHT);
 }
 
 World.prototype.init_world = function() {
@@ -67,9 +92,14 @@ World.prototype.init_world = function() {
 
 World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  var tmpColor = Math.floor(255 * (1 - (this.mouse_x / this.WORLD_WIDTH)));
+  var ratio = this.mouse_x / this.WORLD_WIDTH;
+  var tmpRatio = 25*ratio;
+  var finalRatio = (this.mouse_x + tmpRatio) / this.WORLD_WIDTH;
+  var tmpColor = Math.floor(255 * (1 - finalRatio));
   context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.95)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
+  
+  context.drawImage(this.gbackground.canvas,0,0);
   
   for(var i = 0; i < this.stars.length; i++) {
     context.save();
@@ -116,6 +146,7 @@ World.prototype.resize_window = function () {
                       y : Math.floor(Math.random() * this.WORLD_HEIGHT),
                       radius: Math.floor(Math.random() * 3) };
   }
+  this.gbackground = new GradientBack(this.WORLD_WIDTH,this.WORLD_HEIGHT);
 };
 
 
