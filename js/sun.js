@@ -23,7 +23,8 @@ Sun.prototype.update = function(mouse_x,width,height) {
   var ratio = mouse_x / width;
   var tmp_y = ratio * (height / 2);
   var final_y = (height / 2) - tmp_y;
-  this.y = final_y;//Math.sqrt(1000*1000 - tmpX*tmpX) - 300;
+  var tmpX = mouse_x - width/2;
+  this.y = height - Math.sqrt(1000*1000 - tmpX*tmpX) + height/2;
 };
 
 Sun.prototype.draw = function(context) {
@@ -49,6 +50,12 @@ function World() {
   this.timePassed = 0;
   this.sun = new Sun(0,this.WORLD_HEIGHT/2);
   this.mouse_x = 0;
+  this.stars = [];
+  for(var i = 0; i < 300; i++) {
+    this.stars[i] = { x : Math.floor(Math.random() * this.WORLD_WIDTH),
+                      y : Math.floor(Math.random() * this.WORLD_HEIGHT),
+                      radius: Math.floor(Math.random() * 3) };
+  }
 }
 
 World.prototype.init_world = function() {
@@ -59,10 +66,24 @@ World.prototype.init_world = function() {
 
 World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  var tmpColor = Math.floor(255 * (this.WORLD_WIDTH - this.mouse_x));
+  var tmpColor = Math.floor(255 * (1 - (this.mouse_x / this.WORLD_WIDTH)));
   console.log(tmpColor);
-  context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.5)";
+  context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.7)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
+  
+  for(var i = 0; i < this.stars.length; i++) {
+    context.save();
+    
+    context.fillStyle = "rgba(255,255,255,0.8)";
+    context.shadowColor = "rgba(255,255,255,0.8)";
+    context.shadowBlur = 8;
+    context.beginPath();
+    context.arc(this.stars[i].x, this.stars[i].y, this.stars[i].radius, 0, 2 * Math.PI, true);
+    context.closePath();
+    context.fill();
+    context.restore();
+    context.restore();
+  }
   this.sun.draw(context);
 };
 
