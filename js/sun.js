@@ -93,7 +93,7 @@ World.prototype.init_world = function() {
 World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   var ratio = this.mouse_x / this.WORLD_WIDTH;
-  var tmpRatio = 25*ratio;
+  var tmpRatio = 40*ratio;
   var finalRatio = (this.mouse_x + tmpRatio) / this.WORLD_WIDTH;
   var tmpColor = Math.floor(255 * (1 - finalRatio));
   context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.95)";
