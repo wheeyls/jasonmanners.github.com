@@ -62,7 +62,6 @@ World.prototype.init_world = function() {
   this.context = $('#world')[0].getContext("2d");
   $('#world').bind("mousemove", this.mouse_move.bind(this));
   $(window).resize(this.resize_window.bind(this));
-  //window.addEventListener('resize', onWindowResize, false);
 };
 
 World.prototype.draw = function(context) {
@@ -110,7 +109,7 @@ World.prototype.mouse_move = function (event) {
 World.prototype.resize_window = function () {
   this.WORLD_WIDTH = window.innerWidth-10;
   this.WORLD_HEIGHT = window.innerHeight-10;
-  console.log("Resized");
+  $("#world").attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
 };
 
 
