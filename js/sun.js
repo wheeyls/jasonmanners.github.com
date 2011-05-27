@@ -24,7 +24,7 @@ Sun.prototype.update = function(mouse_x,width,height) {
   var tmp_y = ratio * (height / 2);
   var final_y = (height / 2) - tmp_y;
   var tmpX = mouse_x - width/2;
-  this.y = height - Math.sqrt(1000*1000 - tmpX*tmpX) + height/2;
+  this.y = height - (Math.sqrt(1000*1000 - tmpX*tmpX)*0.85) + height/2;
 };
 
 Sun.prototype.draw = function(context) {
