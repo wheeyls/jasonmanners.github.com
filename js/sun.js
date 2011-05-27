@@ -61,6 +61,8 @@ World.prototype.init_world = function() {
   $("#world").attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
   this.context = $('#world')[0].getContext("2d");
   $('#world').bind("mousemove", this.mouse_move.bind(this));
+  $(window).resize(this.resize_window.bind(this));
+  //window.addEventListener('resize', onWindowResize, false);
 };
 
 World.prototype.draw = function(context) {
@@ -104,6 +106,13 @@ World.prototype.mouse_move = function (event) {
   this.sun.update(event.layerX,this.WORLD_WIDTH,this.WORLD_HEIGHT);
   this.mouse_x = event.layerX;
 };
+
+World.prototype.resize_window = function () {
+  this.WORLD_WIDTH = window.innerWidth-10;
+  this.WORLD_HEIGHT = window.innerHeight-10;
+  console.log("Resized");
+};
+
 
 var myWorld = new World();
 myWorld.init_world();
