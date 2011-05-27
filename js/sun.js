@@ -67,7 +67,6 @@ World.prototype.init_world = function() {
 World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   var tmpColor = Math.floor(255 * (1 - (this.mouse_x / this.WORLD_WIDTH)));
-  console.log(tmpColor);
   context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.95)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   
