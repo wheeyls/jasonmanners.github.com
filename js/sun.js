@@ -20,7 +20,7 @@ function GradientBack(x,y) {
   var placement = 0.85;
   
   var grad = this.context.createRadialGradient(this.x*placement,10,0,this.x*placement,10,600); 
-  grad.addColorStop(0, "rgba(0,0,100,0.25)");
+  grad.addColorStop(0, "rgba(0,0,150,0.25)");
   grad.addColorStop(1, "rgba(255,255,255,0)");
   this.context.fillStyle = grad;
   this.context.fillRect (0, 0, this.x, this.y);
