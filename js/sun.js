@@ -91,23 +91,15 @@ World.prototype.update = function(delta_time) {
   this.timePassed += delta_time;
 };
 
-World.prototype.run = function() {
-
-  
-  this.update();//delta_time
-  this.draw(this.context);
- /*
+World.prototype.run = function(timestamp) {
   var drawStart   = (timestamp || Date.now());
   var delta_time  = drawStart - startTime;
+  
+  this.update(delta_time);
+  this.draw(this.context);
   requestAnimationFrame(this.run.bind(this));
   
   startTime = drawStart;
-  */
-  
-};
-
-World.prototype.start = function() {
-  intervalID = setInterval(this.run.bind(this),1000/60);
 };
 
 World.prototype.mouse_move = function (event) {
@@ -117,5 +109,4 @@ World.prototype.mouse_move = function (event) {
 
 var myWorld = new World();
 myWorld.init_world();
-//myWorld.run();
-myWorld.start();
+myWorld.run();
