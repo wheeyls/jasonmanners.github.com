@@ -68,7 +68,7 @@ World.prototype.draw = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   var tmpColor = Math.floor(255 * (1 - (this.mouse_x / this.WORLD_WIDTH)));
   console.log(tmpColor);
-  context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.8)";
+  context.fillStyle = "rgba("+tmpColor+","+tmpColor+","+tmpColor+",0.95)";
   context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   
   for(var i = 0; i < this.stars.length; i++) {
