@@ -65,6 +65,7 @@ nav a:hover {
   position: absolute;
   bottom: 200px;
   left: 150px;
+  z-index:1;
 }
 
 #menu {
