@@ -204,7 +204,7 @@ function Player(x,y) {
 
 Player.prototype.draw = function(context) {
   context.save();
-    context.draw(this.image,this.x,this.y);
+    //context.drawImage(this.image,this.x,this.y);
     context.fillStyle = "rgba(200,0,0,0.5)";
     context.fillRect (this.x, this.y, 40, 40); 
   context.restore();
