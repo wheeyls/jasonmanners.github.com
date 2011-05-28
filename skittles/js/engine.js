@@ -21,8 +21,8 @@ var startTime = window.mozAnimationStartTime || Date.now();
   World declaration
 *************************************/
 function World() {
-  this.WORLD_WIDTH = x;
-  this.WORLD_HEIGHT = y;
+  this.WORLD_WIDTH = 600;
+  this.WORLD_HEIGHT = 400;
   
   this.MARGIN_LEFT = 50;
   this.MARGIN_RIGHT = this.WORLD_WIDTH - 150;
