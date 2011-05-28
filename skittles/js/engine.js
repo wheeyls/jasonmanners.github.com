@@ -48,7 +48,7 @@ function World() {
   this.input_queue = [];
   
   /*--- Physics Consts ---*/
-  this.GRAVITY = 300;
+  this.GRAVITY = 10;
 }
 
 World.prototype.init_world = function() {
@@ -81,7 +81,7 @@ World.prototype._init_game_objects = function() {
   this.player = new Player(200,200);
   this.currentLevel = new Level();
   this.levels[0] = this.currentLevel;
-  this.level_objects = this.currentLevel.build_blocks;
+  this.level_objects = this.currentLevel.building_blocks;
 }
 
 World.prototype.start = function() {
@@ -116,7 +116,7 @@ World.prototype.update = function(delta_time) {
   //this.camera.x += 0.1; //+ : right || - : left
   //this.camera.y += 0.1; //+ : down || - : up
   this.process_input();
-  this.player.draft_update(delta_time);
+  this.player.draft_update(delta_time,this.GRAVITY);
   
   var isIntercept = false;
   for(var i = 0; i < this.level_objects.length; i++) {
@@ -212,46 +212,54 @@ Player.prototype.draw = function(context) {
     context.fillStyle = "rgba(200,0,0,0.5)";
     context.fillRect (this.x, this.y, 40, 40); 
   context.restore();
-}
+};
 
-Player.prototype.draft_update = function(delta_time) {
+Player.prototype.draft_update = function(delta_time,gravity) {
   this.tmp_x = this.x + this.getDeltaX(delta_time);
-  this.tmp_y = this.y + this.getDeltaY(delta_time);
-}
+  this.tmp_y = this.y + this.getDeltaY(delta_time,gravity);
+};
 
 Player.prototype.publish_update = function() {
   this.x = this.tmp_x;
   this.y = this.tmp_y;
-}
+};
 
 Player.prototype.getDeltaX = function(delta_time){
   return (delta_time/MS_IN_SEC) * this.xVelocity;
-}
+};
 
-Player.prototype.getDeltaY = function(delta_time){
+Player.prototype.getDeltaY = function(delta_time,gravity){
+  this.yVelocity += gravity;
   return (delta_time/MS_IN_SEC) * this.yVelocity;
-}
+};
 
 Player.prototype.getVelocityVector = function(radius, angle) {
   return {
     x : radius*Math.cos(angle),
     y : radius*Math.sin(angle)
   };
-}
+};
 
 Player.prototype.getWorldToScreenCoords = function(camera) {
   return {
     x : this.x - camera.x,
     y : this.y - camera.y
   };
-}
+};
 
-Player.prototype.check_collision = function(x,y,width,height) {
-  if(this.x >= x && this.x <= x+width && this.y >= y && this.y <= y+height) {
-    return true;
+Player.prototype.check_collision = function(block_object) {
+  if(this.x >= block_object.x && this.x <= block_object.x+block_object.width && 
+      this.y >= block_object.y && this.y <= block_object.y+block_object.height) {
+    return {collide: true};
   }
-  return false;
-}
+  return {collide: false};
+};
+
+Player.prototype.set_coords = function(block_object,collide_object) {
+  //eventually check which side but for now only y
+  this.y = block_objects.y;
+  this.yVelocity = 0;
+};
 
 /************************************
   LevelBlock declaration
@@ -277,10 +285,10 @@ function Level() {
 
   this.building_blocks = [];
   
+  this.building_blocks.push(new LevelBlock(200,250,50,50));
   this.building_blocks.push(new LevelBlock(250,250,50,50));
   this.building_blocks.push(new LevelBlock(300,260,50,50));
   this.building_blocks.push(new LevelBlock(350,270,50,50));
-  this.building_blocks.push(new LevelBlock(400,280,50,50));
 }
 
 Level.prototype.draw = function(context) {
