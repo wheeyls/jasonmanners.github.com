@@ -79,6 +79,9 @@ World.prototype._init_input = function() {
 
 World.prototype._init_game_objects = function() {
   this.player = new Player(200,200);
+  this.currentLevel = new Level();
+  this.levels[0] = this.currentLevel;
+  this.level_objects = this.currentLevel.build_blocks;
 }
 
 World.prototype.start = function() {
@@ -158,9 +161,10 @@ World.prototype.draw = function(context) {
 
   context.save();
     context.translate(-this.camera.x+this.effect.x,-this.camera.y+this.effect.y); // might not need to -y
-    for(var i = 0, ii = this.level_objects.length; i < ii; i++) {
+    /*for(var i = 0, ii = this.level_objects.length; i < ii; i++) {
       this.level_objects[i].draw(context);
-    }
+    }*/
+    this.currentLevel.draw(context);
     this.player.draw(context);
   context.restore();
   /*
@@ -248,3 +252,39 @@ Player.prototype.check_collision = function(x,y,width,height) {
   }
   return false;
 }
+
+/************************************
+  LevelBlock declaration
+*************************************/
+function LevelBlock(x,y,width,height) {
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+}
+
+LevelBlock.prototype.draw = function(context) {
+  context.save();
+    context.fillStyle = "rgba(0,200,200,0.5)";
+    context.fillRect (this.x, this.y, this.width, this.height);
+  context.restore();
+};
+
+/************************************
+  Level declaration
+*************************************/
+function Level() {
+
+  this.building_blocks = [];
+  
+  this.building_blocks.push(new LevelBlock(250,250,50,50));
+  this.building_blocks.push(new LevelBlock(300,260,50,50));
+  this.building_blocks.push(new LevelBlock(350,270,50,50));
+  this.building_blocks.push(new LevelBlock(400,280,50,50));
+}
+
+Level.prototype.draw = function(context) {
+  for(var i = 0; i < this.building_blocks.length; i++) {
+    this.building_blocks[i].draw(context);
+  }
+};
