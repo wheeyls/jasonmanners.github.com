@@ -155,7 +155,7 @@ World.prototype.resize_window = function () {
 };
 
 World.prototype.start = function() {
-  intervalID = setInterval("this.run_other()");
+  intervalID = setInterval("World.run_other()");
 };
 var myWorld = new World();
 myWorld.init_world();
