@@ -194,12 +194,12 @@ function Player(x,y) {
   this.tmp_x = x;
   this.tmp_y = y;
   
-  this.mass = mass;
-  this.direction = direction;
+  this.mass = 10;
+  this.direction = 1;
   
-  var calcVelocity = this.getVelocityVector(velocity,direction);
-  this.xVelocity = calcVelocity.x;
-  this.yVelocity = calcVelocity.y;
+  //var calcVelocity = this.getVelocityVector(velocity,direction);
+  this.xVelocity = 0;//calcVelocity.x;
+  this.yVelocity = 0;//calcVelocity.y;
 }
 
 Player.prototype.draw = function(context) {
