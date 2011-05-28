@@ -133,8 +133,7 @@ World.prototype.run = function(timestamp) {
 };
 
 World.prototype.run_other = function(timestamp) {
-  this.update(15);
-  this.draw(this.context);
+  
 };
 
 World.prototype.mouse_move = function (event) {
@@ -155,9 +154,14 @@ World.prototype.resize_window = function () {
 };
 
 World.prototype.start = function() {
-  intervalID = setInterval("World.run_other()");
+  intervalID = setInterval("test()");
 };
 var myWorld = new World();
 myWorld.init_world();
 //myWorld.run();
 myWorld.start();
+
+function test() {
+  myWorld.update(15);
+  myWorld.draw(myWorld.context);
+}
