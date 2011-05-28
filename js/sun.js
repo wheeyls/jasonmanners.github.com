@@ -154,7 +154,7 @@ World.prototype.resize_window = function () {
 };
 
 World.prototype.start = function() {
-  setTimeout("test()",1000/60);
+  var t = setTimeout("test()",1000/60);
 };
 var myWorld = new World();
 myWorld.init_world();
