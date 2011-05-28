@@ -4,7 +4,7 @@
 var requestAnimationFrame =   window.mozRequestAnimationFrame     || 
                               window.webkitRequestAnimationFrame  ||
                               function(/* function */ callback, /* DOMElement */ element){
-                                 window.setTimeout(callback, 1000 / 60, +new Date());
+                                 window.setTimeout(callback, 1000 / 60, new Date());
                               };
 var startTime = window.mozAnimationStartTime || Date.now();
 
@@ -132,10 +132,6 @@ World.prototype.run = function(timestamp) {
   startTime = drawStart;
 };
 
-World.prototype.run_other = function(timestamp) {
-  
-};
-
 World.prototype.mouse_move = function (event) {
   this.sun.update(event.layerX,this.WORLD_WIDTH,this.WORLD_HEIGHT);
   this.mouse_x = event.layerX;
@@ -153,16 +149,7 @@ World.prototype.resize_window = function () {
   this.gbackground = new GradientBack(this.WORLD_WIDTH,this.WORLD_HEIGHT);
 };
 
-World.prototype.start = function() {
-  var t = setTimeout("test()",1000/60);
-};
+
 var myWorld = new World();
 myWorld.init_world();
-//myWorld.run();
-//myWorld.start();
-
-function test() {
-  myWorld.update(15);
-  myWorld.draw(myWorld.context);
-  var t = setTimeout("test()",1000/60);
-}
+myWorld.run();
