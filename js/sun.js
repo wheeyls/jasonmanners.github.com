@@ -159,10 +159,10 @@ World.prototype.start = function() {
 var myWorld = new World();
 myWorld.init_world();
 //myWorld.run();
-myWorld.start();
+//myWorld.start();
 
 function test() {
   myWorld.update(15);
   myWorld.draw(myWorld.context);
-  setTimeout("test()",1000/60);
+  var t = setTimeout("test()",1000/60);
 }
