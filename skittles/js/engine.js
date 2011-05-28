@@ -257,7 +257,7 @@ Player.prototype.check_collision = function(block_object) {
 
 Player.prototype.set_coords = function(block_object,collide_object) {
   //eventually check which side but for now only y
-  this.y = block_objects.y;
+  this.y = block_object.y;
   this.yVelocity = 0;
 };
 
