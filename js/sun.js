@@ -154,7 +154,7 @@ World.prototype.resize_window = function () {
 };
 
 World.prototype.start = function() {
-  intervalID = setInterval("test()");
+  setTimeout("test()",1000/60);
 };
 var myWorld = new World();
 myWorld.init_world();
@@ -164,4 +164,5 @@ myWorld.start();
 function test() {
   myWorld.update(15);
   myWorld.draw(myWorld.context);
+  setTimeout("test()",1000/60);
 }
