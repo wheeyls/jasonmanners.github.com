@@ -179,12 +179,10 @@ World.prototype.draw = function(context) {
 }
 
 World.prototype.queue_key_up = function(event) {
-  this.input_queue["KEY_DOWN"] = event;
   this.change_input_queue(event,"KEY_DOWN");
 }
 
 World.prototype.queue_key_down = function(event) {
-  this.input_queue["KEY_UP"] = event;
   this.change_input_queue(event,"KEY_UP");
 }
 
@@ -205,7 +203,7 @@ World.prototype.change_input_queue = function(event,type) {
       inputType = true;
   }
   
-  switch(event) {
+  switch(event.keyCode) {
     case 37: // Left Arrow
       this.input_queue["LEFT"] = inputType;
       break;
