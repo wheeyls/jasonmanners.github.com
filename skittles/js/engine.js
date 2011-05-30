@@ -64,6 +64,7 @@ World.prototype._init_canvas = function() {
   $("#world").css("position","absolute");
   $("#world").css("left",worldWidth+"px");
   $("#world").css("top","50px");
+  $("#world").css("border","1px solid #000000");
   
   this.context = $("#world")[0].getContext("2d");
 }
@@ -179,15 +180,46 @@ World.prototype.draw = function(context) {
 
 World.prototype.queue_key_up = function(event) {
   this.input_queue["KEY_DOWN"] = event;
+  this.change_input_queue(event,"KEY_DOWN");
 }
 
 World.prototype.queue_key_down = function(event) {
   this.input_queue["KEY_UP"] = event;
+  this.change_input_queue(event,"KEY_UP");
 }
 
 World.prototype.process_input = function() {
   
+  if(this.input_queue["RIGHT"]) {
+    this.player.run();
+  }
+  else if(!this.input_queue["RIGHT"]) {
+    this.player.stop_run();
+  }
+  
 }
+
+World.prototype.change_input_queue = function(event,type) {
+  var inputType = false;
+  if(type === "KEY_DOWN") {
+      inputType = true;
+  }
+  
+  switch(event) {
+    case 37: // Left Arrow
+      this.input_queue["LEFT"] = inputType;
+      break;
+    case 38: // Up Arrow
+      this.input_queue["UP"] = inputType;
+      break;
+    case 39: // Right Arrow
+      this.input_queue["RIGHT"] = inputType;
+      break;
+    case 40: // Down Arrow
+      this.input_queue["DOWN"] = inputType;
+      break;
+  }
+};
 
 /************************************
   Player declaration
@@ -260,6 +292,14 @@ Player.prototype.set_coords = function(block_object,collide_object) {
   this.y = block_object.y;
   this.yVelocity = 0;
 };
+
+Player.prototype.run = function() {
+  this.xVelocity = 300;
+}
+
+Player.prototype.stop_run = function() {
+  this.xVelocity = 0;
+}
 
 /************************************
   LevelBlock declaration
