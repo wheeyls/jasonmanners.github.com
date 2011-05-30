@@ -187,7 +187,7 @@ World.prototype.queue_key_up = function(event) {
 }
 
 World.prototype.process_input = function() {
-  
+  console.log(this.input_queue["RIGHT"]);
   if(this.input_queue["RIGHT"]) {
     this.player.run();
   }
