@@ -178,11 +178,11 @@ World.prototype.draw = function(context) {
   */
 }
 
-World.prototype.queue_key_up = function(event) {
+World.prototype.queue_key_down = function(event) {
   this.change_input_queue(event,"KEY_DOWN");
 }
 
-World.prototype.queue_key_down = function(event) {
+World.prototype.queue_key_up = function(event) {
   this.change_input_queue(event,"KEY_UP");
 }
 
