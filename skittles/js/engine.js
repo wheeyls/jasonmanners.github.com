@@ -79,7 +79,7 @@ World.prototype._init_input = function() {
 }
 
 World.prototype._init_game_objects = function() {
-  this.player = new Player(200,200);
+  this.player = new Player(210,150);
   this.currentLevel = new Level();
   this.levels[0] = this.currentLevel;
   this.level_objects = this.currentLevel.building_blocks;
@@ -187,12 +187,18 @@ World.prototype.queue_key_up = function(event) {
 
 World.prototype.process_input = function() {
   if(this.input_queue["RIGHT"]) {
-    this.player.run();
+    this.player.run(1);
   }
   else if(!this.input_queue["RIGHT"]) {
     this.player.stop_run();
   }
   
+  if(this.input_queue["LEFT"]) {
+    this.player.run(-1);
+  }
+  else if(!this.input_queue["LEFT"]) {
+    this.player.stop_run();
+  }
 }
 
 World.prototype.change_input_queue = function(event,type) {
@@ -228,6 +234,9 @@ function Player(x,y) {
   this.width = 20;
   this.height = 50;
   
+  this.halfX = (this.width/2);
+  this.halfY = (this.height/2);
+  
   this.corner_x = this.x - (this.width/2);
   this.corner_y = this.y + (this.height/2);
   
@@ -255,6 +264,8 @@ Player.prototype.draft_update = function(delta_time,gravity) {
 Player.prototype.publish_update = function() {
   this.x = this.tmp_x;
   this.y = this.tmp_y;
+  this.corner_x = this.x - this.halfX;
+  this.corner_y = this.y - this.halfY;
 };
 
 Player.prototype.getDeltaX = function(delta_time){
@@ -302,8 +313,8 @@ Player.prototype.set_coords = function(block_object,collide_object) {
   this.yVelocity = 0;
 };
 
-Player.prototype.run = function() {
-  this.xVelocity = 300;
+Player.prototype.run = function(direction) {
+  this.xVelocity = 300*direction;
 }
 
 Player.prototype.stop_run = function() {
