@@ -129,9 +129,8 @@ World.prototype.update = function(delta_time) {
     }
   }
   
-  if(!isIntercept) {
-    this.player.publish_update();
-  }
+  this.player.publish_update();
+  
   
   if(this.player.x > this.MARGIN_RIGHT) {
     var xDiff = (this.player.x - this.camera.x + this.MARGIN_RIGHT);
@@ -187,7 +186,6 @@ World.prototype.queue_key_up = function(event) {
 }
 
 World.prototype.process_input = function() {
-  console.log(this.input_queue["RIGHT"]);
   if(this.input_queue["RIGHT"]) {
     this.player.run();
   }
@@ -227,6 +225,11 @@ function Player(x,y) {
   this.y = y;
   this.tmp_x = x;
   this.tmp_y = y;
+  this.width = 20;
+  this.height = 50;
+  
+  this.corner_x = this.x - (this.width/2);
+  this.corner_y = this.y + (this.height/2);
   
   this.mass = 10;
   this.direction = 1;
@@ -240,7 +243,7 @@ Player.prototype.draw = function(context) {
   context.save();
     //context.drawImage(this.image,this.x,this.y);
     context.fillStyle = "rgba(200,0,0,0.5)";
-    context.fillRect (this.x, this.y, 40, 40); 
+    context.fillRect (this.corner_x, this.corner_y, this.width, this.height); 
   context.restore();
 };
 
@@ -285,9 +288,17 @@ Player.prototype.check_collision = function(block_object) {
   return {collide: false};
 };
 
+Player.prototype.check_collision_y = function(block_object) {
+  if(this.x >= block_object.x && this.x <= block_object.x+block_object.width && 
+      this.y >= block_object.y && this.y <= block_object.y+block_object.height) {
+    return {collide: true};
+  }
+  return {collide: false};
+};
+
 Player.prototype.set_coords = function(block_object,collide_object) {
   //eventually check which side but for now only y
-  this.y = block_object.y;
+  this.tmp_y = block_object.y;
   this.yVelocity = 0;
 };
 
