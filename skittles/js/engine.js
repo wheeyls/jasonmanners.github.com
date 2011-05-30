@@ -189,15 +189,16 @@ World.prototype.process_input = function() {
   if(this.input_queue["RIGHT"]) {
     this.player.run(1);
   }
-  else if(!this.input_queue["RIGHT"]) {
-    this.player.stop_run();
-  }
-  
-  if(this.input_queue["LEFT"]) {
+  else if(this.input_queue["LEFT"]) {
     this.player.run(-1);
   }
   else if(!this.input_queue["LEFT"]) {
     this.player.stop_run();
+  }
+  
+  if(this.input_queue["UP"]) {
+    this.player.jump();
+    this.input_queue["UP"] = false;
   }
 }
 
@@ -293,7 +294,8 @@ Player.prototype.getWorldToScreenCoords = function(camera) {
 
 Player.prototype.check_collision = function(block_object) {
   if(this.x >= block_object.x && this.x <= block_object.x+block_object.width && 
-      this.y >= block_object.y && this.y <= block_object.y+block_object.height) {
+      this.y >= block_object.y && this.y <= block_object.y+block_object.height &&
+      this.yVelocity > 0) {
     return {collide: true};
   }
   return {collide: false};
@@ -301,7 +303,8 @@ Player.prototype.check_collision = function(block_object) {
 
 Player.prototype.check_collision_y = function(block_object) {
   if(this.x >= block_object.x && this.x <= block_object.x+block_object.width && 
-      this.y >= block_object.y && this.y <= block_object.y+block_object.height) {
+      this.y >= block_object.y && this.y <= block_object.y+block_object.height &&
+      this.yVelocity > 0) {
     return {collide: true};
   }
   return {collide: false};
@@ -319,6 +322,10 @@ Player.prototype.run = function(direction) {
 
 Player.prototype.stop_run = function() {
   this.xVelocity = 0;
+}
+
+Player.prototype.jump = function() {
+  this.yVelocity = -300;
 }
 
 /************************************
@@ -349,6 +356,9 @@ function Level() {
   this.building_blocks.push(new LevelBlock(250,250,50,50));
   this.building_blocks.push(new LevelBlock(300,260,50,50));
   this.building_blocks.push(new LevelBlock(350,270,50,50));
+  for(var i = 0; i < 600; i+=50) {
+    this.building_blocks.push(new LevelBlock(i,350,50,50));
+  }
 }
 
 Level.prototype.draw = function(context) {
