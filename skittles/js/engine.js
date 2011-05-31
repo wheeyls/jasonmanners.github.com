@@ -132,12 +132,12 @@ World.prototype.update = function(delta_time) {
   this.player.publish_update();
   
   
-  if(this.player.x > this.MARGIN_RIGHT) {
-    var xDiff = (this.player.x - this.camera.x + this.MARGIN_RIGHT);
+  if(this.player.x > (this.MARGIN_RIGHT + this.camera.x)) {
+    var xDiff = this.player.x - (this.camera.x + this.MARGIN_RIGHT);
     this.update_camera(xDiff);
   }
-  else if(this.player.x < this.MARGIN_LEFT) {
-    var xDiff = (this.camera.x + this.MARGIN_LEFT - this.player.x);
+  else if(this.player.x < (this.MARGIN_LEFT + this.camera.x)) {
+    var xDiff = this.player.x - (this.camera.x + this.MARGIN_LEFT);
     this.update_camera(xDiff);
   }
   /*
@@ -200,6 +200,11 @@ World.prototype.process_input = function() {
     this.player.jump();
     this.input_queue["UP"] = false;
   }
+  
+  if(this.input_queue["DOWN"]) {
+    this.player.teleport();
+    this.input_queue["DOWN"] = false;
+  }
 }
 
 World.prototype.change_input_queue = function(event,type) {
@@ -224,6 +229,9 @@ World.prototype.change_input_queue = function(event,type) {
   }
 };
 
+World.prototype.update_camera = function(xDiff) {
+  this.camera.x += xDiff;
+};
 /************************************
   Player declaration
 *************************************/
@@ -317,6 +325,7 @@ Player.prototype.set_coords = function(block_object,collide_object) {
 };
 
 Player.prototype.run = function(direction) {
+  this.direction = direction;
   this.xVelocity = 300*direction;
 }
 
@@ -328,6 +337,9 @@ Player.prototype.jump = function() {
   this.yVelocity = -300;
 }
 
+Player.prototype.teleport = function() {
+  this.x += 100*this.direction;
+}
 /************************************
   LevelBlock declaration
 *************************************/
@@ -352,13 +364,18 @@ function Level() {
 
   this.building_blocks = [];
   
-  this.building_blocks.push(new LevelBlock(200,250,50,50));
-  this.building_blocks.push(new LevelBlock(250,250,50,50));
-  this.building_blocks.push(new LevelBlock(300,260,50,50));
-  this.building_blocks.push(new LevelBlock(350,270,50,50));
+  this.building_blocks.push(new LevelBlock(0,250,75,25));
+  this.building_blocks.push(new LevelBlock(400,250,75,25));
+  this.building_blocks.push(new LevelBlock(200,175,75,25));
+  this.building_blocks.push(new LevelBlock(600,125,75,25));
+  this.building_blocks.push(new LevelBlock(1000,175,75,25));
+  
+  this.building_blocks.push(new LevelBlock(-1000,350,3000,50));
+  /*
   for(var i = 0; i < 600; i+=50) {
     this.building_blocks.push(new LevelBlock(i,350,50,50));
   }
+  */
 }
 
 Level.prototype.draw = function(context) {
