@@ -29,14 +29,17 @@ h1 {
   width: 100px;
   z-index: 200;
   
+  -moz-transition: top .15s linear;
   -webkit-transition: top .15s linear;
   transition: top .15s linear;
 }
 
 #home:hover {
-    top: 0px;
-     -webkit-transition: top .15s linear;
-    transition: top .15s linear;
+  top: 0px;
+  
+  -moz-transition: top .15s linear;
+   -webkit-transition: top .15s linear;
+  transition: top .15s linear;
 }
 
 #page {
