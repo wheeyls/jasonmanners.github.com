@@ -7,6 +7,11 @@ const WIN     = 44;
 const PAUSE   = 45;
 const STOPPED = 46;
 
+const PLAYER_RUNNING = 101;
+const PLAYER_STOP = 102;
+const PLAYER_JUMP = 103;
+const PLAYER_TELEPORT = 104;
+
 /************************************
   RequestAnimationFrame declaration
 *************************************/
@@ -252,6 +257,7 @@ function Player(x,y) {
   this.mass = 10;
   this.direction = 1;
   
+  this.state;
   //var calcVelocity = this.getVelocityVector(velocity,direction);
   this.xVelocity = 0;//calcVelocity.x;
   this.yVelocity = 0;//calcVelocity.y;
@@ -275,6 +281,13 @@ Player.prototype.publish_update = function() {
   this.y = this.tmp_y;
   this.corner_x = this.x - this.halfX;
   this.corner_y = this.y - this.halfY;
+  if(this.state === PLAYER_TELEPORT) {
+    this.xVelocity /= 2;
+    if(Math.abs(this.xVelocity) < 100) {
+      this.state = 0;
+      this.xVelocity = 0;
+    }
+  }
 };
 
 Player.prototype.getDeltaX = function(delta_time){
@@ -330,7 +343,9 @@ Player.prototype.run = function(direction) {
 }
 
 Player.prototype.stop_run = function() {
-  this.xVelocity = 0;
+  if(this.state !== PLAYER_TELEPORT) {
+    this.xVelocity = 0;
+  }
 }
 
 Player.prototype.jump = function() {
@@ -338,7 +353,9 @@ Player.prototype.jump = function() {
 }
 
 Player.prototype.teleport = function() {
-  this.x += 100*this.direction;
+  //this.x += 100*this.direction;
+  this.state = PLAYER_TELEPORT;
+  this.xVelocity = 5000*this.direction;
 }
 /************************************
   LevelBlock declaration

@@ -38,7 +38,7 @@ h1 {
   top: 0px;
   
   -moz-transition: top .15s linear;
-   -webkit-transition: top .15s linear;
+  -webkit-transition: top .15s linear;
   transition: top .15s linear;
 }
 
