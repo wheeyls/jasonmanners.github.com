@@ -254,7 +254,7 @@ function Player(x,y) {
   this.corner_x = this.x - (this.width/2);
   this.corner_y = this.y + (this.height/2);
   
-  this.mass = 10;
+  this.mass = 3;
   this.direction = 1;
   
   this.state;
@@ -264,11 +264,13 @@ function Player(x,y) {
 }
 
 Player.prototype.draw = function(context) {
-  context.save();
-    //context.drawImage(this.image,this.x,this.y);
-    context.fillStyle = "rgba(200,0,0,0.5)";
-    context.fillRect (this.corner_x, this.corner_y, this.width, this.height); 
-  context.restore();
+  if(this.state !== PLAYER_TELEPORT) {
+    context.save();
+      //context.drawImage(this.image,this.x,this.y);
+      context.fillStyle = "rgba(200,0,0,0.5)";
+      context.fillRect (this.corner_x, this.corner_y, this.width, this.height); 
+    context.restore();
+  }
 };
 
 Player.prototype.draft_update = function(delta_time,gravity) {
@@ -295,7 +297,7 @@ Player.prototype.getDeltaX = function(delta_time){
 };
 
 Player.prototype.getDeltaY = function(delta_time,gravity){
-  this.yVelocity += gravity;
+  this.yVelocity += gravity*this.mass;
   return (delta_time/MS_IN_SEC) * this.yVelocity;
 };
 
@@ -349,7 +351,7 @@ Player.prototype.stop_run = function() {
 }
 
 Player.prototype.jump = function() {
-  this.yVelocity = -300;
+  this.yVelocity = -600;
 }
 
 Player.prototype.teleport = function() {
