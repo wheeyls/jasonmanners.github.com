@@ -21,12 +21,12 @@ h1 {
   background-color: #8ea0ae;
   border: 1px solid white;
   border-radius: 0px 0px 4px 4px;
-  height: 30px;
+  height: 25px;
   left: 200;
-  padding: 12px 20px 0 40px;
+  padding: 5px 5px 5px 5px;
   position: fixed;
   top: -20px;
-  width: 100px;
+  width: 25px;
   z-index: 200;
   
   -moz-transition: top .15s linear;
