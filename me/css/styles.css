@@ -1,0 +1,48 @@
+* {
+  margin 0;
+  padding 0;
+}
+
+header, section {
+  display: block;
+}
+
+body {
+  background: #242A34;
+}
+
+h1 {
+  font-size: 3.5em;
+  padding: 0.5em 0 0;
+  color: #F5F5F5;
+}
+
+#home {
+  background-color: #8ea0ae;
+  border: 1px solid white;
+  border-radius: 0px 0px 4px 4px;
+  height: 30px;
+  left: 200;
+  padding: 12px 20px 0 40px;
+  position: fixed;
+  top: -20px;
+  width: 100px;
+  z-index: 200;
+  
+  -webkit-transition: top .15s linear;
+  transition: top .15s linear;
+}
+
+#home:hover {
+    top: 0px;
+     -webkit-transition: top .15s linear;
+    transition: top .15s linear;
+}
+
+#page {
+  margin: 0 auto;
+  position: relative;
+  width: 960px;
+}
+
+
