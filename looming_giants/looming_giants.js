@@ -13,7 +13,7 @@ function setNavAnimations() {
     leftOffset = leftOffset.replace("px","");
 
     $(this).click(function() {
-      $("#window_pane").animate({scrollTop: topOffset, scrollLeft: leftOffset-100}, 750);
+      $("#window_pane").animate({scrollTop: topOffset, scrollLeft: leftOffset-100}, 1000);
     });
   });
 

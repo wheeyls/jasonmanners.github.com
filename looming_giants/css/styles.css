@@ -115,12 +115,12 @@ nav ul li:hover {
 #contact_nav {
   position: absolute;
   left:450px;
-  top: 212px;
-  transform:rotate(6deg);
-  -ms-transform:rotate(6deg); /* IE 9 */
-  -moz-transform:rotate(6deg); /* Firefox */
-  -webkit-transform:rotate(6deg); /* Safari and Chrome */
-  -o-transform:rotate(6deg);
+  top: 210px;
+  transform:rotate(10deg);
+  -ms-transform:rotate(10deg); /* IE 9 */
+  -moz-transform:rotate(10deg); /* Firefox */
+  -webkit-transform:rotate(10deg); /* Safari and Chrome */
+  -o-transform:rotate(10deg);
 }
 
 #container {
@@ -142,6 +142,7 @@ nav ul li:hover {
   position: absolute;
   width: 960px;
   height: 400px;
+  background: #000000;
 }
 
 .info_section h1 {
