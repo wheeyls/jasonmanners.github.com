@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+  background: #000000;
+}
+
+ul {
+  list-style: none;
+}
+
+.game_ui {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(0,0,0,0.3);
+}
+
+.game_ui ul li {
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
+}

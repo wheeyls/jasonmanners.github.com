@@ -14,6 +14,7 @@ const PLAYER_TELEPORT = 104;
 
 /************************************
   RequestAnimationFrame declaration
+  -may use setInterval with a date.now() call
 *************************************/
 var requestAnimationFrame =   window.mozRequestAnimationFrame     || 
                               window.webkitRequestAnimationFrame  ||

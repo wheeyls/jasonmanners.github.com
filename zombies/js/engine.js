@@ -1,6 +1,8 @@
 /************************************
   Constants
 *************************************/
+const MS_IN_SEC = 1000;
+
 const WIN     = 42;
 const LOSE    = 43;
 const PAUSED  = 44;
@@ -41,30 +43,47 @@ World.prototype = {
 
 World.prototype.initialize = function() {
   this._init_world();
+  this._init_objects();
 }
 
 World.prototype._init_world = function() {
   this.WORLD_WIDTH = window.innerWidth;
   this.WORLD_HEIGHT = window.innerHeight;
   $(this.canvas_id).attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
-}
-
-World.prototype.clear = function() {
   
+  this.context = $("#world")[0].getContext("2d");
 }
 
-World.prototype.draw = function() {
-  this.clear();
+World.prototype._init_objects = function() {
+  this.gameState = new GameState();
+  this.gameState.set_state(RUNNING);
+  
+  /* Should be done seperate from engine but this is just for testing */
+  var newLevel = new Level(510,360,30,"#222222");
+  this.gameState.set_level(newLevel);
+}
+
+World.prototype.clear = function(context) {
+  context.fillStyle = "rgb(235,255,255)";
+  context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
+}
+
+World.prototype.draw = function(context) {
+  this.clear(context);
+  context.save();
+    context.translate(300,200);
+    this.gameState.currentLevel.draw(context);
+  context.restore();
 }
 
 World.prototype.update = function(delta_time) {
-  if(this.game_state.is_running()) {
+  if(this.gameState.is_running()) {
     //Update code here
   }
 }
 
 World.prototype.run = function(timestep) {
-  var drawStart   = (timestamp || Date.now());
+  var drawStart   = (timestep || Date.now());
   var delta_time  = drawStart - startTime;
   
   if(this.gameState.currentState === RUNNING) {
@@ -83,11 +102,11 @@ function GameState() {
   this.currentLevel;
 }
 
-GameState.prototype.setLevel = function(level)  {
+GameState.prototype.set_level = function(level)  {
   this.currentLevel = level;
 }
 
-GameState.prototype.setState = function(state) {
+GameState.prototype.set_state = function(state) {
   this.currentState = state;
 }
 
@@ -101,12 +120,49 @@ GameState.prototype.is_running = function() {
 /************************************
   Level
 *************************************/
-function Level() {
+function Level(width,height,gridSpace,gridColor) {
+  this.gameBoard = new GameBoard(width,height,gridSpace,gridColor,"rgba(100,100,0,0.3)");
 }
 
-Level.prototype.darw = function() {
-  
+Level.prototype.draw = function(context) {
+  this.gameBoard.draw(context);
 }
+
+/************************************
+  GameBoard
+*************************************/
+function GameBoard(width,height,gridSpace,gridColor,bgColor) {
+  this.width = width;
+  this.height = height;
+  this.gridSpace = gridSpace;
+  this.gridColor = gridColor;
+  this.bgColor= bgColor;
+}
+
+GameBoard.prototype.draw = function(context) {
+  context.fillStyle = this.bgColor;
+  context.fillRect (0, 0, this.width, this.height);
+  this.draw_grid(context);
+}
+
+GameBoard.prototype.draw_grid = function(context) {
+  context.save();
+    //Draw Vertical Lines
+    for (var x = 0.5; x <= this.width+0.5; x += this.gridSpace) {
+      context.moveTo(x, 0);
+      context.lineTo(x, this.height);
+    }
+
+    //Draw Horizontal Lines
+    for (var y = 0.5; y <= this.height+0.5; y += this.gridSpace) {
+      context.moveTo(0, y);
+      context.lineTo(this.width, y);
+    }
+    context.strokeStyle = this.gridColor;
+    context.stroke();
+  context.restore();
+}
+
 /************************************
   Tower
 *************************************/
@@ -165,7 +221,8 @@ function HUD() {
 /************************************
   Button
 *************************************/
-function Button(x,y,width,height) {
+function Button(x,y,width,height,id) {
+  this.id = id;
   /* Might change this and handle it with css */
   this.x = x;
   this.y = y;
@@ -175,3 +232,13 @@ function Button(x,y,width,height) {
   
   this.display = false;
 }
+
+Button.prototype.set_click = function(clickfunction) {
+  $("#"+this.id).click(clickfunction);
+}
+
+$(document).ready(function() {
+  var myWorld = new World("world");
+  myWorld.initialize();
+  myWorld.run(Date.now());
+});
