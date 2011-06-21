@@ -1,0 +1,255 @@
+html
+{
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font: helvetica;
+}
+
+body {
+  overflow: hidden;
+  background: #000000;
+}
+
+ul {
+  list-style: none;
+}
+
+header {
+  background: url("../looming_giants_header.png") no-repeat scroll 0 0 transparent;
+  height: 300px;
+  
+}
+
+footer {
+  background: #111111;
+  position:absolute;
+  height: 35px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  color: #AAAAAA;
+  -moz-box-shadow: 0px -2px 5px #AAAAAA;
+}
+/*
+#navigation li a{
+  background: url("../images/icons.png") no-repeat scroll 0 0 transparent;
+}
+*/
+
+.button {
+  padding: 2px;
+  font-size: 30px;
+  text-decoration: none;
+  color: #DDDDDD;
+  background: rgba(25,25,25,0.8);
+  border: 2px solid #FFFFFF;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.button:hover {
+  background: rgba(113,111,80,0.6);
+  -moz-transition: background .25s linear;
+  -webkit-transition: background .25s linear;
+  transition: background .25s linear;
+}
+
+
+nav ul li {
+  float: left;
+  padding: 2px;
+  font-size: 30px;
+  text-decoration: none;
+  color: #EEEEEE;
+  background: rgba(0,0,0,0.4);
+  border: 2px solid #000000;
+}
+a {
+	color:#EEEEFF;
+	text-decoration:none;
+  text-shadow:0 0 7px #222222;
+}
+
+nav ul li:hover {
+	background: rgba(0,0,0,0.7);
+  -moz-transition: background .25s linear;
+  -webkit-transition: background .25s linear;
+  transition: background .25s linear;
+}
+
+#home_nav {
+  position: absolute;
+  left:115px;
+  top: 187px;
+  -webkit-transform:rotate(-15deg); /* Safari and Chrome */
+  -moz-transform:rotate(-15deg); /* Firefox */
+  -ms-transform:rotate(-15deg); /* IE 9 */
+  -o-transform:rotate(-15deg);
+  transform:rotate(-15deg);
+}
+
+#about_nav {
+  position: absolute;
+  left:205px;
+  top: 176px;
+}
+
+#zombies_nav {
+  position: absolute;
+  left:295px;
+  top: 188px;
+  transform:rotate(8deg);
+  -ms-transform:rotate(8deg); /* IE 9 */
+  -moz-transform:rotate(8deg); /* Firefox */
+  -webkit-transform:rotate(8deg); /* Safari and Chrome */
+  -o-transform:rotate(8deg);
+}
+
+#contact_nav {
+  position: absolute;
+  left:450px;
+  top: 212px;
+  transform:rotate(6deg);
+  -ms-transform:rotate(6deg); /* IE 9 */
+  -moz-transform:rotate(6deg); /* Firefox */
+  -webkit-transform:rotate(6deg); /* Safari and Chrome */
+  -o-transform:rotate(6deg);
+}
+
+#container {
+  width: 4800px;
+  height: 4800px;
+}
+
+#window_pane {
+  position: absolute;
+  top: 280px;
+  left: 0px;
+  overflow: hidden;
+  height: 400px;
+  width:960px;
+}
+
+.info_section {
+  color: #FFFFFF;
+  position: absolute;
+  width: 960px;
+  height: 400px;
+}
+
+.info_section h1 {
+ font-family: 'Special Elite', serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  text-shadow: none;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0em;
+  word-spacing: 0em;
+  line-height: 1.2;
+  padding-bottom: 20px;
+}
+
+#title {
+  font-family: 'Special Elite', serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 900;
+  text-shadow: none;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0em;
+  word-spacing: 0em;
+  line-height: 1.2;
+  padding-bottom: 20px;
+  opacity: 0.2;
+  left: 100px;
+  top: 40px;
+  position:absolute;
+}
+
+#home {
+  top: 0px;
+  left: 100px;
+}
+
+#about {
+  top: 0px;
+  left: 1700px;
+}
+
+#zombies {
+  top: 1600px;
+  left: 1700px;
+}
+
+#contact {
+  top: 1600px;
+  left: 100px;
+}
+
+.info_container {
+  position: relative;
+}
+
+#zombie_play {
+  position:absolute;
+  top:100px;
+  left:100px;
+}
+
+#logo {
+  position:absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.social_icon {
+  position:absolute;
+  opacity: 0.4;
+}
+
+.social_icon:hover {
+  opacity: 0.95;
+  -moz-transition: opacity .25s linear;
+  -webkit-transition: opacity .25s linear;
+  transition: opacity .25s linear;
+}
+
+#facebook {
+  top: 250px;
+  left: 640px;
+}
+
+#twitter {
+  top: 248px;
+  left: 670px;
+}
+
+#linkedin {
+  top: 246px;
+  left: 700px;
+}
+
+#github {
+  top: 244px;
+  left: 730px;
+}
+
+#delicious {
+  top: 242px;
+  left: 760px;
+}
+
+#quote {
+  width:500px;
+  font-size: 20px;
+  word-wrap: normal;
+}
