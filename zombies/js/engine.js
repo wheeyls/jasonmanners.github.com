@@ -60,6 +60,12 @@ World.prototype._init_objects = function() {
   
   /* Should be done seperate from engine but this is just for testing */
   var newLevel = new Level(510,360,30,"#222222");
+  for(var i = 0; i < 10; i++) {
+    var tmpX = -(i*15);
+    var tmpY = Math.random()*300+20;
+    var tmpDir = Math.atan2(150-tmpY,500-tmpX);
+    newLevel.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10,10));  
+  }
   this.gameState.set_level(newLevel);
 }
 
@@ -79,6 +85,7 @@ World.prototype.draw = function(context) {
 World.prototype.update = function(delta_time) {
   if(this.gameState.is_running()) {
     //Update code here
+    this.gameState.currentLevel.update(delta_time);
   }
 }
 
@@ -124,10 +131,28 @@ function Level(width,height,gridSpace,gridColor) {
   this.gameBoard = new GameBoard(width,height,gridSpace,gridColor,"rgba(100,100,0,0.3)");
 }
 
-Level.prototype.draw = function(context) {
-  this.gameBoard.draw(context);
+Level.prototype = {
+  enemies : [],
+  towers : [],
+  base : undefined
 }
 
+Level.prototype.update = function(delta_time) {
+  for(var i = 0; i < this.enemies.length; i++) {
+    this.enemies[i].update(delta_time);
+  }
+}
+
+Level.prototype.draw = function(context) {
+  this.gameBoard.draw(context);
+  for(var i = 0; i < this.enemies.length; i++) {
+    this.enemies[i].draw(context);
+  }
+}
+
+Level.prototype.add_enemy = function(enemy) {
+  this.enemies.push(enemy);
+}
 /************************************
   GameBoard
 *************************************/
@@ -140,9 +165,11 @@ function GameBoard(width,height,gridSpace,gridColor,bgColor) {
 }
 
 GameBoard.prototype.draw = function(context) {
-  context.fillStyle = this.bgColor;
-  context.fillRect (0, 0, this.width, this.height);
-  this.draw_grid(context);
+  context.save();
+    context.fillStyle = this.bgColor;
+    context.fillRect (0, 0, this.width, this.height);
+    this.draw_grid(context);
+  context.restore();
 }
 
 GameBoard.prototype.draw_grid = function(context) {
@@ -189,14 +216,29 @@ Projectile.prototype.draw = function() {
 /************************************
   Enemy
 *************************************/
-function Enemy() {
+function Enemy(x,y,velocity,direction,health,damage) {
+  this.x = x;
+  this.y = y;
+  this.velocity = velocity;
+  this.direction = direction;
+  this.health = health;
+  this.damage = damage;
 }
 
 Enemy.prototype.update = function(delta_time) {
+  var step = (delta_time / MS_IN_SEC);
+  var tmpX = step * this.velocity * Math.cos(this.direction);
+  var tmpY = step * this.velocity * Math.sin(this.direction);
   
+  this.x += tmpX;
+  this.y += tmpY;
 }
 
-Enemy.prototype.draw = function() {
+Enemy.prototype.draw = function(context) {
+  context.save();
+    context.fillStyle = "rgba(255,100,0,0.8)";
+    context.fillRect (this.x, this.y, 10, 10);
+  context.restore();
 }
 
 /************************************
