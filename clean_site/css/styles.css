@@ -13,12 +13,40 @@ ul {
   list-style: none;
 }
 
-section {
+nav {
+  background: #4C6081;
+  width: 960px;
   margin: 0 auto;
+  text-align: center;
+}
+section {
+  margin: 10px auto;
   width: 960px;
   text-align: center;
-  border: 1px solid #dddddd;
+  min-height:200px;
+}
+
+section h1 {
   /*font-family: 'Nixie One', arial, serif; */
   font-family: 'Holtwood One SC', arial, serif;
-  font-size: 20px;
+  font-size: 30px;
+  letter-spacing: 0.2em;
+  text-shadow: 2px 2px 2px #000000;
+}
+
+section h1:before {
+    background: none no-repeat scroll left 0.6em #521B12;
+    content: " ";
+    display: inline-block;
+    height: 1em;
+    margin-right: 10px;
+    width: 115px;
+}
+section h1:after {
+    background: none no-repeat scroll right 0.6em #5C673D;
+    content: " ";
+    display: inline-block;
+    height: 1em;
+    margin-left: 10px;
+    width: 115px;
 }
