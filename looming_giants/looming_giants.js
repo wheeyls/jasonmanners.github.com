@@ -2,19 +2,23 @@
 // This file is automatically included by javascript_include_tag :defaults
 function setNavAnimations() {
   $(".nav_button").each(function(){
-    var sectionToGo = $(this).attr("section");
-    
-    var topOffset = $("#"+sectionToGo).css("top");
-    var leftOffset = $("#"+sectionToGo).css("left");
-    var thisWidth = $("#"+sectionToGo).css("width");
-    var thisColor = $(this).css("backgroundColor");
-    
-    topOffset = topOffset.replace("px","");
-    leftOffset = leftOffset.replace("px","");
-
-    $(this).click(function() {
-      $("#window_pane").animate({scrollTop: topOffset, scrollLeft: leftOffset-100}, 1000);
-    });
+      var sectionToGo = $(this).attr("section");
+      
+      var topOffset = $("#"+sectionToGo).css("top");
+      var leftOffset = $("#"+sectionToGo).css("left");
+      var thisWidth = $("#"+sectionToGo).css("width");
+      var thisColor = $(this).css("backgroundColor");
+      
+      topOffset = topOffset.replace("px","");
+      leftOffset = leftOffset.replace("px","");
+  
+      $(this).click(function() {
+        if(topOffset != $("#window_pane").scrollTop() || leftOffset-100 != $("#window_pane").scrollLeft()){
+         $("#window_pane").animate({scrollTop: topOffset, scrollLeft: leftOffset-100}, 1000); 
+        }
+        return false;
+      });
+      
   });
 
 }
