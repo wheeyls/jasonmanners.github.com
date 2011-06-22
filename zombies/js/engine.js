@@ -201,6 +201,9 @@ Tower.prototype.draw = function() {
   
 }
 
+Tower.prototype.update = function(delta_time) {
+}
+
 /************************************
   Projectile
 *************************************/
@@ -263,24 +266,23 @@ function HUD() {
 /************************************
   Button
 *************************************/
-function Button(x,y,width,height,id) {
+function GameButton(x,y,width,height,id) {
   this.id = id;
-  /* Might change this and handle it with css */
-  this.x = x;
-  this.y = y;
-  
-  this.width  = width;
-  this.height = height;
-  
   this.display = false;
 }
-
-Button.prototype.set_click = function(clickfunction) {
+/* DOESNT WORK? */
+GameButton.prototype.set_click = function(clickfunction) {
   $("#"+this.id).click(clickfunction);
 }
 
+function TMP() {
+  alert("HI");
+}
 $(document).ready(function() {
   var myWorld = new World("world");
   myWorld.initialize();
   myWorld.run(Date.now());
+  
+  $("#watch_tower").click(TMP);
 });
+

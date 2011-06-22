@@ -24,4 +24,10 @@ ul {
   float: left;
   padding-left: 10px;
   padding-right: 10px;
+  height: 40px;
+  border-right: 1px solid rgba(0,50,50,0.5);
+}
+
+.game_ui ul li:hover {
+  background: rgba(0,0,0,0.3);
 }
