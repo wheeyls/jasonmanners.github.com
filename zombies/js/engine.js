@@ -20,6 +20,13 @@ var requestAnimationFrame =   window.mozRequestAnimationFrame     ||
 var startTime = window.mozAnimationStartTime || Date.now();
 
 /************************************
+  Helper functions
+*************************************/
+function distance_between(x1,y1,x2,y2) {
+  return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
+}
+
+/************************************
   World
 *************************************/
 function World(canvas_id) {
@@ -233,7 +240,20 @@ Tower.prototype.draw = function(context) {
 }
 
 Tower.prototype.update = function(delta_time,enemies) {
-  this.direction = Math.atan2(enemies[0].y-this.y+15,enemies[0].x-this.x+15);
+  var x_min = 0;
+  var y_min = 0;
+  var dist_min = 10000000;
+  
+  for(var i = 0; i < enemies.length; i++) {
+    var tmpDist = distance_between(enemies[i].x,enemies[i].y,500,150);
+    if(tmpDist < dist_min ) {
+      dist_min = tmpDist
+      x_min = enemies[i].x;
+      y_min = enemies[i].y;
+    }
+  }
+
+  this.direction = Math.atan2(y_min-this.y+15,x_min-this.x+15);
 }
 
 /************************************
