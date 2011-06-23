@@ -74,6 +74,7 @@ World.prototype._init_objects = function() {
     newLevel.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10,10));  
   }
   newLevel.add_tower(new Tower(300,120));
+  newLevel.add_tower(new Tower(270,180));
   this.gameState.set_level(newLevel);
 }
 
@@ -249,12 +250,18 @@ Tower.prototype.draw = function(context) {
   context.save();
     context.fillStyle = "rgba(0,100,255,0.8)";
     context.fillRect (this.x, this.y, 30, 30);
+    context.fillStyle = "rgba(0,100,255,0.2)";
+    context.beginPath();
+      context.arc(this.x+15, this.y+15, 200, 0, Math.PI*2, true); //*2
+    context.fill();
   context.restore();
+  
   context.save();
     context.lineWidth = 3;
     context.strokeStyle = "#000000";
     context.translate(this.x+15,this.y+15);
     context.rotate(this.direction);
+    
     context.save();
       context.beginPath();
         context.moveTo(0,0);
@@ -262,6 +269,7 @@ Tower.prototype.draw = function(context) {
       context.stroke();
     context.restore();
   context.restore();
+  
   context.save();
   context.strokeStyle = "#FF0000";
    context.beginPath();
@@ -285,7 +293,7 @@ Tower.prototype.update = function(delta_time,enemies) {
   }
   
   for(var i = 0; i < enemies.length; i++) {
-    var tmpDist = distance_between(enemies[i].x+10,enemies[i].y+10,500,150);
+    var tmpDist = distance_between(enemies[i].x+10,enemies[i].y+10,this.x+15,this.y+15);
     if(tmpDist < distMin ) {
       distMin = tmpDist
       this.xMin = enemies[i].x+5;
@@ -297,7 +305,10 @@ Tower.prototype.update = function(delta_time,enemies) {
   this.cooldown += delta_time;
   if(this.cooldown > this.fireRate) {
     this.cooldown = 0;
-    this.projectiles.push(new Projectile(this.x+15,this.y+15,300,this.direction,3));
+    console.log(distMin);
+    if(distMin < 200) {
+      this.projectiles.push(new Projectile(this.x+15,this.y+15,150,this.direction,5));
+    }
   }
 }
 
