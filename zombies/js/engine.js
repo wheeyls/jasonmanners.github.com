@@ -65,13 +65,15 @@ World.prototype._init_objects = function() {
     var tmpY = Math.random()*300+20;
     var tmpDir = Math.atan2(150-tmpY,500-tmpX);
     newLevel.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10,10));  
+    newLevel.add_tower(new Tower(300,120));
   }
   this.gameState.set_level(newLevel);
 }
 
 World.prototype.clear = function(context) {
+  context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
   context.fillStyle = "rgb(235,255,255)";
-  context.fillRect (0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
+  context.fillRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
 }
 
 World.prototype.draw = function(context) {
@@ -141,6 +143,10 @@ Level.prototype.update = function(delta_time) {
   for(var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].update(delta_time);
   }
+  
+  for(var i = 0; i < this.towers.length; i++) {
+    this.towers[i].update(delta_time,this.enemies);
+  }
 }
 
 Level.prototype.draw = function(context) {
@@ -148,10 +154,17 @@ Level.prototype.draw = function(context) {
   for(var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].draw(context);
   }
+  for(var i = 0; i < this.towers.length; i++) {
+    this.towers[i].draw(context);
+  }
 }
 
 Level.prototype.add_enemy = function(enemy) {
   this.enemies.push(enemy);
+}
+
+Level.prototype.add_tower = function(tower) {
+  this.towers.push(tower);
 }
 /************************************
   GameBoard
@@ -193,15 +206,34 @@ GameBoard.prototype.draw_grid = function(context) {
 /************************************
   Tower
 *************************************/
-function Tower() {
-  
+function Tower(x,y) {
+  this.x = x;
+  this.y = y;
+  this.direction = 0;
 }
 
-Tower.prototype.draw = function() {
+Tower.prototype.draw = function(context) {
   
+  context.save();
+    context.fillStyle = "rgba(0,100,255,0.8)";
+    context.fillRect (this.x, this.y, 30, 30);
+  context.restore();
+  context.save();
+    context.translate(this.x+15,this.y+15);
+    context.rotate(this.direction);
+    context.save();
+      context.lineWidth = 3;
+      context.strokeStyle = "#000000";
+      context.beginPath();
+      context.moveTo(0.5,0.5);
+      context.lineTo(30.5,0.5);
+      context.stroke();
+    context.restore();
+  context.restore();
 }
 
-Tower.prototype.update = function(delta_time) {
+Tower.prototype.update = function(delta_time,enemies) {
+  this.direction = Math.atan2(enemies[0].y-this.y+15,enemies[0].x-this.x+15);
 }
 
 /************************************
@@ -285,4 +317,5 @@ $(document).ready(function() {
   
   $("#watch_tower").click(TMP);
 });
+
 
