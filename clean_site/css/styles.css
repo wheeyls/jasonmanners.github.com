@@ -24,7 +24,7 @@ header {
 .button_nav {
   background: #4C6081;
   border: 2px solid #3B5070;
-
+  margin: 5px;
   padding: 5px 20px 5px 20px;
 }
 
