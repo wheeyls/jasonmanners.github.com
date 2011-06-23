@@ -72,8 +72,8 @@ World.prototype._init_objects = function() {
     var tmpY = Math.random()*300+20;
     var tmpDir = Math.atan2(150-tmpY,500-tmpX);
     newLevel.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10,10));  
-    newLevel.add_tower(new Tower(300,120));
   }
+  newLevel.add_tower(new Tower(300,120));
   this.gameState.set_level(newLevel);
 }
 
@@ -95,6 +95,9 @@ World.prototype.update = function(delta_time) {
   if(this.gameState.is_running()) {
     //Update code here
     this.gameState.currentLevel.update(delta_time);
+    if(this.gameState.currentLevel.enemies.length == 0) {
+      this.gameState.set_state(STOPPED);
+    }
   }
 }
 
@@ -154,6 +157,25 @@ Level.prototype.update = function(delta_time) {
   for(var i = 0; i < this.towers.length; i++) {
     this.towers[i].update(delta_time,this.enemies);
   }
+  
+  for(var i = 0; i < this.towers.length; i++) {
+    for(var j = 0; j < this.towers[i].projectiles.length; j++) {
+      for(var k = 0; k < this.enemies.length; k++) {
+        if(this.towers[i].projectiles[j].x-2 >= this.enemies[k].x && this.towers[i].projectiles[j].x-2 <= this.enemies[k].x+20 &&
+          this.towers[i].projectiles[j].y-2 >= this.enemies[k].y && this.towers[i].projectiles[j].y-2 <= this.enemies[k].y+20) {
+          
+          this.enemies[k].hit(this.towers[i].projectiles[j].damage);
+          
+          this.towers[i].projectiles.splice(j,1);
+          if(this.enemies[k].health <= 0) {
+            this.enemies.splice(k,1); 
+            break;
+          }
+        }
+      }
+    }
+  }
+  
 }
 
 Level.prototype.draw = function(context) {
@@ -217,6 +239,9 @@ function Tower(x,y) {
   this.x = x;
   this.y = y;
   this.direction = 0;
+  this.fireRate = 300;
+  this.cooldown = 0;
+  this.projectiles = [];
 }
 
 Tower.prototype.draw = function(context) {
@@ -244,6 +269,9 @@ Tower.prototype.draw = function(context) {
       context.lineTo(this.xMin,this.yMin);
     context.stroke();
   context.restore();
+  for(var i = 0; i < this.projectiles.length; i++) {
+    this.projectiles[i].draw(context);
+  }
 }
 
 
@@ -252,8 +280,12 @@ Tower.prototype.update = function(delta_time,enemies) {
   this.yMin = 0;
   var distMin = 10000000;
   
+  for(var i = 0; i < this.projectiles.length; i++) {
+    this.projectiles[i].update(delta_time);
+  }
+  
   for(var i = 0; i < enemies.length; i++) {
-    var tmpDist = distance_between(enemies[i].x+5,enemies[i].y+5,500,150);
+    var tmpDist = distance_between(enemies[i].x+10,enemies[i].y+10,500,150);
     if(tmpDist < distMin ) {
       distMin = tmpDist
       this.xMin = enemies[i].x+5;
@@ -262,6 +294,11 @@ Tower.prototype.update = function(delta_time,enemies) {
   }
 
   this.direction = Math.atan2(this.yMin-this.y,this.xMin-this.x);
+  this.cooldown += delta_time;
+  if(this.cooldown > this.fireRate) {
+    this.cooldown = 0;
+    this.projectiles.push(new Projectile(this.x+15,this.y+15,300,this.direction,3));
+  }
 }
 
 /************************************
@@ -284,9 +321,9 @@ Projectile.prototype.update = function(delta_time) {
   this.y += tmpY;
 }
 
-Projectile.prototype.draw = function() {
+Projectile.prototype.draw = function(context) {
   context.save();
-    context.fillStyle = "rgba(100,255,0,0.8)";
+    context.fillStyle = "rgba(0,0,0,0.8)";
     context.fillRect (this.x, this.y, 4, 4);
   context.restore();
 }
@@ -317,6 +354,10 @@ Enemy.prototype.draw = function(context) {
     context.fillStyle = "rgba(255,100,0,0.8)";
     context.fillRect (this.x, this.y, 20, 20);
   context.restore();
+}
+
+Enemy.prototype.hit = function(damage) {
+  this.health -= damage
 }
 
 /************************************
