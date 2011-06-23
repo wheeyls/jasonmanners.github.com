@@ -13,12 +13,29 @@ ul {
   list-style: none;
 }
 
-nav {
-  background: #4C6081;
+header {
+  height: 75px;
+  /*background: #4C6081;*/
   width: 960px;
   margin: 0 auto;
   text-align: center;
 }
+
+.button_nav {
+  background: #4C6081;
+  border: 2px solid #3B5070;
+
+  padding: 5px 20px 5px 20px;
+}
+
+nav ul li.left {
+  float: left;
+}
+
+nav ul li.right {
+  float: right;
+}
+
 section {
   margin: 10px auto;
   width: 960px;

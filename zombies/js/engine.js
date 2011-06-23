@@ -267,13 +267,28 @@ Tower.prototype.update = function(delta_time,enemies) {
 /************************************
   Projectile
 *************************************/
-function Projectile() {
+function Projectile(x,y,velocity,direction,damage) {
+  this.x = x;
+  this.y = y;
+  this.velocity = velocity;
+  this.direction = direction;
+  this.damage = damage;
 }
 
 Projectile.prototype.update = function(delta_time) {
+  var step = (delta_time / MS_IN_SEC);
+  var tmpX = step * this.velocity * Math.cos(this.direction);
+  var tmpY = step * this.velocity * Math.sin(this.direction);
+  
+  this.x += tmpX;
+  this.y += tmpY;
 }
 
 Projectile.prototype.draw = function() {
+  context.save();
+    context.fillStyle = "rgba(100,255,0,0.8)";
+    context.fillRect (this.x, this.y, 4, 4);
+  context.restore();
 }
 
 /************************************
@@ -300,7 +315,7 @@ Enemy.prototype.update = function(delta_time) {
 Enemy.prototype.draw = function(context) {
   context.save();
     context.fillStyle = "rgba(255,100,0,0.8)";
-    context.fillRect (this.x, this.y, 10, 10);
+    context.fillRect (this.x, this.y, 20, 20);
   context.restore();
 }
 
