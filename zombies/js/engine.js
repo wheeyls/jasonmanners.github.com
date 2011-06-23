@@ -226,34 +226,42 @@ Tower.prototype.draw = function(context) {
     context.fillRect (this.x, this.y, 30, 30);
   context.restore();
   context.save();
+    context.lineWidth = 3;
+    context.strokeStyle = "#000000";
     context.translate(this.x+15,this.y+15);
     context.rotate(this.direction);
     context.save();
-      context.lineWidth = 3;
-      context.strokeStyle = "#000000";
       context.beginPath();
-      context.moveTo(0.5,0.5);
-      context.lineTo(30.5,0.5);
+        context.moveTo(0,0);
+        context.lineTo(30,0);
       context.stroke();
     context.restore();
   context.restore();
+  context.save();
+  context.strokeStyle = "#FF0000";
+   context.beginPath();
+      context.moveTo(this.x+15,this.y+15);
+      context.lineTo(this.xMin,this.yMin);
+    context.stroke();
+  context.restore();
 }
 
+
 Tower.prototype.update = function(delta_time,enemies) {
-  var x_min = 0;
-  var y_min = 0;
-  var dist_min = 10000000;
+  this.xMin = 0;
+  this.yMin = 0;
+  var distMin = 10000000;
   
   for(var i = 0; i < enemies.length; i++) {
-    var tmpDist = distance_between(enemies[i].x,enemies[i].y,500,150);
-    if(tmpDist < dist_min ) {
-      dist_min = tmpDist
-      x_min = enemies[i].x;
-      y_min = enemies[i].y;
+    var tmpDist = distance_between(enemies[i].x+5,enemies[i].y+5,500,150);
+    if(tmpDist < distMin ) {
+      distMin = tmpDist
+      this.xMin = enemies[i].x+5;
+      this.yMin = enemies[i].y+5;
     }
   }
 
-  this.direction = Math.atan2(y_min-this.y+15,x_min-this.x+15);
+  this.direction = Math.atan2(this.yMin-this.y,this.xMin-this.x);
 }
 
 /************************************
