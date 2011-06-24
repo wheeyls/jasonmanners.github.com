@@ -127,9 +127,10 @@ World.prototype.run = function(timestep) {
     this.update(delta_time);
     this.draw(this.context);
     //requestAnimFrame(this.run.bind(this));
+    requestAnimFrame(this.run);
   }
   startTime = drawStart;
-  yay();
+  //yay();
 }
 
 /************************************
