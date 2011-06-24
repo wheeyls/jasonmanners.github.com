@@ -9,13 +9,14 @@ const PAUSED  = 44;
 const STOPPED = 45;
 const RUNNING = 46;
 
+var mouseType = 0;
 /************************************
   RequestAnimationFrame declaration
 *************************************/
 var requestAnimationFrame =   window.mozRequestAnimationFrame     || 
                               window.webkitRequestAnimationFrame  ||
                               function(/* function */ callback, /* DOMElement */ element){
-                                 window.setTimeout(callback, 1000 / 60, new Date());
+                                 window.setTimeout(callback, MS_IN_SEC / 60, new Date());
                               };
 var startTime = window.mozAnimationStartTime || Date.now();
 
@@ -59,6 +60,10 @@ World.prototype._init_world = function() {
   $(this.canvas_id).attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
   
   this.context = $("#world")[0].getContext("2d");
+  var self = this;
+  $('#world').bind("mousedown",function(event) { mouse_down(event,self);});
+ // $('#world').bind("mousemove",mouse_move);
+ // $('#world').bind("mouseup",mouse_up);
 }
 
 World.prototype._init_objects = function() {
@@ -73,8 +78,8 @@ World.prototype._init_objects = function() {
     var tmpDir = Math.atan2(150-tmpY,500-tmpX);
     newLevel.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10,10));  
   }
-  newLevel.add_tower(new Tower(300,120));
-  newLevel.add_tower(new Tower(270,180));
+  //newLevel.add_tower(new Tower(300,120));
+  //newLevel.add_tower(new Tower(270,180));
   this.gameState.set_level(newLevel);
 }
 
@@ -160,8 +165,9 @@ Level.prototype.update = function(delta_time) {
   }
   
   for(var i = 0; i < this.towers.length; i++) {
-    for(var j = 0; j < this.towers[i].projectiles.length; j++) {
-      for(var k = 0; k < this.enemies.length; k++) {
+    for(var k = 0; k < this.enemies.length; k++) {
+      for(var j = 0; j < this.towers[i].projectiles.length; j++) {
+      
         if(this.towers[i].projectiles[j].x-2 >= this.enemies[k].x-10 && this.towers[i].projectiles[j].x-2 <= this.enemies[k].x+10 &&
           this.towers[i].projectiles[j].y-2 >= this.enemies[k].y-10 && this.towers[i].projectiles[j].y-2 <= this.enemies[k].y+10) {
           
@@ -403,9 +409,57 @@ GameButton.prototype.set_click = function(clickfunction) {
   $("#"+this.id).click(clickfunction);
 }
 
-function TMP() {
-  alert("HI");
+/******************************
+  mouse down event
+******************************/
+function mouse_down(event,world) {
+  var cleanX = Math.floor((event.layerX - 300) / 30) * 30;
+  var cleanY = Math.floor((event.layerY - 200) / 30) * 30;
+  if(mouseType === 1) {
+    world.gameState.currentLevel.add_tower(new Tower(cleanX,cleanY));
+    mouseType = 0;
+  }
 }
+
+/******************************
+  mouse move event
+******************************/
+/*
+function mouse_move(event) {
+  if(move_square) {
+    grabbed_square.x = event.layerX-5-(GRID_SPACE/2);
+    grabbed_square.y = event.layerY-5-(GRID_SPACE/2);
+  }
+}
+*/
+/******************************
+  mouse up event
+******************************/
+/*
+function mouse_up(event) {
+  cleanX = cleanSelection(event.layerX-5);
+  cleanY = cleanSelection(event.layerY-5);
+  var mySquares = gameBoard.get_squares();
+  for(i in mySquares) {
+    if(mySquares[i] != grabbed_square) {
+      if(move_square & mySquares[i].x == cleanX && mySquares[i].y == cleanY) {
+        grabbed_square.x = (cleanX+GRID_SPACE)%WORLD_WIDTH;
+        grabbed_square.y = cleanY;
+      }
+      else if(move_square) {
+        grabbed_square.x = cleanX;
+        grabbed_square.y = cleanY;
+      }
+    }
+  }
+  move_square = false;
+}
+*/
+
+function TMP() {
+  mouseType = 1;
+}
+
 $(document).ready(function() {
   var myWorld = new World("world");
   myWorld.initialize();

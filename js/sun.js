@@ -150,6 +150,7 @@ World.prototype.resize_window = function () {
 };
 
 
+
 var myWorld = new World();
 myWorld.init_world();
 myWorld.run();
