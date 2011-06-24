@@ -14,18 +14,19 @@ var mouseType = 0;
   RequestAnimationFrame declaration
 *************************************/
 
-window.requestAnimFrame = (function(){
-      return  window.requestAnimationFrame       || 
+window.requestAnimFrame =   /*window.requestAnimationFrame       || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
               window.oRequestAnimationFrame      || 
-              window.msRequestAnimationFrame     || 
-              function(/* function */ callback, /* DOMElement */ element){
-                window.setTimeout(callback, 1000 / 60, new Date());
-              }();
-    })();
+              window.msRequestAnimationFrame     || */
+              function(callback, element){
+                window.setTimeout(function(){
+                    callback(+new Date);
+                }, 1000 / 60);
+              };
+    
 var startTime = window.mozAnimationStartTime || Date.now();
-alert("change");
+
 if(window.webkitRequestAnimationFrame) {
   alert("WEBKIT");
 }
