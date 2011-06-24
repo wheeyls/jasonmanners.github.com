@@ -13,13 +13,14 @@ var mouseType = 0;
 /************************************
   RequestAnimationFrame declaration
 *************************************/
-Function.prototype.bind = function(scope) {
-  var _function = this;
-  
-  return function() {
-    return _function.apply(scope, arguments);
-  }
-}
+Function.prototype.bind = Function.prototype.bind ||
+                          function(scope) {
+                            var _function = this;
+                            
+                            return function() {
+                              return _function.apply(scope, arguments);
+                            }
+                          };
 
 
 
