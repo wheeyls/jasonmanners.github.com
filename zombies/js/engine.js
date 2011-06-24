@@ -19,7 +19,7 @@ window.requestAnimFrame = window.requestAnimationFrame ||
               window.mozRequestAnimationFrame    || 
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
-              function(/* function */ callback, /* DOMElement */ element){
+              function(/* function */ callback){
                 setTimeout(callback, 1000 / 60);
               };
 var startTime = window.mozAnimationStartTime || Date.now();
