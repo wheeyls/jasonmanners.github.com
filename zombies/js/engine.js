@@ -243,7 +243,7 @@ function Tower(x,y) {
   this.x = x;
   this.y = y;
   this.direction = 0;
-  this.fireRate = 300;
+  this.fireRate = 120;
   this.cooldown = 0;
   this.projectiles = [];
 }
@@ -315,9 +315,9 @@ Tower.prototype.update = function(delta_time,enemies) {
     if(distMin < 200) {
       
       var beta = this.minDir - this.direction;
-      var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.minVel / 300));
+      var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.minVel / 400));
 
-      this.projectiles.push(new Projectile(this.x+15,this.y+15,300,newDirection,5));
+      this.projectiles.push(new Projectile(this.x+15,this.y+15,400,newDirection,1));
     }
   }
 }
