@@ -21,17 +21,16 @@ Function.prototype.bind = function(scope) {
   }
 }
 
- function myTimer(/* function */ callback){
-   alert("HERE");
-                 window.setTimeout(callback, 1000, +Date.now());
-              }
+
 
 window.requestAnimFrame = window.requestAnimationFrame || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
-              myTimer;
+               function(/* function */ callback){
+                 window.setTimeout(callback, 1000, +Date.now());
+              };
 var startTime = window.mozAnimationStartTime || Date.now();
 
 
