@@ -122,12 +122,12 @@ World.prototype.update = function(delta_time) {
 World.prototype.run = function(timestep) {
   var drawStart   = (timestep || Date.now());
   var delta_time  = drawStart - startTime;
-  
-  if(this.gameState.currentState === RUNNING) {
-    this.update(delta_time);
-    this.draw(this.context);
+  var self = this;
+  if(self.gameState.currentState === RUNNING) {
+    self.update(delta_time);
+    self.draw(self.context);
     //requestAnimFrame(this.run.bind(this));
-    requestAnimFrame(this.run);
+    requestAnimFrame(self.run);
   }
   startTime = drawStart;
   //yay();
