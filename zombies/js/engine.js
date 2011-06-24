@@ -32,6 +32,7 @@ function distance_between(x1,y1,x2,y2) {
 *************************************/
 function World(canvas_id) {
   this.canvas_id = "#"+canvas_id; //might change
+  this.gameState = undefined;
 }
 
 World.prototype = {
@@ -39,7 +40,6 @@ World.prototype = {
   WORLD_HEIGHT : 1000,  //defaults - will be set later in _init_world
   
   context : undefined,
-  gameState : undefined,
   levels : [],
   
   scale : 1,
@@ -147,12 +147,9 @@ GameState.prototype.is_running = function() {
 *************************************/
 function Level(width,height,gridSpace,gridColor) {
   this.gameBoard = new GameBoard(width,height,gridSpace,gridColor,"rgba(100,100,0,0.3)");
-}
-
-Level.prototype = {
-  enemies : [],
-  towers : [],
-  base : undefined
+  this.enemies = [];
+  this.towers = [];
+  this.base = undefined;
 }
 
 Level.prototype.update = function(delta_time) {
@@ -460,12 +457,20 @@ function TMP() {
   mouseType = 1;
 }
 
+function reset(myWorld) {
+  myWorld = new World("world");
+  myWorld.initialize();
+  myWorld.run(Date.now());
+}
+
 $(document).ready(function() {
+  
   var myWorld = new World("world");
   myWorld.initialize();
   myWorld.run(Date.now());
-  
+
   $("#watch_tower").click(TMP);
+  $("#guard_tower").click(function(){reset(myWorld);});
 });
 
 
