@@ -14,6 +14,7 @@ var mouseType = 0;
   RequestAnimationFrame declaration
 *************************************/
  function myTimer(/* function */ callback){
+   alert("HERE");
                  window.setTimeout(callback, 1000, +Date.now());
               }
 
