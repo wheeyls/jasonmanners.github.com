@@ -9,11 +9,11 @@ const PAUSED  = 44;
 const STOPPED = 45;
 const RUNNING = 46;
 
-var mouseType = 0;
-
+var mouseType = 0; // CHANGE
 /************************************
   bind declaration
-  - Has caused issues when it is not declared
+  - Has caused issues when it is not declared will not run
+  in Safari without declaration
 *************************************/
 Function.prototype.bind = Function.prototype.bind ||
                           function(scope) {
@@ -23,7 +23,6 @@ Function.prototype.bind = Function.prototype.bind ||
                               return _function.apply(scope, arguments);
                             }
                           };
-
 
 /************************************
   RequestAnimationFrame declaration
@@ -481,7 +480,7 @@ function mouse_up(event) {
 }
 */
 
-function TMP() {
+function myMouseClick() {
   mouseType = 1;
 }
 
@@ -497,8 +496,6 @@ $(document).ready(function() {
   myWorld.initialize();
   myWorld.run();
 
-  $("#watch_tower").click(TMP);
+  $("#watch_tower").click(myMouseClick);
   $("#guard_tower").click(function(){reset(myWorld);});
 });
-
-
