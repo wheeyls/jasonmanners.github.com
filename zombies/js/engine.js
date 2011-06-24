@@ -162,8 +162,8 @@ Level.prototype.update = function(delta_time) {
   for(var i = 0; i < this.towers.length; i++) {
     for(var j = 0; j < this.towers[i].projectiles.length; j++) {
       for(var k = 0; k < this.enemies.length; k++) {
-        if(this.towers[i].projectiles[j].x-2 >= this.enemies[k].x && this.towers[i].projectiles[j].x-2 <= this.enemies[k].x+20 &&
-          this.towers[i].projectiles[j].y-2 >= this.enemies[k].y && this.towers[i].projectiles[j].y-2 <= this.enemies[k].y+20) {
+        if(this.towers[i].projectiles[j].x-2 >= this.enemies[k].x-10 && this.towers[i].projectiles[j].x-2 <= this.enemies[k].x+10 &&
+          this.towers[i].projectiles[j].y-2 >= this.enemies[k].y-10 && this.towers[i].projectiles[j].y-2 <= this.enemies[k].y+10) {
           
           this.enemies[k].hit(this.towers[i].projectiles[j].damage);
           
@@ -293,21 +293,20 @@ Tower.prototype.update = function(delta_time,enemies) {
   }
   
   for(var i = 0; i < enemies.length; i++) {
-    var tmpDist = distance_between(enemies[i].x+10,enemies[i].y+10,this.x+15,this.y+15);
+    var tmpDist = distance_between(enemies[i].x,enemies[i].y,this.x+15,this.y+15);
     if(tmpDist < distMin ) {
       distMin = tmpDist
-      this.xMin = enemies[i].x+5;
-      this.yMin = enemies[i].y+5;
+      this.xMin = enemies[i].x;
+      this.yMin = enemies[i].y;
     }
   }
 
-  this.direction = Math.atan2(this.yMin-this.y,this.xMin-this.x);
+  this.direction = Math.atan2(this.yMin-this.y-15,this.xMin-this.x-15);
   this.cooldown += delta_time;
   if(this.cooldown > this.fireRate) {
     this.cooldown = 0;
-    console.log(distMin);
     if(distMin < 200) {
-      this.projectiles.push(new Projectile(this.x+15,this.y+15,150,this.direction,5));
+      this.projectiles.push(new Projectile(this.x+15,this.y+15,300,this.direction,5));
     }
   }
 }
@@ -363,7 +362,9 @@ Enemy.prototype.update = function(delta_time) {
 Enemy.prototype.draw = function(context) {
   context.save();
     context.fillStyle = "rgba(255,100,0,0.8)";
-    context.fillRect (this.x, this.y, 20, 20);
+    context.beginPath();
+      context.arc(this.x, this.y, 10, 0, Math.PI*2, true); //*2
+    context.fill();
   context.restore();
 }
 
