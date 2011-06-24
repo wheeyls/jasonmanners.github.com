@@ -14,14 +14,17 @@ var mouseType = 0;
   RequestAnimationFrame declaration
 *************************************/
 
+ function tmoney(/* function */ callback){
+                 window.setTimeout("alert('111')", 1000 / 60, +Date.now());
+              }
+
 window.requestAnimFrame = window.requestAnimationFrame || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
-              function(/* function */ callback){
-                 window.setTimeout("alert('111')", 1000 / 60, +Date.now());
-              };
+              tmoney;
+tmoney('aa');
 var startTime = window.mozAnimationStartTime || Date.now();
 
 
