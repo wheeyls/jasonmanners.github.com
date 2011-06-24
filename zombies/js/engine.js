@@ -15,6 +15,7 @@ var mouseType = 0;
 *************************************/
 Function.prototype.bind = Function.prototype.bind ||
                           function(scope) {
+                            alert("THIS ONE");
                             var _function = this;
                             
                             return function() {
