@@ -25,7 +25,7 @@ window.requestAnimFrame = (function(){
               }();
     })();
 var startTime = window.mozAnimationStartTime || Date.now();
-
+alert("change");
 if(window.webkitRequestAnimationFrame) {
   alert("WEBKIT");
 }
