@@ -17,7 +17,12 @@ var mouseType = 0;
    alert("HERE");
                  window.setTimeout(callback, 1000, +Date.now());
               }
+window.TESTING = myTimer;
 
+function yay() {
+  TESTING(yay);
+}
+yay();
 window.requestAnimFrame = window.requestAnimationFrame || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
