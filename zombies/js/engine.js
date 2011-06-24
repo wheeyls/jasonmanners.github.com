@@ -289,6 +289,8 @@ Tower.prototype.draw = function(context) {
 Tower.prototype.update = function(delta_time,enemies) {
   this.xMin = 0;
   this.yMin = 0;
+  this.minDir = 0;
+  this.minVel = 0;
   var distMin = 10000000;
   
   for(var i = 0; i < this.projectiles.length; i++) {
@@ -301,6 +303,8 @@ Tower.prototype.update = function(delta_time,enemies) {
       distMin = tmpDist
       this.xMin = enemies[i].x;
       this.yMin = enemies[i].y;
+      this.minDir = enemies[i].direction;
+      this.minVel = enemies[i].velocity;
     }
   }
 
@@ -309,7 +313,11 @@ Tower.prototype.update = function(delta_time,enemies) {
   if(this.cooldown > this.fireRate) {
     this.cooldown = 0;
     if(distMin < 200) {
-      this.projectiles.push(new Projectile(this.x+15,this.y+15,300,this.direction,5));
+      
+      var beta = this.minDir - this.direction;
+      var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.minVel / 300));
+
+      this.projectiles.push(new Projectile(this.x+15,this.y+15,300,newDirection,5));
     }
   }
 }
