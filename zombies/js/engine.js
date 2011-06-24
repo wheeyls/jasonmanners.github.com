@@ -480,7 +480,7 @@ $(document).ready(function() {
   
   var myWorld = new World("world");
   myWorld.initialize();
-  myWorld.run(Date.now());
+  myWorld.run();
 
   $("#watch_tower").click(TMP);
   $("#guard_tower").click(function(){reset(myWorld);});
