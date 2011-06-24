@@ -22,7 +22,7 @@ window.TESTING = myTimer;
 function yay() {
   TESTING(yay);
 }
-yay();
+
 window.requestAnimFrame = window.requestAnimationFrame || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
@@ -129,6 +129,7 @@ World.prototype.run = function(timestep) {
     requestAnimFrame(this.run.bind(this));
   }
   startTime = drawStart;
+  yay();
 }
 
 /************************************
