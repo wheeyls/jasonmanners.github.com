@@ -485,7 +485,6 @@ function myMouseClick() {
 }
 
 function reset(myWorld) {
-  myWorld = new World("world");
   myWorld.initialize();
   myWorld.run(Date.now());
 }
