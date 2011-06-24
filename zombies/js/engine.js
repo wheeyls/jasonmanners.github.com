@@ -13,9 +13,11 @@ var mouseType = 0;
 /************************************
   RequestAnimationFrame declaration
 *************************************/
-
+function amoney() {
+  alert("222");
+}
  function tmoney(/* function */ callback){
-                 window.setTimeout(alert('111'), 1000 / 60, +Date.now());
+                 window.setTimeout(callback, 1000 / 60, +Date.now());
               }
 
 window.requestAnimFrame = window.requestAnimationFrame || 
@@ -24,7 +26,7 @@ window.requestAnimFrame = window.requestAnimationFrame ||
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
               tmoney;
-tmoney('aa');
+tmoney(amoney);
 var startTime = window.mozAnimationStartTime || Date.now();
 
 
