@@ -20,7 +20,7 @@ var mouseType = 0;
 window.TESTING = myTimer;
 
 function yay() {
-  TESTING(yay);
+  myWorld.run(Date.now()); 
 }
 
 window.requestAnimFrame = window.requestAnimationFrame || 
@@ -122,15 +122,14 @@ World.prototype.update = function(delta_time) {
 World.prototype.run = function(timestep) {
   var drawStart   = (timestep || Date.now());
   var delta_time  = drawStart - startTime;
-  var self = this;
-  if(self.gameState.currentState === RUNNING) {
-    self.update(delta_time);
-    self.draw(self.context);
+  
+  if(this.gameState.currentState === RUNNING) {
+    this.update(delta_time);
+    this.draw(this.context);
     //requestAnimFrame(this.run.bind(this));
-    requestAnimFrame(self.run);
+    requestAnimFrame(yay);
   }
   startTime = drawStart;
-  //yay();
 }
 
 /************************************
