@@ -20,7 +20,7 @@ window.requestAnimFrame = window.requestAnimationFrame ||
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
               function(/* function */ callback){
-                setTimeout(callback, 1000 / 60);
+                window.setTimeout(callback, 1000 / 60);
               };
 var startTime = window.mozAnimationStartTime || Date.now();
 
