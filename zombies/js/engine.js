@@ -10,12 +10,13 @@ const STOPPED = 45;
 const RUNNING = 46;
 
 var mouseType = 0;
+
 /************************************
-  RequestAnimationFrame declaration
+  bind declaration
+  - Has caused issues when it is not declared
 *************************************/
 Function.prototype.bind = Function.prototype.bind ||
                           function(scope) {
-                            alert("THIS ONE");
                             var _function = this;
                             
                             return function() {
@@ -24,7 +25,9 @@ Function.prototype.bind = Function.prototype.bind ||
                           };
 
 
-
+/************************************
+  RequestAnimationFrame declaration
+*************************************/
 window.requestAnimFrame = window.requestAnimationFrame || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
