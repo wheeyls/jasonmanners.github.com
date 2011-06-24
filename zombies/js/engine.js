@@ -26,6 +26,9 @@ window.requestAnimFrame = (function(){
     })();
 var startTime = window.mozAnimationStartTime || Date.now();
 
+if(window.webkitRequestAnimationFrame) {
+  alert("WEBKIT");
+}
 /************************************
   Helper functions
 *************************************/
