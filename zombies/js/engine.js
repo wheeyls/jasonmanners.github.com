@@ -15,9 +15,10 @@ var mouseType = 0;
 *************************************/
 function amoney() {
   alert("222");
+  tmoney(amoney);
 }
  function tmoney(/* function */ callback){
-                 window.setTimeout(callback, 1000 / 60, +Date.now());
+                 window.setTimeout(callback, 1000, +Date.now());
               }
 
 window.requestAnimFrame = window.requestAnimationFrame || 
