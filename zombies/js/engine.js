@@ -13,15 +13,18 @@ var mouseType = 0;
 /************************************
   RequestAnimationFrame declaration
 *************************************/
+Function.prototype.bind = function(scope) {
+  var _function = this;
+  
+  return function() {
+    return _function.apply(scope, arguments);
+  }
+}
+
  function myTimer(/* function */ callback){
    alert("HERE");
                  window.setTimeout(callback, 1000, +Date.now());
               }
-window.TESTING = myTimer;
-
-function yay() {
-  myWorld.run(Date.now()); 
-}
 
 window.requestAnimFrame = window.requestAnimationFrame || 
               window.webkitRequestAnimationFrame || 
@@ -126,8 +129,7 @@ World.prototype.run = function(timestep) {
   if(this.gameState.currentState === RUNNING) {
     this.update(delta_time);
     this.draw(this.context);
-    //requestAnimFrame(this.run.bind(this));
-    requestAnimFrame(yay);
+    requestAnimFrame(this.run.bind(this));
   }
   startTime = drawStart;
 }
