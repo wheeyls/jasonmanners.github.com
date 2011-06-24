@@ -15,7 +15,7 @@ var mouseType = 0;
 *************************************/
 
  function tmoney(/* function */ callback){
-                 window.setTimeout("alert('111')", 1000 / 60, +Date.now());
+                 window.setTimeout(alert('111'), 1000 / 60, +Date.now());
               }
 
 window.requestAnimFrame = window.requestAnimationFrame || 
