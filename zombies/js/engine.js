@@ -13,23 +13,18 @@ var mouseType = 0;
 /************************************
   RequestAnimationFrame declaration
 *************************************/
-
+function myTimer(callback){
+                window.setTimeout(callback,1000 / 60);
+              }
 window.requestAnimFrame =   /*window.requestAnimationFrame       || 
               window.webkitRequestAnimationFrame || 
               window.mozRequestAnimationFrame    || 
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || */
-              function(callback, element){
-                window.setTimeout(function(){
-                    callback(+new Date);
-                }, 1000 / 60);
-              };
+              "myTimer()";
     
 var startTime = window.mozAnimationStartTime || Date.now();
 
-if(window.webkitRequestAnimationFrame) {
-  alert("WEBKIT");
-}
 /************************************
   Helper functions
 *************************************/
