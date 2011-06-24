@@ -252,7 +252,7 @@ Tower.prototype.draw = function(context) {
   
   context.save();
     context.fillStyle = "rgba(0,100,255,0.8)";
-    context.fillRect (this.x, this.y, 30, 30);
+    context.fillRect (this.x+0.5, this.y+0.5, 29.5, 29.5);
     context.fillStyle = "rgba(0,100,255,0.2)";
     context.beginPath();
       context.arc(this.x+15, this.y+15, 200, 0, Math.PI*2, true); //*2
