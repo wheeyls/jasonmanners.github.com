@@ -29,7 +29,7 @@ window.requestAnimFrame = window.requestAnimationFrame ||
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
                function(/* function */ callback){
-                 window.setTimeout(callback, 1000, +Date.now());
+                 window.setTimeout(callback, MS_IN_SEC / 60, +Date.now());
               };
 var startTime = window.mozAnimationStartTime || Date.now();
 
