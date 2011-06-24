@@ -13,11 +13,17 @@ var mouseType = 0;
 /************************************
   RequestAnimationFrame declaration
 *************************************/
-var requestAnimationFrame =   window.mozRequestAnimationFrame     || 
-                              window.webkitRequestAnimationFrame  ||
-                              function(/* function */ callback, /* DOMElement */ element){
-                                 window.setTimeout(callback, MS_IN_SEC / 60, new Date());
-                              };
+
+window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function(/* function */ callback, /* DOMElement */ element){
+                window.setTimeout(callback, 1000 / 60, new Date());
+              };
+    })();
 var startTime = window.mozAnimationStartTime || Date.now();
 
 /************************************
@@ -114,7 +120,7 @@ World.prototype.run = function(timestep) {
   if(this.gameState.currentState === RUNNING) {
     this.update(delta_time);
     this.draw(this.context);
-    requestAnimationFrame(this.run.bind(this));
+    requestAnimFrame(this.run.bind(this));
   }
   startTime = drawStart;
 }
