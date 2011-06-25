@@ -486,6 +486,7 @@ function myMouseClick() {
 
 function reset(myWorld) {
   myWorld.initialize();
+  startTime = Date.now();
   myWorld.run(Date.now());
 }
 
@@ -494,7 +495,18 @@ $(document).ready(function() {
   var myWorld = new World("world");
   myWorld.initialize();
   myWorld.run();
-
+  
   $("#watch_tower").click(myMouseClick);
   $("#guard_tower").click(function(){reset(myWorld);});
+  $("#pause").click(function(){
+      if(myWorld.gameState.currentState === RUNNING) {
+         myWorld.gameState.set_state(PAUSED);
+      }
+      else if(myWorld.gameState.currentState === PAUSED) {
+         myWorld.gameState.set_state(RUNNING);
+         startTime = Date.now();
+         myWorld.run();
+      }
+  });
+  
 });
