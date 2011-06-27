@@ -133,7 +133,7 @@ World.prototype._init_game = function() {
   this.gameState = new GameStateManager();
   
   var firstLevel = new Level();
-
+  $("#waves").append("<article class='wave_indicator'>Wave "+(0)+"</article>");
   for(var i = 0; i < 50; i++) {
     var currentWave = new Wave();
     for(var j = 0; j < 10*(Math.ceil(i/10)); j++) {
@@ -143,6 +143,8 @@ World.prototype._init_game = function() {
       var tmpDelay = Math.random() * 10000;
       currentWave.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10*i,10,7,tmpDelay));
     }
+    $("#waves").append("<article class='wave_indicator'>Wave "+(i+1)+"</article>");
+        
     firstLevel.add_wave(currentWave);
   }
   
@@ -179,6 +181,7 @@ World.prototype.update = function(delta_time) {
     this.gameBoard.set_enemies(this.gameState.get_next_wave());
 
     $("#wave_number").html(this.gameState.currentWaveIndex);
+    $("#wave_window").animate({scrollLeft: $("#wave_window").scrollLeft() + 99}, 1000);
   }
   this.gameBoard.update(delta_time);
   $("#score_number").html(this.gameBoard.score);
@@ -199,7 +202,7 @@ World.prototype.run = function(timestep) {
     this.update(delta_time);
     this.draw(this.context);
     requestAnimFrame(this.run.bind(this));
-   
+  }
   startTime = drawStart;
 }
 
@@ -652,7 +655,6 @@ InputManager.prototype.mouse_down = function(event) {
 InputManager.prototype.mouse_move = function(event) {
   this.mouseX = event.layerX;
   this.mouseY = event.layerY;
-  console.log(this.mouseX+":"+this.mouseY);
 }
 
 InputManager.prototype.mouse_up = function(event) {

@@ -111,3 +111,53 @@ ul {
   float:left;
   padding-left:10px;
 }
+
+#waves {
+  width: 1000000px;
+}
+.wave_indicator {
+  width: 75px;
+  height: 25px;
+  padding: 5px;
+  border: 2px solid #222222;
+  -webkit-transform-origin: 0% 0%;
+  -moz-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin: 0 10px 0 0;
+  float:left;
+  background: rgba(0,50,50,0.5);
+}
+
+#wave_window {
+  position: absolute;
+  left:10px;
+  bottom: 10px;
+  right:10px;
+  overflow: hidden;
+  z-index: 10;
+  border: 2px solid rgba(50,50,50,0.8);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding:10px;
+  background: rgba(0,0,0,0.3);
+}
+
+#wave_overlay {
+  background-image: -webkit-gradient(linear, right center, left center, color-stop(0, rgb(155,165,165)), color-stop(1.0, rgba(155,165,165,0)));
+  background-image: -moz-linear-gradient(right center, rgb(235,255,255) 0% , rgba(235,255,255, 0) 100% );
+  position: absolute;
+  left: 10px;
+  bottom: 12px;
+  right: 12px;
+  height:59px;
+  overflow: hidden;
+  z-index: 11;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  pointer-events: none;
+}
