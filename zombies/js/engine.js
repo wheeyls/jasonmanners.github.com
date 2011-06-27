@@ -1,6 +1,6 @@
-/************************************
+/*************************************************************************
   Constants
-*************************************/
+**************************************************************************/
 const MS_IN_SEC = 1000;
 
 const WIN     = 42;
@@ -9,12 +9,22 @@ const PAUSED  = 44;
 const STOPPED = 45;
 const RUNNING = 46;
 
-var mouseType = 0; // CHANGE
-/************************************
+const BASE_TOWER = 142;
+const FAST_WEAK_TOWER = 143;
+const LONG_RANGE_TOWER = 144;
+const SLOW_STRING_TOWER = 145;
+
+const MOUSE_UP = 242;
+const MOUSE_DOWN = 243;
+const MOVE_BOARD = 244;
+const UPDATE_TOWER = 245;
+const PLACING_TOWER = 246;
+const NOTHING = 247;
+/*************************************************************************
   bind declaration
   - Has caused issues when it is not declared will not run
   in Safari without declaration
-*************************************/
+**************************************************************************/
 Function.prototype.bind = Function.prototype.bind ||
                           function(scope) {
                             var _function = this;
@@ -24,34 +34,39 @@ Function.prototype.bind = Function.prototype.bind ||
                             }
                           };
 
-/************************************
+/*************************************************************************
   RequestAnimationFrame declaration
-*************************************/
+**************************************************************************/
 window.requestAnimFrame = window.requestAnimationFrame        || 
                           window.webkitRequestAnimationFrame  || 
                           window.mozRequestAnimationFrame     || 
                           window.oRequestAnimationFrame       || 
                           window.msRequestAnimationFrame      || 
-                          function(/* function */ callback){
+                          function(/* function */ callback) {
                             window.setTimeout(callback, MS_IN_SEC / 60);
                           };
                           
 var startTime = window.mozAnimationStartTime || Date.now();
 
-
-/************************************
+/*************************************************************************
   Helper functions
-*************************************/
+**************************************************************************/
 function distance_between(x1,y1,x2,y2) {
   return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
 }
 
-/************************************
+function coord_to_index(x,gridSpace) {
+  return Math.floor(x/gridSpace);
+}
+
+function clean_coord(x,gridSpace) {
+  return Math.floor(x/gridSpace) * gridSpace;
+}
+/*************************************************************************
   World
-*************************************/
+**************************************************************************/
 function World(canvas_id) {
   this.canvas_id = "#"+canvas_id; //might change
-  this.gameState = undefined;
 }
 
 World.prototype = {
@@ -59,18 +74,23 @@ World.prototype = {
   WORLD_HEIGHT : 1000,  //defaults - will be set later in _init_world
   
   context : undefined,
-  levels : [],
   
   scale : 1,
   scaleOptions : [1,8,16,24],
+  camera : {x:200,y:100}, //used to translate world so user can move gameboard
+  
+  gameBoard : undefined,
+  gameState : undefined,
+  
+  inputManager : undefined,
   
   initialized : false,
-  
 }
 
 World.prototype.initialize = function() {
   this._init_world();
-  this._init_objects();
+  this._init_game();
+  this.initialized = true;
 }
 
 World.prototype._init_world = function() {
@@ -79,27 +99,39 @@ World.prototype._init_world = function() {
   $(this.canvas_id).attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
   
   this.context = $("#world")[0].getContext("2d");
+
+  //Init InputManager
+  this.inputManager = new InputManager();
+  
   var self = this;
-  $('#world').bind("mousedown",function(event) { mouse_down(event,self);});
- // $('#world').bind("mousemove",mouse_move);
- // $('#world').bind("mouseup",mouse_up);
+  $('#world').bind("mousedown", function(event) {self.inputManager.mouse_down(event);});
+  $('#world').bind("mousemove", function(event) {self.inputManager.mouse_move(event);});
+  $('#world').bind("mouseup", function(event) {self.inputManager.mouse_up(event);});
 }
 
-World.prototype._init_objects = function() {
-  this.gameState = new GameState();
-  this.gameState.set_state(RUNNING);
+World.prototype._init_game = function() {
+  //init gameBoard
+  this.gameBoard = new GameBoard(640,400,20,"rgba(0,0,0,0.05)","rgba(100,100,0,0.3)");
+  //init gameState
+  this.gameState = new GameStateManager();
   
-  /* Should be done seperate from engine but this is just for testing */
-  var newLevel = new Level(510,360,30,"#222222");
+  var firstLevel = new Level();
   for(var i = 0; i < 10; i++) {
-    var tmpX = -(i*15);
-    var tmpY = Math.random()*300+20;
-    var tmpDir = Math.atan2(150-tmpY,500-tmpX);
-    newLevel.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10,10));  
+    var currentWave = new Wave();
+    for(var j = 0; j < 10; j++) {
+      var tmpX = -10;
+      var tmpY = Math.random()*this.gameBoard.height;
+      var tmpDir = Math.atan2(this.gameBoard.base.midY-tmpY,this.gameBoard.base.midX-tmpX);
+      var tmpDelay = Math.random()* 5000;
+      currentWave.add_enemy(new Enemy(tmpX,tmpY,25,tmpDir,10*i,10,7,tmpDelay));
+    }
+    firstLevel.add_wave(currentWave);
   }
-  //newLevel.add_tower(new Tower(300,120));
-  //newLevel.add_tower(new Tower(270,180));
-  this.gameState.set_level(newLevel);
+  
+  this.gameState.add_level(firstLevel);
+  this.gameState.initialize();
+  
+  this.gameBoard.set_enemies(this.gameState.currentWave.enemies);
 }
 
 World.prototype.clear = function(context) {
@@ -111,122 +143,76 @@ World.prototype.clear = function(context) {
 World.prototype.draw = function(context) {
   this.clear(context);
   context.save();
-    context.translate(300,200);
-    this.gameState.currentLevel.draw(context);
+    context.scale(this.scale,this.scale);
+    context.translate(this.camera.x,this.camera.y);
+    this.gameBoard.draw(context);
   context.restore();
 }
 
 World.prototype.update = function(delta_time) {
-  if(this.gameState.is_running()) {
-    //Update code here
-    this.gameState.currentLevel.update(delta_time);
-    if(this.gameState.currentLevel.enemies.length == 0) {
-      this.gameState.set_state(STOPPED);
-    }
+  //process input
+  this.process_input(delta_time);
+  //update gameBoard
+  if(this.gameBoard.currentEnemies.length === 0 ) {
+    this.gameBoard.set_enemies(this.gameState.get_next_wave());
   }
+  this.gameBoard.update(delta_time);
+  //update gameState
 }
 
 World.prototype.run = function(timestep) {
   var drawStart   = (timestep || Date.now());
   var delta_time  = drawStart - startTime;
   
-  if(this.gameState.currentState === RUNNING) {
     this.update(delta_time);
     this.draw(this.context);
     requestAnimFrame(this.run.bind(this));
-  }
+   
   startTime = drawStart;
 }
 
-/************************************
-  GameState
-*************************************/
-function GameState() {
-  this.currentState = STOPPED;
-  this.currentLevel;
-}
-
-GameState.prototype.set_level = function(level)  {
-  this.currentLevel = level;
-}
-
-GameState.prototype.set_state = function(state) {
-  this.currentState = state;
-}
-
-GameState.prototype.is_running = function() {
-  if(this.currentState === RUNNING) {
-    return true;
-  }
-  return false;
-}
-
-/************************************
-  Level
-*************************************/
-function Level(width,height,gridSpace,gridColor) {
-  this.gameBoard = new GameBoard(width,height,gridSpace,gridColor,"rgba(100,100,0,0.3)");
-  this.enemies = [];
-  this.towers = [];
-  this.base = undefined;
-}
-
-Level.prototype.update = function(delta_time) {
-  for(var i = 0; i < this.enemies.length; i++) {
-    this.enemies[i].update(delta_time);
-  }
-  
-  for(var i = 0; i < this.towers.length; i++) {
-    this.towers[i].update(delta_time,this.enemies);
-  }
-  
-  for(var i = 0; i < this.towers.length; i++) {
-    for(var k = 0; k < this.enemies.length; k++) {
-      for(var j = 0; j < this.towers[i].projectiles.length; j++) {
-      
-        if(this.towers[i].projectiles[j].x-2 >= this.enemies[k].x-10 && this.towers[i].projectiles[j].x-2 <= this.enemies[k].x+10 &&
-          this.towers[i].projectiles[j].y-2 >= this.enemies[k].y-10 && this.towers[i].projectiles[j].y-2 <= this.enemies[k].y+10) {
-          
-          this.enemies[k].hit(this.towers[i].projectiles[j].damage);
-          
-          this.towers[i].projectiles.splice(j,1);
-          if(this.enemies[k].health <= 0) {
-            this.enemies.splice(k,1); 
-            break;
-          }
-        }
-      }
-    }
-  }
-  
-}
-
-Level.prototype.draw = function(context) {
-  this.gameBoard.draw(context);
-  for(var i = 0; i < this.enemies.length; i++) {
-    this.enemies[i].draw(context);
-  }
-  for(var i = 0; i < this.towers.length; i++) {
-    this.towers[i].draw(context);
+World.prototype.process_input = function(delta_time) {
+  if(this.inputManager.is_placing_tower()) {
+    this.gameBoard.add_tower(clean_coord(this.inputManager.mouseX - this.camera.x,this.gameBoard.gridSpace),clean_coord(this.inputManager.mouseY - this.camera.y,this.gameBoard.gridSpace));
   }
 }
 
-Level.prototype.add_enemy = function(enemy) {
-  this.enemies.push(enemy);
-}
-
-Level.prototype.add_tower = function(tower) {
-  this.towers.push(tower);
-}
-/************************************
+/*************************************************************************
   GameBoard
-*************************************/
+**************************************************************************/
 function GameBoard(width,height,gridSpace,gridColor,bgColor) {
   this.width = width;
   this.height = height;
   this.gridSpace = gridSpace;
   this.gridColor = gridColor;
   this.bgColor= bgColor;
+  
+  this.base = new Base(600,160,40,80,200);
+  
+  this.currentEnemies = [];
+  
+  this.towers = [];
+  
+  this.projectiles = [];
+  
+  
+  this.maxX = Math.floor(this.width / this.gridSpace)
+  this.maxY = Math.floor(this.height / this.gridSpace);
+  this.occupiedCells = new Array();
+  
+  for(var i = 0; i < this.maxX; i++) {
+    this.occupiedCells[i] = new Array();
+    for(var j = 0; j < this.maxY; j++) {
+      this.occupiedCells[i][j] = false;  
+    }
+  }
+}
+
+GameBoard.prototype.update = function(delta_time) {
+  this.update_enemies(delta_time);
+  this.update_towers(delta_time,this.currentEnemies);
+  this.update_projectiles(delta_time);
+  this.check_hits();
 }
 
 GameBoard.prototype.draw = function(context) {
@@ -235,10 +221,16 @@ GameBoard.prototype.draw = function(context) {
     context.fillRect (0, 0, this.width, this.height);
     this.draw_grid(context);
   context.restore();
+  
+  this.base.draw(context);
+  this.draw_towers(context);
+  this.draw_enemies(context);
+  this.draw_projectiles(context);
 }
 
 GameBoard.prototype.draw_grid = function(context) {
   context.save();
+    context.beginPath();
     //Draw Vertical Lines
     for (var x = 0.5; x <= this.width+0.5; x += this.gridSpace) {
       context.moveTo(x, 0);
@@ -255,101 +247,276 @@ GameBoard.prototype.draw_grid = function(context) {
   context.restore();
 }
 
-/************************************
-  Tower
-*************************************/
-function Tower(x,y) {
-  this.x = x;
-  this.y = y;
-  this.direction = 0;
-  this.fireRate = 120;
-  this.cooldown = 0;
-  this.projectiles = [];
+GameBoard.prototype.draw_towers = function(context) {
+  for(var i = 0; i < this.towers.length; i++) {
+    this.towers[i].draw(context);
+  }
 }
 
-Tower.prototype.draw = function(context) {
-  
-  context.save();
-    context.fillStyle = "rgba(0,100,255,0.8)";
-    context.fillRect (this.x+0.5, this.y+0.5, 29.5, 29.5);
-    context.fillStyle = "rgba(0,100,255,0.2)";
-    context.beginPath();
-      context.arc(this.x+15, this.y+15, 200, 0, Math.PI*2, true); //*2
-    context.fill();
-  context.restore();
-  
-  context.save();
-    context.lineWidth = 3;
-    context.strokeStyle = "#000000";
-    context.translate(this.x+15,this.y+15);
-    context.rotate(this.direction);
-    
-    context.save();
-      context.beginPath();
-        context.moveTo(0,0);
-        context.lineTo(30,0);
-      context.stroke();
-    context.restore();
-  context.restore();
-  
-  context.save();
-  context.strokeStyle = "#FF0000";
-   context.beginPath();
-      context.moveTo(this.x+15,this.y+15);
-      context.lineTo(this.xMin,this.yMin);
-    context.stroke();
-  context.restore();
+GameBoard.prototype.draw_projectiles = function(context) {
   for(var i = 0; i < this.projectiles.length; i++) {
     this.projectiles[i].draw(context);
   }
 }
 
-
-Tower.prototype.update = function(delta_time,enemies) {
-  this.xMin = 0;
-  this.yMin = 0;
-  this.minDir = 0;
-  this.minVel = 0;
-  var distMin = 10000000;
-  
-  for(var i = 0; i < this.projectiles.length; i++) {
-    this.projectiles[i].update(delta_time);
-  }
-  
-  for(var i = 0; i < enemies.length; i++) {
-    var tmpDist = distance_between(enemies[i].x,enemies[i].y,this.x+15,this.y+15);
-    if(tmpDist < distMin ) {
-      distMin = tmpDist
-      this.xMin = enemies[i].x;
-      this.yMin = enemies[i].y;
-      this.minDir = enemies[i].direction;
-      this.minVel = enemies[i].velocity;
-    }
-  }
-
-  this.direction = Math.atan2(this.yMin-this.y-15,this.xMin-this.x-15);
-  this.cooldown += delta_time;
-  if(this.cooldown > this.fireRate) {
-    this.cooldown = 0;
-    if(distMin < 200) {
-      
-      var beta = this.minDir - this.direction;
-      var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.minVel / 400));
-
-      this.projectiles.push(new Projectile(this.x+15,this.y+15,400,newDirection,1));
+GameBoard.prototype.draw_enemies = function(context) {
+  for(var i = 0; i < this.currentEnemies.length; i++) {
+    if(this.currentEnemies[i].x > 0 && this.currentEnemies[i].x < this.width &&
+        this.currentEnemies[i].y > 0 && this.currentEnemies[i].y < this.height) {
+      this.currentEnemies[i].draw(context);
     }
   }
 }
 
-/************************************
+GameBoard.prototype.update_enemies = function(delta_time) {
+  for(var i = 0; i < this.currentEnemies.length; i++) {
+    this.currentEnemies[i].update(delta_time);
+  }
+}
+
+GameBoard.prototype.update_towers = function(delta_time,enemies) {
+  for(var i = 0; i < this.towers.length; i++) {
+    var tmpProjectile = this.towers[i].update(delta_time,enemies);
+    if(tmpProjectile !== false) {
+      this.add_projectile(tmpProjectile);
+    }
+  }
+}
+
+GameBoard.prototype.update_projectiles = function(delta_time) {
+  for(var i = 0; i < this.projectiles.length; i++) {
+    this.projectiles[i].update(delta_time);
+    
+    if(this.projectiles[i].x <= 0 || this.projectiles[i].x >= this.width ||
+        this.projectiles[i].y <= 0 || this.projectiles[i].y >= this.height) {
+      this.projectiles.splice(i--,1);
+    }
+  }
+}
+
+GameBoard.prototype.add_projectile = function(projectile) {
+  this.projectiles.push(projectile);
+}
+
+GameBoard.prototype.check_hits = function(enemies,projectiles) {
+  for(var i = 0; i < this.currentEnemies.length; i++) {
+    for(var j = 0; j < this.projectiles.length; j++) {
+      if(this.projectiles[j].x >= this.currentEnemies[i].x-this.currentEnemies[i].size && this.projectiles[j].x <= this.currentEnemies[i].x+this.currentEnemies[i].size && 
+          this.projectiles[j].y >= this.currentEnemies[i].y-this.currentEnemies[i].size && this.projectiles[j].y <= this.currentEnemies[i].y+this.currentEnemies[i].size) {
+        
+        this.currentEnemies[i].take_damage(this.projectiles[j].damage);
+        this.projectiles.splice(j--,1);
+
+        if(this.currentEnemies[i].is_dead()) {
+          this.currentEnemies.splice(i--,1);
+          break;
+        }
+      }
+    }
+  }
+}
+
+GameBoard.prototype.set_enemies = function(enemies) {
+  this.currentEnemies = enemies;
+}
+
+GameBoard.prototype.add_tower = function(x,y) {
+  var xInd = coord_to_index(x,this.gridSpace);
+  var yInd = coord_to_index(y,this.gridSpace);
+  
+  if(!this.is_occupied(xInd,yInd)) {
+    this.occupiedCells[xInd][yInd] = true;
+    this.towers.push(new Tower(x,y,this.gridSpace));
+  }
+}
+
+GameBoard.prototype.is_occupied = function(x,y) {
+  if(this.occupiedCells[x][y] === true) {
+    return true;
+  }
+  return false;
+}
+
+/*************************************************************************
+  Base
+**************************************************************************/
+function Base(x,y,width,height,health) {
+  /* ---TO DO -  create survivor class */
+  this.survivors = [];
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+  this.health = health;
+  
+  this.midX = this.x + (this.width / 2);
+  this.midY = this.y + (this.height / 2);
+}
+
+Base.prototype.update = function(delta_time) {
+
+}
+
+Base.prototype.draw = function(context) {
+  context.save();
+    context.fillStyle = "rgba(75,175,175,0.9)";
+    context.fillRect (this.x, this.y, this.width, this.height);
+  context.restore();
+}
+
+
+/*************************************************************************
+  Tower
+**************************************************************************/
+function Tower(x,y,gridSpace) {
+  this.x = x;
+  this.y = y;
+  this.direction = 0;
+  this.fireRate = 120;
+  this.cooldown = 0;
+  this.width = gridSpace;
+  this.height = gridSpace;
+  
+  //Defaults for the basic tower
+  this.range = 125;
+  this.projectile_size = 2;
+  this.damage = 3;
+  this.velocity = 300;
+  
+  this.midX = this.x + (this.width / 2);
+  this.midY = this.y + (this.height / 2);
+}
+
+Tower.prototype.draw = function(context) {
+  
+  //Tower and range
+  context.save();
+    context.fillStyle = "rgba(0,100,255,0.8)";
+    context.fillRect (this.x+0.5, this.y+0.5, this.width - 0.5, this.height - 0.5);
+    context.fillStyle = "rgba(0,100,255,0.1)";
+    context.beginPath();
+      context.arc(this.midX, this.midY, this.range, 0, Math.PI*2, true); //*2
+    context.fill();
+  context.restore();
+  
+  //Cannon
+  context.save();
+    context.lineWidth = 3;
+    context.strokeStyle = "#000000";
+    context.translate(this.midX,this.midY);
+    context.rotate(this.direction);
+    
+    context.save();
+      context.beginPath();
+        context.moveTo(0,0);
+        context.lineTo((this.width+this.height) / 2 ,0); //Size of turret is avg of width and length
+      context.stroke();
+    context.restore();
+  context.restore();
+  
+  //Line to show engaged enemy
+  if(this.target !== undefined) {
+    context.save();
+      context.strokeStyle = "rgba(255,0,0,0.1)";
+      context.beginPath();
+        context.moveTo(this.midX,this.midY);
+        context.lineTo(this.target.x,this.target.y);
+      context.stroke();
+    context.restore();
+  }
+}
+
+
+Tower.prototype.update = function(delta_time,enemies) {
+
+  //Want to add in priority - if closer to goal and in range shoot at it - otherwise shoot at closest
+  var distMin = 10000000;
+
+  for(var i = 0; i < enemies.length; i++) {
+    var tmpDist = distance_between(enemies[i].x,enemies[i].y,this.midX,this.midY);
+    if(tmpDist < distMin ) {
+      distMin = tmpDist;
+      this.target = enemies[i];
+    }
+  }
+
+  if(this.target !== undefined) {
+    this.direction = Math.atan2(this.target.y-this.midY,this.target.x-this.midX);
+    this.cooldown += delta_time;
+    if(this.cooldown > this.fireRate) {
+      this.cooldown = 0;
+      if(distMin < this.range) {
+        
+        var beta = this.target.direction - this.direction;
+        var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.target.velocity / this.velocity));
+        
+        return new Projectile(this.midX,this.midY,this.velocity,newDirection,this.damage,this.projectile_size);
+      }
+    }
+  }
+  return false;
+}
+
+
+
+/*************************************************************************
+  Enemy
+*************************************************************************/
+function Enemy(x,y,velocity,direction,health,damage,size,delay) {
+  this.x = x;
+  this.y = y;
+  this.velocity = velocity;
+  this.direction = direction;
+  this.health = health;
+  this.damage = damage;
+  this.size = size;
+  
+  this.time_till_release = delay;
+}
+
+Enemy.prototype.update = function(delta_time) {
+  if(this.time_till_release > 0) {
+    this.time_till_release -= delta_time;
+    return;
+  }
+  var step = (delta_time / MS_IN_SEC);
+  var tmpX = step * this.velocity * Math.cos(this.direction);
+  var tmpY = step * this.velocity * Math.sin(this.direction);
+  
+  this.x += tmpX;
+  this.y += tmpY;
+}
+
+Enemy.prototype.draw = function(context) {
+  context.save();
+    context.fillStyle = "rgba(255,100,0,0.8)";
+    context.beginPath();
+      context.arc(this.x, this.y, this.size, 0, Math.PI*2, true); //*2
+    context.fill();
+  context.restore();
+}
+
+Enemy.prototype.take_damage = function(damage) {
+  this.health -= damage
+}
+
+Enemy.prototype.is_dead = function() {
+  if(this.health <= 0) {
+    return true;
+  }
+  return false;
+}
+
+/*************************************************************************
   Projectile
-*************************************/
-function Projectile(x,y,velocity,direction,damage) {
+*************************************************************************/
+function Projectile(x,y,velocity,direction,damage,size) {
   this.x = x;
   this.y = y;
   this.velocity = velocity;
   this.direction = direction;
   this.damage = damage;
+  this.size = size;
 }
 
 Projectile.prototype.update = function(delta_time) {
@@ -364,149 +531,142 @@ Projectile.prototype.update = function(delta_time) {
 Projectile.prototype.draw = function(context) {
   context.save();
     context.fillStyle = "rgba(0,0,0,0.8)";
-    context.fillRect (this.x, this.y, 4, 4);
-  context.restore();
-}
-
-/************************************
-  Enemy
-*************************************/
-function Enemy(x,y,velocity,direction,health,damage) {
-  this.x = x;
-  this.y = y;
-  this.velocity = velocity;
-  this.direction = direction;
-  this.health = health;
-  this.damage = damage;
-}
-
-Enemy.prototype.update = function(delta_time) {
-  var step = (delta_time / MS_IN_SEC);
-  var tmpX = step * this.velocity * Math.cos(this.direction);
-  var tmpY = step * this.velocity * Math.sin(this.direction);
-  
-  this.x += tmpX;
-  this.y += tmpY;
-}
-
-Enemy.prototype.draw = function(context) {
-  context.save();
-    context.fillStyle = "rgba(255,100,0,0.8)";
     context.beginPath();
-      context.arc(this.x, this.y, 10, 0, Math.PI*2, true); //*2
+      context.arc(this.x, this.y, this.size, 0, Math.PI*2, true); //*2
     context.fill();
   context.restore();
 }
 
-Enemy.prototype.hit = function(damage) {
-  this.health -= damage
-}
-
-/************************************
-  Base
-*************************************/
-function Base() {
-}
-
-Base.prototype.update = function(delta_time) {
-}
-
-Base.prototype.draw = function() {
-}
-
-/************************************
-  HUD
-*************************************/
-function HUD() {
+/*************************************************************************
+  InputManager
+*************************************************************************/
+function InputManager() {
+  this.mouseState = MOUSE_UP;
+  this.mouseAction = PLACING_TOWER;
   
+  this.mouseX = 0;
+  this.mouseY = 0;
+
 }
 
-/************************************
-  Button
-*************************************/
-function GameButton(x,y,width,height,id) {
-  this.id = id;
-  this.display = false;
-}
-/* DOESNT WORK? */
-GameButton.prototype.set_click = function(clickfunction) {
-  $("#"+this.id).click(clickfunction);
+InputManager.prototype.set_mouse_state = function(newState) {
+  this.mouseState = newState;
 }
 
-/******************************
-  mouse down event
-******************************/
-function mouse_down(event,world) {
-  var cleanX = Math.floor((event.layerX - 300) / 30) * 30;
-  var cleanY = Math.floor((event.layerY - 200) / 30) * 30;
-  if(mouseType === 1) {
-    world.gameState.currentLevel.add_tower(new Tower(cleanX,cleanY));
-    mouseType = 0;
+InputManager.prototype.get_mouse_state = function() {
+  return this.mouseState;
+}
+
+
+InputManager.prototype.is_placing_tower = function() {
+  if(this.mouseState === MOUSE_DOWN && this.mouseAction === PLACING_TOWER) {
+    return true;
   }
+  return false;
 }
 
-/******************************
-  mouse move event
-******************************/
-/*
-function mouse_move(event) {
-  if(move_square) {
-    grabbed_square.x = event.layerX-5-(GRID_SPACE/2);
-    grabbed_square.y = event.layerY-5-(GRID_SPACE/2);
+InputManager.prototype.mouse_down = function(event) {
+  this.mouseState = MOUSE_DOWN;
+  this.mouseX = event.layerX;
+  this.mouseY = event.layerY;
+}
+
+InputManager.prototype.mouse_move = function(event) {
+  this.mouseX = event.layerX;
+  this.mouseY = event.layerY;
+}
+
+InputManager.prototype.mouse_up = function(event) {
+  this.mouseState = MOUSE_UP;
+  this.mouseX = event.layerX;
+  this.mouseY = event.layerY;
+}
+
+/*************************************************************************
+  GameStateManager
+*************************************************************************/
+function GameStateManager() {
+  this.currentState = STOPPED;
+  this.levels = [];
+  
+  this.currentLevel = undefined;
+  
+  this.currentWaves = [];
+  this.currentWave = undefined;
+  
+  this.currentLevelIndex = 0;
+  this.currentWaveIndex = 0;
+}
+
+GameStateManager.prototype.run = function() {
+  this.currentState = RUNNING;
+}
+
+GameStateManager.prototype.update = function(delta_time) {
+
+}
+
+GameStateManager.prototype.initialize = function() {
+  this.currentLevel = this.levels[0];
+  this.currentWaves = this.currentLevel.waves;
+  this.currentWave = this.currentWaves[0];
+  this.currentWaveIndex = 0;
+}
+
+GameStateManager.prototype.get_next_wave = function() {
+  this.currentWaveIndex++;
+  if(this.currentWaveIndex < this.currentWaves.length) {
+    return this.currentWaves[this.currentWaveIndex].get_enemies();
   }
-}
-*/
-/******************************
-  mouse up event
-******************************/
-/*
-function mouse_up(event) {
-  cleanX = cleanSelection(event.layerX-5);
-  cleanY = cleanSelection(event.layerY-5);
-  var mySquares = gameBoard.get_squares();
-  for(i in mySquares) {
-    if(mySquares[i] != grabbed_square) {
-      if(move_square & mySquares[i].x == cleanX && mySquares[i].y == cleanY) {
-        grabbed_square.x = (cleanX+GRID_SPACE)%WORLD_WIDTH;
-        grabbed_square.y = cleanY;
-      }
-      else if(move_square) {
-        grabbed_square.x = cleanX;
-        grabbed_square.y = cleanY;
-      }
-    }
-  }
-  move_square = false;
-}
-*/
-
-function myMouseClick() {
-  mouseType = 1;
+  return false;
 }
 
-function reset(myWorld) {
-  myWorld.initialize();
-  startTime = Date.now();
-  myWorld.run(Date.now());
+GameStateManager.prototype.add_level = function(level) {
+  this.levels.push(level);
 }
 
+/*************************************************************************
+  Level
+*************************************************************************/
+function Level() {
+  this.waves = [];
+  this.totalWaves = 0;
+}
+
+Level.prototype.add_wave = function(wave) {
+  this.waves.push(wave);
+  this.totalWaves++;
+}
+
+Level.prototype.get_waves = function() {
+  return this.waves;
+}
+
+/*************************************************************************
+  Wave
+*************************************************************************/
+function Wave() {
+  this.enemies = [];
+  this.totalEnemies = 0;
+}
+
+Wave.prototype.add_enemy = function(enemy) {
+  this.enemies.push(enemy);
+  this.totalEnemies++;
+}
+
+Wave.prototype.get_enemies = function() {
+  return this.enemies;
+}
+
+/**************
+RUN CODE
+**************/
 $(document).ready(function() {
-  
   var myWorld = new World("world");
   myWorld.initialize();
   myWorld.run();
   
-  $("#watch_tower").click(myMouseClick);
-  $("#guard_tower").click(function(){reset(myWorld);});
-  $("#pause").click(function(){
-      if(myWorld.gameState.currentState === RUNNING) {
-         myWorld.gameState.set_state(PAUSED);
-      }
-      else if(myWorld.gameState.currentState === PAUSED) {
-         myWorld.gameState.set_state(RUNNING);
-         startTime = Date.now();
-         myWorld.run();
-      }
-  });
-  
 });
+
+
