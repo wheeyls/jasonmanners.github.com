@@ -99,12 +99,14 @@ ul {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  background: rgba(255,50,50,0.7);
+  background: rgba(200,50,50,0.9);
   position:absolute;
-  left:200px;
-  top:200px;
+  left:100px;
+  top:100px;
   padding: 8px;
   display: none;
+  font-size: 45px;
+  color:#DDDDDD;
 }
 
 .title {
@@ -129,6 +131,8 @@ ul {
   margin: 0 10px 0 0;
   float:left;
   background: rgba(0,50,50,0.5);
+  color:#FFFFFF;
+  text-align: center;
 }
 
 #wave_window {
