@@ -195,19 +195,23 @@ World.prototype.update = function(delta_time) {
   //process input
   this.process_input(delta_time);
   //update gameBoard
-  if(this.gameBoard.currentEnemies.length === 0 ) {
-    this.gameBoard.set_enemies(this.gameState.get_next_wave());
-
-    $("#wave_number").html(this.gameState.currentWaveIndex);
-    $("#wave_window").animate({scrollLeft: this.gameState.currentWaveIndex * 99}, 1000);
+  
+  if(this.gameState.is_running()) {
     
-    this.gameBoard.base.add_survivor(new Survivor());
-    this.gameBoard.base.resources += 30;
+    if(this.gameBoard.currentEnemies.length === 0 ) {
+      this.gameBoard.set_enemies(this.gameState.get_next_wave());
+  
+      $("#wave_number").html(this.gameState.currentWaveIndex);
+      $("#wave_window").animate({scrollLeft: this.gameState.currentWaveIndex * 99}, 1000);
+      
+      this.gameBoard.base.add_survivor(new Survivor());
+      this.gameBoard.base.resources += 30;
+    }
+    this.gameBoard.update(delta_time);
+    $("#score_number").html(this.gameBoard.score);
+    $("#health_number").html(this.gameBoard.base.health);
+    $("#resources_number").html(this.gameBoard.base.resources);
   }
-  this.gameBoard.update(delta_time);
-  $("#score_number").html(this.gameBoard.score);
-  $("#health_number").html(this.gameBoard.base.health);
-  $("#resources_number").html(this.gameBoard.base.resources);
   
   if(this.gameBoard.base.is_dead()) {
     $("#lose").css("display","block");
@@ -219,12 +223,11 @@ World.prototype.update = function(delta_time) {
 World.prototype.run = function(timestep) {
   var drawStart   = (timestep || Date.now());
   var delta_time  = drawStart - startTime;
-
-  if(this.gameState.is_running()) {
+  
     this.update(delta_time);
     this.draw(this.context);
     requestAnimFrame(this.run.bind(this));
-  }
+    
   startTime = drawStart;
 }
 
