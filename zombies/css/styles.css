@@ -165,7 +165,7 @@ ul {
 
 #wave_overlay {
   background-image: -webkit-gradient(linear, right center, left center, color-stop(0, rgb(125,120,120)), color-stop(1.0, rgba(125,120,120,0)));
-  background-image: -moz-linear-gradient(right center, rgb(235,255,255) 0% , rgba(235,255,255, 0) 100% );
+  background-image: -moz-linear-gradient(right center, rgb(125,120,120) 0% , rgba(125,120,120, 0) 100% );
   position: absolute;
   left: 10px;
   bottom: 12px;
@@ -173,8 +173,8 @@ ul {
   height:59px;
   overflow: hidden;
   z-index: 11;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
   pointer-events: none;
 }
