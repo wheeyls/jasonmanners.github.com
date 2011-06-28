@@ -117,6 +117,7 @@ ul {
 #waves {
   width: 1000000px;
 }
+
 .wave_indicator {
   width: 75px;
   height: 25px;
@@ -130,9 +131,10 @@ ul {
   border-radius: 5px;
   margin: 0 10px 0 0;
   float:left;
-  background: rgba(0,50,50,0.5);
-  color:#FFFFFF;
+  background: rgba(50,50,0,0.5);
+  color:#EEEEEE;
   text-align: center;
+  font-weight: bold;
 }
 
 #wave_window {
@@ -147,11 +149,22 @@ ul {
   -webkit-border-radius: 5px;
   border-radius: 5px;
   padding:10px;
-  background: rgba(0,0,0,0.3);
+  background: rgba(25,25,0,0.1);
+}
+
+#current_wave {
+  position:absolute;
+  z-index: 11;
+  border-right: 2px solid #222222;
+  border-left: 2px solid #222222;
+  width:98px;
+  height: 75px;
+  left:15px;
+  bottom: 5px;
 }
 
 #wave_overlay {
-  background-image: -webkit-gradient(linear, right center, left center, color-stop(0, rgb(155,165,165)), color-stop(1.0, rgba(155,165,165,0)));
+  background-image: -webkit-gradient(linear, right center, left center, color-stop(0, rgb(125,120,120)), color-stop(1.0, rgba(125,120,120,0)));
   background-image: -moz-linear-gradient(right center, rgb(235,255,255) 0% , rgba(235,255,255, 0) 100% );
   position: absolute;
   left: 10px;
