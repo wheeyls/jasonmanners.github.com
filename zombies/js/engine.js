@@ -94,7 +94,8 @@ World.prototype = {
   
   initialized : false,
   score: 0,
-  currentSelected : undefined
+  currentSelected : undefined,
+  lastMouse : {x:0 , y:0}
 }
 
 World.prototype.initialize = function() {
@@ -251,6 +252,20 @@ World.prototype.process_input = function(delta_time) {
       this.currentSelected = tmpSelected;
       this.currentSelected.set_focus();
     }
+    else {
+      this.inputManager.mouseAction = MOVE_BOARD;
+      this.lastMouse.x = this.inputManager.mouseX;
+      this.lastMouse.y = this.inputManager.mouseY;
+    }
+  }
+  
+  if(this.inputManager.mouseAction === MOVE_BOARD) {
+      var tmpX = this.inputManager.mouseX;
+      var tmpY = this.inputManager.mouseY;
+      this.camera.x += tmpX - this.lastMouse.x;
+      this.camera.y += tmpY - this.lastMouse.y;
+      this.lastMouse.x = tmpX;
+      this.lastMouse.y = tmpY;
   }
   
   if(this.inputManager.is_placing_survivor() && this.gameBoard.is_on_board(tmpX,tmpY)) {
@@ -779,6 +794,10 @@ InputManager.prototype.mouse_up = function(event) {
   this.mouseState = MOUSE_UP;
   this.mouseX = event.layerX;
   this.mouseY = event.layerY;
+  
+  if(this.mouseAction === MOVE_BOARD) {
+    this.mouseAction = NOTHING;
+  }
 }
 
 InputManager.prototype.key_down = function(event) {
