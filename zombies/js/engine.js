@@ -541,7 +541,7 @@ Tower.prototype.draw = function(context) {
   //Tower and range
   context.save();
     context.fillStyle = "rgba(0,100,255,0.6)";
-    if(this.selected) {
+    if(this.selected || this.survivor !== undefined) {
       context.fillStyle = "rgba(0,100,255,0.9)";
     }
     context.fillRect (this.x+0.5, this.y+0.5, this.width - 0.5, this.height - 0.5);
