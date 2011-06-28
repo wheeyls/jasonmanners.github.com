@@ -154,7 +154,7 @@ World.prototype._init_game = function() {
       var tmpY = Math.random()*this.gameBoard.height;
       var tmpDir = Math.atan2(this.gameBoard.base.midY-tmpY,this.gameBoard.base.midX-tmpX);
       var tmpDelay = Math.random() * 10000;
-      currentWave.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10*i,10,7,tmpDelay));
+      currentWave.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10*i,10,7,tmpDelay,this.gameBoard.base.midX,this.gameBoard.base.midY));
     }
     $("#waves").append("<article class='wave_indicator'>Wave "+(i+1)+"</article>");
         
@@ -199,6 +199,9 @@ World.prototype.update = function(delta_time) {
 
     $("#wave_number").html(this.gameState.currentWaveIndex);
     $("#wave_window").animate({scrollLeft: this.gameState.currentWaveIndex * 99}, 1000);
+    
+    this.gameBoard.base.add_survivor(new Survivor());
+    this.gameBoard.base.resources += 30;
   }
   this.gameBoard.update(delta_time);
   $("#score_number").html(this.gameBoard.score);
@@ -250,15 +253,21 @@ World.prototype.process_input = function(delta_time) {
     }
   }
   
-  if(this.inputManager.mouseAction === PLACING_SURVIVOR && this.inputManager.mouseState === MOUSE_DOWN && this.gameBoard.is_on_board(tmpX,tmpY)) {
+  if(this.inputManager.is_placing_survivor() && this.gameBoard.is_on_board(tmpX,tmpY)) {
     var tmpSelected = this.gameBoard.occupiedCells[xInd][yInd];
     if(tmpSelected !== false) {
-      this.gameBoard.base.survivors[0].tower = tmpSelected;
-      tmpSelected.set_survivor(this.gameBoard.base.survivors[0]);
+    
+      var tmpTower = this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1].tower
+      if(tmpTower != undefined) {
+        tmpTower.survivor = undefined;
+      }
+      this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1].tower = tmpSelected;
+      tmpSelected.set_survivor(this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1]);
+      this.inputManager.mouseAction = NOTHING; 
     }
   }
   
-  if(this.inputManager.is_placing_tower() && !this.gameBoard.is_on_board(tmpX,tmpY)) {
+  if((this.inputManager.is_placing_survivor() || this.inputManager.is_placing_tower()) && !this.gameBoard.is_on_board(tmpX,tmpY)) {
     this.inputManager.mouseAction = NOTHING; 
     if(this.currentSelected !== undefined) {
       this.currentSelected.lose_focus();
@@ -278,8 +287,6 @@ function GameBoard(width,height,gridSpace,gridColor,bgColor) {
   
   this.score = 0;
   this.base = new Base(600,160,40,80,200);
-  var tmpSurvivor = new Survivor();
-  this.base.add_survivor(tmpSurvivor);
   this.currentEnemies = [];
   
   this.towers = [];
@@ -290,6 +297,7 @@ function GameBoard(width,height,gridSpace,gridColor,bgColor) {
   this.maxX = Math.floor(this.width / this.gridSpace)
   this.maxY = Math.floor(this.height / this.gridSpace);
   this.occupiedCells = new Array();
+  this.occupiedList = [];
   
   for(var i = 0; i < this.maxX; i++) {
     this.occupiedCells[i] = new Array();
@@ -359,16 +367,16 @@ GameBoard.prototype.draw_projectiles = function(context) {
 
 GameBoard.prototype.draw_enemies = function(context) {
   for(var i = 0; i < this.currentEnemies.length; i++) {
-    if(this.currentEnemies[i].x > 0 && this.currentEnemies[i].x < this.width &&
-        this.currentEnemies[i].y > 0 && this.currentEnemies[i].y < this.height) {
+  //  if(this.currentEnemies[i].x > 0 && this.currentEnemies[i].x < this.width &&
+   //     this.currentEnemies[i].y > 0 && this.currentEnemies[i].y < this.height) {
       this.currentEnemies[i].draw(context);
-    }
+    //}
   }
 }
 
 GameBoard.prototype.update_enemies = function(delta_time) {
   for(var i = 0; i < this.currentEnemies.length; i++) {
-    this.currentEnemies[i].update(delta_time);
+    this.currentEnemies[i].update(delta_time,this.towers);
   }
 }
 
@@ -532,7 +540,10 @@ Tower.prototype.draw = function(context) {
   
   //Tower and range
   context.save();
-    context.fillStyle = "rgba(0,100,255,0.8)";
+    context.fillStyle = "rgba(0,100,255,0.6)";
+    if(this.selected) {
+      context.fillStyle = "rgba(0,100,255,0.9)";
+    }
     context.fillRect (this.x+0.5, this.y+0.5, this.width - 0.5, this.height - 0.5);
     if(this.selected) {
       context.fillStyle = "rgba(0,100,255,0.1)";
@@ -559,7 +570,7 @@ Tower.prototype.draw = function(context) {
     context.restore();
   }
   //Line to show engaged enemy
-  if(this.target !== undefined) {
+  if(this.target !== undefined && this.survivor !== undefined) {
     context.save();
       context.strokeStyle = "rgba(255,0,0,0.1)";
       context.beginPath();
@@ -621,7 +632,7 @@ Tower.prototype.lose_focus = function() {
 /*************************************************************************
   Enemy
 *************************************************************************/
-function Enemy(x,y,velocity,direction,health,damage,size,delay) {
+function Enemy(x,y,velocity,direction,health,damage,size,delay,goalX,goalY) {
   this.x = x;
   this.y = y;
   this.velocity = velocity;
@@ -630,11 +641,15 @@ function Enemy(x,y,velocity,direction,health,damage,size,delay) {
   this.fullHealth = health;
   this.damage = damage;
   this.size = size;
-  
+  this.goalX = goalX;
+  this.goalY = goalY;
   this.time_till_release = delay;
 }
 
-Enemy.prototype.update = function(delta_time) {
+Enemy.prototype.update = function(delta_time,occupiedList) {
+
+  this.direction = Math.atan2(this.goalY-this.y,this.goalX-this.x);
+  
   if(this.time_till_release > 0) {
     this.time_till_release -= delta_time;
     return;
@@ -643,6 +658,14 @@ Enemy.prototype.update = function(delta_time) {
   var tmpX = step * this.velocity * Math.cos(this.direction);
   var tmpY = step * this.velocity * Math.sin(this.direction);
   
+  
+  for(var i = 0; i < occupiedList.length; i++) {
+    if(this.x+tmpX >= occupiedList[i].x && this.x+tmpX <= occupiedList[i].x+occupiedList[i].width && 
+        this.y+tmpY >= occupiedList[i].y && this.y+tmpY <= occupiedList[i].y+occupiedList[i].height) {
+        this.y += Math.abs(step * this.velocity);
+      return;
+    }
+  }
   this.x += tmpX;
   this.y += tmpY;
 }
@@ -729,6 +752,13 @@ InputManager.prototype.get_mouse_state = function() {
 
 InputManager.prototype.is_placing_tower = function() {
   if(this.mouseState === MOUSE_DOWN && this.mouseAction === PLACING_TOWER) {
+    return true;
+  }
+  return false;
+}
+
+InputManager.prototype.is_placing_survivor = function() {
+  if(this.mouseState === MOUSE_DOWN && this.mouseAction === PLACING_SURVIVOR) {
     return true;
   }
   return false;
