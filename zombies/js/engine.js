@@ -3,6 +3,11 @@
 **************************************************************************/
 const MS_IN_SEC = 1000;
 
+const LEFT_ARROW = 37;
+const UP_ARROW = 38;
+const RIGHT_ARROW = 39;
+const DOWN_ARROW = 40;
+
 const WIN     = 42;
 const LOSE    = 43;
 const PAUSED  = 44;
@@ -20,6 +25,9 @@ const MOVE_BOARD = 244;
 const UPDATE_TOWER = 245;
 const PLACING_TOWER = 246;
 const NOTHING = 247;
+const KEY_DOWN = 248;
+const KEY_UP = 249;
+const PLACING_SURVIVOR = 250;
 /*************************************************************************
   bind declaration
   - Has caused issues when it is not declared will not run
@@ -85,7 +93,8 @@ World.prototype = {
   inputManager : undefined,
   
   initialized : false,
-  score: 0
+  score: 0,
+  currentSelected : undefined
 }
 
 World.prototype.initialize = function() {
@@ -109,7 +118,11 @@ World.prototype._init_world = function() {
   $('#world').bind("mousemove", function(event) {self.inputManager.mouse_move(event);});
   $('#world').bind("mouseup", function(event) {self.inputManager.mouse_up(event);});
 
+  $(document).keydown(function(event) {self.inputManager.key_down(event);});
+  $(document).keyup(function(event) {self.inputManager.key_up(event);});
+  
   $("#tower").click(function() {self.inputManager.mouseAction = PLACING_TOWER;});
+  $("#survivor").click(function() {self.inputManager.mouseAction = PLACING_SURVIVOR;});
   
   $("#start_button").click(function() {self.gameState.run(); self.run(); $(this).css("display","none")});
   $("#pause").click(function() {
@@ -165,12 +178,16 @@ World.prototype.draw = function(context) {
   context.save();
     context.scale(this.scale,this.scale);
     context.translate(this.camera.x,this.camera.y);
-    context.fillStyle = "rgba(0,100,255,0.1)";
-    context.beginPath();
-      context.arc(this.inputManager.mouseX, this.inputManager.mouseY, this.range, 0, Math.PI*2, true); //*2
-    context.fill();
-    this.gameBoard.draw(context);
+    this.gameBoard.draw(context); 
   context.restore();
+  
+  if(this.inputManager.mouseAction === PLACING_TOWER) {
+    context.save();
+      context.fillStyle = "rgba(0,100,255,0.5)";
+      var tmpGrid = this.gameBoard.gridSpace;
+      context.fillRect(clean_coord(this.inputManager.mouseX,tmpGrid), clean_coord(this.inputManager.mouseY,tmpGrid), tmpGrid, tmpGrid);
+    context.restore();
+  }
 }
 
 World.prototype.update = function(delta_time) {
@@ -181,11 +198,12 @@ World.prototype.update = function(delta_time) {
     this.gameBoard.set_enemies(this.gameState.get_next_wave());
 
     $("#wave_number").html(this.gameState.currentWaveIndex);
-    $("#wave_window").animate({scrollLeft: $("#wave_window").scrollLeft() + 99}, 1000);
+    $("#wave_window").animate({scrollLeft: this.gameState.currentWaveIndex * 99}, 1000);
   }
   this.gameBoard.update(delta_time);
   $("#score_number").html(this.gameBoard.score);
   $("#health_number").html(this.gameBoard.base.health);
+  $("#resources_number").html(this.gameBoard.base.resources);
   
   if(this.gameBoard.base.is_dead()) {
     $("#lose").css("display","block");
@@ -209,9 +227,42 @@ World.prototype.run = function(timestep) {
 World.prototype.process_input = function(delta_time) {
   var tmpX = clean_coord(this.inputManager.mouseX - this.camera.x,this.gameBoard.gridSpace);
   var tmpY = clean_coord(this.inputManager.mouseY - this.camera.y,this.gameBoard.gridSpace);
-  if(this.inputManager.is_placing_tower() && this.gameBoard.is_on_board(tmpX,tmpY)) {
+  var xInd = coord_to_index(this.inputManager.mouseX - this.camera.x,this.gameBoard.gridSpace);
+  var yInd = coord_to_index(this.inputManager.mouseY - this.camera.y,this.gameBoard.gridSpace);
+  
+  if(this.inputManager.is_placing_tower() && this.gameBoard.is_on_board(tmpX,tmpY) && 
+      (this.gameBoard.base.resources - 10 >= 0)  && !this.gameBoard.is_occupied(xInd,yInd)) {
     this.gameBoard.add_tower(tmpX,tmpY);
-    this.inputManager.mouseAction = NOTHING; // convert to function
+    this.gameBoard.base.resources -= 10;
+    if(this.inputManager.keys[LEFT_ARROW] == KEY_UP) {
+      this.inputManager.mouseAction = NOTHING; // convert to function
+    }
+  }
+
+  if(this.inputManager.mouseAction === NOTHING && this.inputManager.mouseState === MOUSE_DOWN && this.gameBoard.is_on_board(tmpX,tmpY)) {
+    var tmpSelected = this.gameBoard.occupiedCells[xInd][yInd];
+    if(tmpSelected !== false) {
+      if(this.currentSelected !== undefined) {
+        this.currentSelected.lose_focus();
+      }
+      this.currentSelected = tmpSelected;
+      this.currentSelected.set_focus();
+    }
+  }
+  
+  if(this.inputManager.mouseAction === PLACING_SURVIVOR && this.inputManager.mouseState === MOUSE_DOWN && this.gameBoard.is_on_board(tmpX,tmpY)) {
+    var tmpSelected = this.gameBoard.occupiedCells[xInd][yInd];
+    if(tmpSelected !== false) {
+      this.gameBoard.base.survivors[0].tower = tmpSelected;
+      tmpSelected.set_survivor(this.gameBoard.base.survivors[0]);
+    }
+  }
+  
+  if(this.inputManager.is_placing_tower() && !this.gameBoard.is_on_board(tmpX,tmpY)) {
+    this.inputManager.mouseAction = NOTHING; 
+    if(this.currentSelected !== undefined) {
+      this.currentSelected.lose_focus();
+    }
   }
 }
 
@@ -227,7 +278,8 @@ function GameBoard(width,height,gridSpace,gridColor,bgColor) {
   
   this.score = 0;
   this.base = new Base(600,160,40,80,200);
-  
+  var tmpSurvivor = new Survivor();
+  this.base.add_survivor(tmpSurvivor);
   this.currentEnemies = [];
   
   this.towers = [];
@@ -386,13 +438,14 @@ GameBoard.prototype.add_tower = function(x,y) {
   var yInd = coord_to_index(y,this.gridSpace);
   
   if(!this.is_occupied(xInd,yInd)) {
-    this.occupiedCells[xInd][yInd] = true;
-    this.towers.push(new Tower(x,y,this.gridSpace));
+    var tmpTower = new Tower(x,y,this.gridSpace);
+    this.occupiedCells[xInd][yInd] = tmpTower;
+    this.towers.push(tmpTower);
   }
 }
 
 GameBoard.prototype.is_occupied = function(x,y) {
-  if(this.occupiedCells[x][y] === true) {
+  if(this.occupiedCells[x][y] !== false) {
     return true;
   }
   return false;
@@ -417,6 +470,7 @@ function Base(x,y,width,height,health) {
   this.height = height;
   this.health = health;
   
+  this.resources = 200;
   this.midX = this.x + (this.width / 2);
   this.midY = this.y + (this.height / 2);
 }
@@ -443,6 +497,10 @@ Base.prototype.is_dead = function() {
   return false;
 }
 
+Base.prototype.add_survivor = function(survivor) {
+  this.survivors.push(survivor);
+}
+
 
 /*************************************************************************
   Tower
@@ -451,19 +509,23 @@ function Tower(x,y,gridSpace) {
   this.x = x;
   this.y = y;
   this.direction = 0;
-  this.fireRate = 120;
   this.cooldown = 0;
   this.width = gridSpace;
   this.height = gridSpace;
   
+  this.cost = 10;
   //Defaults for the basic tower
   this.range = 125;
   this.projectile_size = 2;
   this.damage = 3;
   this.velocity = 300;
+  this.fireRate = 120;
   
   this.midX = this.x + (this.width / 2);
   this.midY = this.y + (this.height / 2);
+  
+  this.survivor = undefined;
+  this.selected = false;
 }
 
 Tower.prototype.draw = function(context) {
@@ -472,28 +534,30 @@ Tower.prototype.draw = function(context) {
   context.save();
     context.fillStyle = "rgba(0,100,255,0.8)";
     context.fillRect (this.x+0.5, this.y+0.5, this.width - 0.5, this.height - 0.5);
-
-    context.fillStyle = "rgba(0,100,255,0.015)";
-    context.beginPath();
-      context.arc(this.midX, this.midY, this.range, 0, Math.PI*2, true); //*2
-    context.fill();
+    if(this.selected) {
+      context.fillStyle = "rgba(0,100,255,0.1)";
+      context.beginPath();
+        context.arc(this.midX, this.midY, this.range, 0, Math.PI*2, true); //*2
+      context.fill();
+    }
   context.restore();
   
   //Cannon
-  context.save();
-    context.lineWidth = 3;
-    context.strokeStyle = "#000000";
-    context.translate(this.midX,this.midY);
-    context.rotate(this.direction);
-    
+  if(this.survivor !== undefined) {
     context.save();
-      context.beginPath();
-        context.moveTo(0,0);
-        context.lineTo((this.width+this.height) / 2 ,0); //Size of turret is avg of width and length
-      context.stroke();
+      context.lineWidth = 3;
+      context.strokeStyle = "#000000";
+      context.translate(this.midX,this.midY);
+      context.rotate(this.direction);
+      
+      context.save();
+        context.beginPath();
+          context.moveTo(0,0);
+          context.lineTo((this.width+this.height) / 2 ,0); //Size of turret is avg of width and length
+        context.stroke();
+      context.restore();
     context.restore();
-  context.restore();
-  
+  }
   //Line to show engaged enemy
   if(this.target !== undefined) {
     context.save();
@@ -508,7 +572,9 @@ Tower.prototype.draw = function(context) {
 
 
 Tower.prototype.update = function(delta_time,enemies) {
-
+  if(this.survivor == undefined) {
+    return false;
+  }
   //Want to add in priority - if closer to goal and in range shoot at it - otherwise shoot at closest
   var distMin = 10000000;
 
@@ -537,8 +603,21 @@ Tower.prototype.update = function(delta_time,enemies) {
   return false;
 }
 
+Tower.prototype.set_survivor = function(survivor) {
+  this.survivor = survivor;
+}
 
+Tower.prototype.lose_survivor = function() {
+  this.survivor = undefined;
+}
 
+Tower.prototype.set_focus = function() {
+  this.selected = true;
+}
+
+Tower.prototype.lose_focus = function() {
+  this.selected = false;
+}
 /*************************************************************************
   Enemy
 *************************************************************************/
@@ -628,6 +707,15 @@ function InputManager() {
   this.mouseX = 0;
   this.mouseY = 0;
 
+  this.keys = [];
+  this._init_keys();
+}
+
+InputManager.prototype._init_keys = function() {
+  this.keys[LEFT_ARROW] = KEY_UP;
+  this.keys[UP_ARROW] = KEY_UP;
+  this.keys[RIGHT_ARROW] = KEY_UP;
+  this.keys[DOWN_ARROW] = KEY_UP;
 }
 
 InputManager.prototype.set_mouse_state = function(newState) {
@@ -659,9 +747,16 @@ InputManager.prototype.mouse_move = function(event) {
 
 InputManager.prototype.mouse_up = function(event) {
   this.mouseState = MOUSE_UP;
-  this.mouseAction = NOTHING;
   this.mouseX = event.layerX;
   this.mouseY = event.layerY;
+}
+
+InputManager.prototype.key_down = function(event) {
+  this.keys[event.keyCode] = KEY_DOWN;
+}
+
+InputManager.prototype.key_up = function(event) {
+  this.keys[event.keyCode] = KEY_UP;
 }
 
 /*************************************************************************
@@ -757,6 +852,18 @@ Wave.prototype.add_enemy = function(enemy) {
 
 Wave.prototype.get_enemies = function() {
   return this.enemies;
+}
+
+/*************************************************************************
+  Survivor
+*************************************************************************/
+function Survivor() {
+  this.range = 125;
+  this.projectile_size = 2;
+  this.damage = 3;
+  this.velocity = 300;
+  this.fireRate = 120;
+  this.tower = undefined;
 }
 
 /**************
