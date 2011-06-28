@@ -367,10 +367,10 @@ GameBoard.prototype.draw_projectiles = function(context) {
 
 GameBoard.prototype.draw_enemies = function(context) {
   for(var i = 0; i < this.currentEnemies.length; i++) {
-  //  if(this.currentEnemies[i].x > 0 && this.currentEnemies[i].x < this.width &&
-   //     this.currentEnemies[i].y > 0 && this.currentEnemies[i].y < this.height) {
+    if(this.currentEnemies[i].x > 0 && this.currentEnemies[i].x < this.width &&
+        this.currentEnemies[i].y > 0 && this.currentEnemies[i].y < this.height) {
       this.currentEnemies[i].draw(context);
-    //}
+    }
   }
 }
 
