@@ -270,6 +270,10 @@ World.prototype.process_input = function(delta_time) {
       this.lastMouse.x = tmpX;
       this.lastMouse.y = tmpY;
   }
+  if(this.inputManager.mouseAction === NOTHING && this.inputManager.mouseState === MOUSE_UP){
+    this.camera.x = clean_coord(this.camera.x,this.gameBoard.gridSpace);
+    this.camera.y = clean_coord(this.camera.y,this.gameBoard.gridSpace);
+  }
   
   if(this.inputManager.is_placing_survivor() && this.gameBoard.is_on_board(tmpX,tmpY)) {
     var tmpSelected = this.gameBoard.occupiedCells[xInd][yInd];
