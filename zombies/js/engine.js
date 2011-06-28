@@ -95,7 +95,8 @@ World.prototype = {
   initialized : false,
   score: 0,
   currentSelected : undefined,
-  lastMouse : {x:0 , y:0}
+  lastMouse : {x:0 , y:0},
+  speed : 1
 }
 
 World.prototype.initialize = function() {
@@ -124,6 +125,10 @@ World.prototype._init_world = function() {
   
   $("#tower").click(function() {self.inputManager.mouseAction = PLACING_TOWER;});
   $("#survivor").click(function() {self.inputManager.mouseAction = PLACING_SURVIVOR;});
+  //Change to class and .each with an attribute holding the speed
+  $("#speed_1").click(function() {self.speed = 1;});
+  $("#speed_2").click(function() {self.speed = 2;});
+  $("#speed_3").click(function() {self.speed = 3;});
   
   $("#start_button").click(function() {self.gameState.run(); self.run(); $(this).css("display","none")});
   $("#pause").click(function() {
@@ -224,7 +229,7 @@ World.prototype.run = function(timestep) {
   var drawStart   = (timestep || Date.now());
   var delta_time  = drawStart - startTime;
   
-    this.update(delta_time);
+    this.update(delta_time*this.speed);
     this.draw(this.context);
     requestAnimFrame(this.run.bind(this));
     
