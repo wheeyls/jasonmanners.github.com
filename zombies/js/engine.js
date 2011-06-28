@@ -651,10 +651,15 @@ Tower.prototype.lose_survivor = function() {
 
 Tower.prototype.set_focus = function() {
   this.selected = true;
+  $("#test_window").css("display","block");
+  $("#damage").html(this.damage);
+  var self = this;
+  $("#move_survivor").click(function(){self.survivor = undefined;});
 }
 
 Tower.prototype.lose_focus = function() {
   this.selected = false;
+  $("#test_window").css("display","none");
 }
 /*************************************************************************
   Enemy

@@ -197,3 +197,43 @@ ul {
   border-radius: 2px;
   pointer-events: none;
 }
+
+#test_window {
+    border: 2px solid rgba(50,50,50,0.8);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background: rgba(200,50,50,0.9);
+  position:absolute;
+  left:10px;
+  top:75px;
+  padding: 8px;
+  display: none;
+  font-size: 20px;
+  color:#DDDDDD;
+}
+
+#move_survivor {
+  width: 75px;
+  height: 25px;
+  padding: 5px;
+  border: 2px solid #222222;
+  -webkit-transform-origin: 0% 0%;
+  -moz-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin: 0 10px 0 0;
+  float:left;
+  background: rgba(50,50,0,0.5);
+  color:#EEEEEE;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+#move_survivor:hover {
+  cursor:pointer;
+  background: rgba(50,50,0,0.8);
+}
