@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <!-- Change number whenever you push an update -->
+    <script type="text/javascript" src="js/engine.js"></script>
+    <script type="text/javascript">
+      /*********************************
+       *  Google Analytics Code
+       * *******************************/
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23612735-1']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>dotZombies</title>
+  </head>
+  <body>
+    <header class="game_ui">
+    <div class="title">dotZombies</div>
+    <nav>
+      <ul>
+        <li id="pause">Pause</li>
+        <li id="tower">Place Tower</li>
+        <li id="survivor">Place Survivor</li>
+      </ul>
+    </nav>
+    <div class="speed_menu">
+      <span>Speed: </span>
+      <ul>
+        <li id="speed_1">1</li>
+        <li id="speed_2">2</li>
+        <li id="speed_3">3</li>
+      </ul>
+    </div>
+    <div class="score_display"><span>Score: </span><span id="score_number">0</span></div>
+    <div class="health_display"><span>Health: </span><span id="health_number"></span></div>
+    <div class="resources_display"><span>Resources: </span><span id="resources_number"></span></div>
+    </header>
+    <div class="start_button" id="start_button">Start</div>
+    <div class="lose" id="lose">Zombies Win...Yay</div>
+    <canvas id="world"></canvas>
+    
+    <div id="current_wave"></div>
+    <div id="wave_overlay"></div>
+    <div id="wave_window">
+      <section id="waves">
+      </section>
+    </div>
+    
+    <div id="test_window">Tower</span>
+      <div id="move_survivor">Move Survivor</div>
+    </div>
+  </body>
+</html>

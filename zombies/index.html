@@ -2,6 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/960.css" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
     <!-- Change number whenever you push an update -->
     <script type="text/javascript" src="js/engine.js"></script>
@@ -22,40 +23,101 @@
     <title>dotZombies</title>
   </head>
   <body>
-    <header class="game_ui">
-    <div class="title">dotZombies</div>
-    <nav>
-      <ul>
-        <li id="pause">Pause</li>
-        <li id="tower">Place Tower</li>
-        <li id="survivor">Place Survivor</li>
-      </ul>
-    </nav>
-    <div class="speed_menu">
-      <span>Speed: </span>
-      <ul>
-        <li id="speed_1">1</li>
-        <li id="speed_2">2</li>
-        <li id="speed_3">3</li>
-      </ul>
-    </div>
-    <div class="score_display"><span>Score: </span><span id="score_number">0</span></div>
-    <div class="health_display"><span>Health: </span><span id="health_number"></span></div>
-    <div class="resources_display"><span>Resources: </span><span id="resources_number"></span></div>
-    </header>
-    <div class="start_button" id="start_button">Start</div>
-    <div class="lose" id="lose">Zombies Win...Yay</div>
-    <canvas id="world"></canvas>
-    
-    <div id="current_wave"></div>
-    <div id="wave_overlay"></div>
-    <div id="wave_window">
-      <section id="waves">
+    <div class="container_12">
+      <div class="grid_2 alpha title">
+        <span>dotZombie</span>
+      </div>
+      <header class="grid_10 omega">
+        <section class="grid_5 alpha td_actions">
+          <article id="tower">
+            <span>Tower</span>
+          </article>
+          <article id="survivor">
+            <span>Survivor</span>
+          </article>
+          <article id="pause">
+            <span>Pause</span>
+          </article>
+          <article class="speed_menu">
+            <span>Speed: </span> 
+            <span>
+              <ul>
+                <li id="speed_1">1</li>
+                <li id="speed_2">2</li>
+                <li id="speed_3">3</li>
+              </ul>
+            </span>
+          </article>
+        </section>
+        <section class="grid_5 omega td_info">
+          <article>
+            <span>Score: </span><span id="score_number">0</span>
+          </article>
+          <article>
+            <span>Health: </span><span id="health_number"></span>
+          </article>
+          <article>
+            <span>Supplies: </span><span id="resources_number"></span>
+          </article>
+        </section>
+      </header>
+      <div class="clear"></div><!-- Used to define rows -- find out why this is necessary -->
+      <div class="grid_2 alpha">
+        <div class="info_section">
+          <p>Menu Stuff</p>
+          <section class="td_actions">
+            <article id="start">
+              <span>Start</span>
+            </article>
+          </section>
+          <section class="tower_info">
+            <article>
+              <h3>Info</h3>
+              <div><span>Damage: </span><span id="damage_display"></span></div>
+            </article>
+            <article>
+              <h3>Upgrades</h3>
+              <section class="tower_actions">
+                <article>
+                  <span>Range</span>
+                </article>
+                <article>
+                  <span>Power</span>
+                </article>
+                <article>
+                  <span>Rate</span>
+                </article>
+              </section>
+            </article>
+            <article>
+              <h3>Actions</h3>
+              <section class="tower_actions">
+                <article>
+                  <span>Move Survivor</span>
+                </article>
+                <article>
+                  <span>Sell</span>
+                </article>
+              </section>
+            </article>
+          </section>
+        </div>
+      </div>
+      <section class="grid_10 omega world_section">
+        <canvas id="world"></canvas>
       </section>
-    </div>
-    
-    <div id="test_window">Tower</span>
-      <div id="move_survivor">Move Survivor</div>
+      <div class="clear"></div><!-- Used to define rows -- find out why this is necessary -->
+      <div class="grid_2 alpha footer_div">
+        <p>OTHERS</p>
+      </div>
+      <footer class="grid_10 omega">
+        <div id="current_wave"></div>
+        <div id="wave_window">
+          <section id="waves">
+          </section>
+        </div>
+      </footer>
+      <div class="clear"></div><!-- Used to define rows -- find out why this is necessary -->
     </div>
   </body>
 </html>

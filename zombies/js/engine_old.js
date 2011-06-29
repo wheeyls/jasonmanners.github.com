@@ -85,8 +85,7 @@ World.prototype = {
   
   scale : 1,
   scaleOptions : [1,8,16,24],
-  camera : {x:60,y:20}, //used to translate world so user can move gameboard
-  lastMouse : {x:0,y:0},
+  camera : {x:200,y:100}, //used to translate world so user can move gameboard
   
   gameBoard : undefined,
   gameState : undefined,
@@ -96,6 +95,7 @@ World.prototype = {
   initialized : false,
   score: 0,
   currentSelected : undefined,
+  lastMouse : {x:0 , y:0},
   speed : 1
 }
 
@@ -106,8 +106,8 @@ World.prototype.initialize = function() {
 }
 
 World.prototype._init_world = function() {
-  this.WORLD_WIDTH = 780;
-  this.WORLD_HEIGHT = 460;
+  this.WORLD_WIDTH = window.innerWidth;
+  this.WORLD_HEIGHT = window.innerHeight;
   $(this.canvas_id).attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
   
   this.context = $("#world")[0].getContext("2d");
@@ -130,7 +130,7 @@ World.prototype._init_world = function() {
   $("#speed_2").click(function() {self.speed = 2;});
   $("#speed_3").click(function() {self.speed = 3;});
   
-  $("#start").click(function() {self.gameState.run(); self.run(); $(this).css("display","none")});
+  $("#start_button").click(function() {self.gameState.run(); self.run(); $(this).css("display","none")});
   $("#pause").click(function() {
       if(self.gameState.is_paused()) {
         startTime = Date.now();
@@ -175,7 +175,7 @@ World.prototype._init_game = function() {
 
 World.prototype.clear = function(context) {
   context.clearRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
-  context.fillStyle = "rgba(200,200,185,0.2)";
+  context.fillStyle = "rgb(235,255,255)";
   context.fillRect(0, 0, this.WORLD_WIDTH, this.WORLD_HEIGHT);
 }
 
@@ -207,7 +207,7 @@ World.prototype.update = function(delta_time) {
       this.gameBoard.set_enemies(this.gameState.get_next_wave());
   
       $("#wave_number").html(this.gameState.currentWaveIndex);
-      $("#wave_window").animate({scrollLeft: this.gameState.currentWaveIndex * 89}, 1000);
+      $("#wave_window").animate({scrollLeft: this.gameState.currentWaveIndex * 99}, 1000);
       
       this.gameBoard.base.add_survivor(new Survivor());
       this.gameBoard.base.resources += 30;
@@ -568,11 +568,8 @@ Tower.prototype.draw = function(context) {
   //Tower and range
   context.save();
     context.fillStyle = "rgba(0,100,255,0.6)";
-    if(this.survivor !== undefined) {
+    if(this.selected || this.survivor !== undefined) {
       context.fillStyle = "rgba(0,100,255,0.9)";
-    }
-    if(this.selected) {
-      context.fillStyle = "rgba(50,100,255,0.3)";
     }
     context.fillRect (this.x+0.5, this.y+0.5, this.width - 0.5, this.height - 0.5);
     if(this.selected) {
@@ -580,10 +577,6 @@ Tower.prototype.draw = function(context) {
       context.beginPath();
         context.arc(this.midX, this.midY, this.range, 0, Math.PI*2, true); //*2
       context.fill();
-      context.fillStyle = "rgba(0,0,0,0.5)";
-      context.beginPath();
-        context.rect (this.x, this.y, this.width, this.height);
-      context.stroke();
     }
   context.restore();
   
@@ -658,15 +651,15 @@ Tower.prototype.lose_survivor = function() {
 
 Tower.prototype.set_focus = function() {
   this.selected = true;
-  $(".tower_info").css("display","block");
-  $("#damage_display").html(this.damage);
+  $("#test_window").css("display","block");
+  $("#damage").html(this.damage);
   var self = this;
   $("#move_survivor").click(function(){self.survivor = undefined;});
 }
 
 Tower.prototype.lose_focus = function() {
   this.selected = false;
-  $(".tower_info").css("display","none");
+  $("#test_window").css("display","none");
 }
 /*************************************************************************
   Enemy
@@ -771,9 +764,6 @@ function InputManager() {
 
   this.keys = [];
   this._init_keys();
-  
-  this.offsetLeft = $("#world").offset().left;
-  this.offsetTop = $("#world").offset().top;
 }
 
 InputManager.prototype._init_keys = function() {
@@ -808,19 +798,19 @@ InputManager.prototype.is_placing_survivor = function() {
 
 InputManager.prototype.mouse_down = function(event) {
   this.mouseState = MOUSE_DOWN;
-  this.mouseX = event.layerX -this.offsetLeft;
-  this.mouseY = event.layerY-this.offsetTop;
+  this.mouseX = event.layerX;
+  this.mouseY = event.layerY;
 }
 
 InputManager.prototype.mouse_move = function(event) {
-  this.mouseX = event.layerX -this.offsetLeft;
-  this.mouseY = event.layerY-this.offsetTop;
+  this.mouseX = event.layerX;
+  this.mouseY = event.layerY;
 }
 
 InputManager.prototype.mouse_up = function(event) {
   this.mouseState = MOUSE_UP;
-  this.mouseX = event.layerX -this.offsetLeft;
-  this.mouseY = event.layerY-this.offsetTop;
+  this.mouseX = event.layerX;
+  this.mouseY = event.layerY;
   
   if(this.mouseAction === MOVE_BOARD) {
     this.mouseAction = NOTHING;
