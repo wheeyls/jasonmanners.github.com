@@ -130,7 +130,7 @@ World.prototype._init_world = function() {
   $("#speed_2").click(function() {self.speed = 2;});
   $("#speed_3").click(function() {self.speed = 3;});
   
-  $("#start").click(function() {self.gameState.run(); self.run(); $(this).css("display","none")});
+  $("#start").click(function() {self.gameState.run(); self.run(); $(this).css("display","none");});
   $("#pause").click(function() {
       if(self.gameState.is_paused()) {
         startTime = Date.now();
@@ -772,8 +772,8 @@ function InputManager() {
   this.keys = [];
   this._init_keys();
   
-  this.offsetLeft = $("#world").offset().left;
-  this.offsetTop = $("#world").offset().top;
+  this.offsetLeft = 0; //$("#world").offset().left;
+  this.offsetTop =  0; //$("#world").offset().top;
 }
 
 InputManager.prototype._init_keys = function() {

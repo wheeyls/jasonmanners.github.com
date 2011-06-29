@@ -37,6 +37,7 @@ p {
   -webkit-border-radius: 0 5px 5px 0;
   -moz-border-radius: 0 10px 10px 0;
   border-radius: 0 5px 5px 0;
+  position: relative;
 }
 
 .title {
@@ -94,6 +95,30 @@ p {
 
 .td_actions article:hover {
   background: rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+
+.world_actions {
+  position: absolute;
+  left: 125px;
+  top: 125px;
+}
+
+.world_actions article {
+  border: 3px solid rgba(40,75,10,0.9);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background: rgba(50,100,25,0.9);
+  padding: 10px;
+  font-size: 35px;
+  font-weight: bold;
+  color:#DDDDDD;
+}
+
+.world_actions article:hover {
+  background: rgba(50,100,25,0.6);
   cursor: pointer;
 }
 
