@@ -1,5 +1,7 @@
 * {
-  font-family: 'Didact Gothic', serif;
+  /*font-family: 'Didact Gothic', serif;*/
+  font-family: 'IM Fell DW Pica SC', serif;
+
 }
 
 
@@ -47,7 +49,7 @@ p {
 }
 
 .title span {
-  font-family: 'Permanent Marker', serif;
+  /*font-family: 'Permanent Marker', serif;*/
 }
 
 .footer_div {
@@ -145,6 +147,8 @@ p {
   float: left;
   padding: 0 10px;
   margin-top: 5px;
+  min-width: 100px;
+  text-align:center;
 }
 
 .speed_menu span {
