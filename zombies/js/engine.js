@@ -85,7 +85,7 @@ World.prototype = {
   
   scale : 1,
   scaleOptions : [1,8,16,24],
-  camera : {x:60,y:20}, //used to translate world so user can move gameboard
+  camera : {x:20,y:20}, //used to translate world so user can move gameboard
   lastMouse : {x:0,y:0},
   
   gameBoard : undefined,
@@ -106,8 +106,8 @@ World.prototype.initialize = function() {
 }
 
 World.prototype._init_world = function() {
-  this.WORLD_WIDTH = 780;
-  this.WORLD_HEIGHT = 460;
+  this.WORLD_WIDTH = 700;
+  this.WORLD_HEIGHT = 440;
   $(this.canvas_id).attr({ width: this.WORLD_WIDTH, height: this.WORLD_HEIGHT });
   
   this.context = $("#world")[0].getContext("2d");
