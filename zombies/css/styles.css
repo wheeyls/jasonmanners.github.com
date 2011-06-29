@@ -169,13 +169,9 @@ p {
 #wave_window {
   overflow: hidden;
   z-index: 10;
-  border: 1px solid rgba(50,50,50,0.8);
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
+  border-left: 2px solid rgba(50,50,50,0.8);
+  border-right: 2px solid rgba(50,50,50,0.8);
   padding:10px;
-  background: rgba(79,78,76,0.5);
-  -moz-box-shadow: 2px 2px 2px #333333;
 }
 
 #current_wave {
@@ -187,11 +183,26 @@ p {
   border-radius: 5px;
   width:79px;
   height:29px;
-  left:7px;
-  bottom: 7px;
+  left:8px;
+  bottom: 6px;
 }
 
 .wave_info {
   position:relative;
   height: 50px;
+}
+
+.lose {
+  border: 2px solid rgba(50,50,50,0.8);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background: rgba(200,50,50,0.9);
+  position:absolute;
+  left:400px;
+  top:200px;
+  padding: 8px;
+  display: none;
+  font-size: 45px;
+  color:#DDDDDD;
 }
