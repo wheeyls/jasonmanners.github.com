@@ -7,6 +7,10 @@ const LEFT_ARROW = 37;
 const UP_ARROW = 38;
 const RIGHT_ARROW = 39;
 const DOWN_ARROW = 40;
+const M_KEY = "M";
+const T_KEY = "T";
+const S_KEY = "S";
+const P_KEY = "P";
 
 const WIN     = 42;
 const LOSE    = 43;
@@ -28,6 +32,7 @@ const NOTHING = 247;
 const KEY_DOWN = 248;
 const KEY_UP = 249;
 const PLACING_SURVIVOR = 250;
+const MOVING_SURVIVOR = 251;
 /*************************************************************************
   bind declaration
   - Has caused issues when it is not declared will not run
@@ -96,6 +101,8 @@ World.prototype = {
   initialized : false,
   score: 0,
   currentSelected : undefined,
+  currentTower : undefined,
+  currentSurvivor : undefined,
   speed : 1
 }
 
@@ -132,17 +139,19 @@ World.prototype._init_world = function() {
   
   $("#start").click(function() {self.gameState.run(); self.run(); $(this).css("display","none");});
   $("#pause").click(function() {
-      if(self.gameState.is_paused()) {
-        startTime = Date.now();
-        self.gameState.run();
-        self.run(); 
-        $(this).html("Pause");
-      }
-      else if(self.gameState.is_running()) {
-        self.gameState.pause(); 
-        $(this).html("Play");
-      }
-    });
+    if(self.gameState.is_paused()) {
+      startTime = Date.now();
+      self.gameState.run();
+      self.run(); 
+      $(this).html("Pause");
+    }
+    else if(self.gameState.is_running()) {
+      self.gameState.pause(); 
+      $(this).html("Play");
+    }
+  });
+    
+  $("#move_survivor").click(function(){self.inputManager.mouseAction = MOVING_SURVIVOR;});
 }
 
 World.prototype._init_game = function() {
@@ -216,6 +225,7 @@ World.prototype.update = function(delta_time) {
     $("#score_number").html(this.gameBoard.score);
     $("#health_number").html(this.gameBoard.base.health);
     $("#resources_number").html(this.gameBoard.base.resources);
+    $("#survivor_display").html(this.currentSurvivor);
   }
   
   if(this.gameBoard.base.is_dead()) {
@@ -242,6 +252,7 @@ World.prototype.process_input = function(delta_time) {
   var xInd = coord_to_index(this.inputManager.mouseX - this.camera.x,this.gameBoard.gridSpace);
   var yInd = coord_to_index(this.inputManager.mouseY - this.camera.y,this.gameBoard.gridSpace);
   
+  //PLace Tower
   if(this.inputManager.is_placing_tower() && this.gameBoard.is_on_board(tmpX,tmpY) && 
       (this.gameBoard.base.resources - 10 >= 0)  && !this.gameBoard.is_occupied(xInd,yInd)) {
     this.gameBoard.add_tower(tmpX,tmpY);
@@ -251,6 +262,7 @@ World.prototype.process_input = function(delta_time) {
     }
   }
 
+  //Select Tower
   if(this.inputManager.mouseAction === NOTHING && this.inputManager.mouseState === MOUSE_DOWN && this.gameBoard.is_on_board(tmpX,tmpY)) {
     var tmpSelected = this.gameBoard.occupiedCells[xInd][yInd];
     if(tmpSelected !== false) {
@@ -259,6 +271,8 @@ World.prototype.process_input = function(delta_time) {
       }
       this.currentSelected = tmpSelected;
       this.currentSelected.set_focus();
+      
+      this.currentSurvivor = this.currentSelected.survivor;
     }
     else {
       this.inputManager.mouseAction = MOVE_BOARD;
@@ -267,6 +281,7 @@ World.prototype.process_input = function(delta_time) {
     }
   }
   
+  //Move board
   if(this.inputManager.mouseAction === MOVE_BOARD) {
       var tmpX = this.inputManager.mouseX;
       var tmpY = this.inputManager.mouseY;
@@ -280,24 +295,38 @@ World.prototype.process_input = function(delta_time) {
     this.camera.y = clean_coord(this.camera.y,this.gameBoard.gridSpace);
   }
   
-  if(this.inputManager.is_placing_survivor() && this.gameBoard.is_on_board(tmpX,tmpY)) {
+  //Place Survivor
+  if((this.inputManager.is_placing_survivor() || this.inputManager.is_moving_survivor()) 
+        && this.gameBoard.is_on_board(tmpX,tmpY)) {
     var tmpSelected = this.gameBoard.occupiedCells[xInd][yInd];
     if(tmpSelected !== false) {
-    
-      var tmpTower = this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1].tower
-      if(tmpTower != undefined) {
-        tmpTower.survivor = undefined;
+      if(this.currentSelected !== undefined) {
+        this.currentSelected.lose_focus();
       }
-      this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1].tower = tmpSelected;
-      tmpSelected.set_survivor(this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1]);
-      this.inputManager.mouseAction = NOTHING; 
+      this.currentSelected = tmpSelected;
+      if(this.currentSurvivor != undefined && this.inputManager.is_moving_survivor()) {
+        this.currentSurvivor.tower.lose_survivor();
+        this.currentSurvivor.tower = this.currentSelected;
+      }
+      else {
+        if(this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1].tower != undefined) {
+          this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1].tower.lose_survivor();
+        }
+        this.currentSurvivor = this.gameBoard.base.survivors[this.gameBoard.base.survivors.length-1];
+      }
+      
+      this.currentSelected.set_survivor(this.currentSurvivor);
+      this.currentSurvivor.tower = this.currentSelected;
+      this.inputManager.mouseAction = NOTHING;
     }
   }
   
+  //Clear Mouse
   if((this.inputManager.is_placing_survivor() || this.inputManager.is_placing_tower()) && !this.gameBoard.is_on_board(tmpX,tmpY)) {
     this.inputManager.mouseAction = NOTHING; 
     if(this.currentSelected !== undefined) {
       this.currentSelected.lose_focus();
+      this.currentSurvivor = undefined;
     }
   }
 }
@@ -661,7 +690,6 @@ Tower.prototype.set_focus = function() {
   $(".tower_info").css("display","block");
   $("#damage_display").html(this.damage);
   var self = this;
-  $("#move_survivor").click(function(){self.survivor = undefined;});
 }
 
 Tower.prototype.lose_focus = function() {
@@ -793,14 +821,28 @@ InputManager.prototype.get_mouse_state = function() {
 
 
 InputManager.prototype.is_placing_tower = function() {
-  if(this.mouseState === MOUSE_DOWN && this.mouseAction === PLACING_TOWER) {
+  if(this.mouseState === MOUSE_DOWN && (this.mouseAction === PLACING_TOWER || this.is_down(T_KEY))) {
     return true;
   }
   return false;
 }
 
 InputManager.prototype.is_placing_survivor = function() {
-  if(this.mouseState === MOUSE_DOWN && this.mouseAction === PLACING_SURVIVOR) {
+  if(this.mouseState === MOUSE_DOWN && (this.mouseAction === PLACING_SURVIVOR || this.is_down(S_KEY))) {
+    return true;
+  }
+  return false;
+}
+
+InputManager.prototype.is_moving_survivor = function() {
+  if(this.mouseState === MOUSE_DOWN && (this.mouseAction === MOVING_SURVIVOR || this.is_down(M_KEY))) {
+    return true;
+  }
+  return false;
+}
+
+InputManager.prototype.is_down = function(key) {
+  if(this.keys[key] === KEY_DOWN) {
     return true;
   }
   return false;
@@ -828,11 +870,11 @@ InputManager.prototype.mouse_up = function(event) {
 }
 
 InputManager.prototype.key_down = function(event) {
-  this.keys[event.keyCode] = KEY_DOWN;
+  this.keys[String.fromCharCode(event.keyCode)] = KEY_DOWN;
 }
 
 InputManager.prototype.key_up = function(event) {
-  this.keys[event.keyCode] = KEY_UP;
+  this.keys[String.fromCharCode(event.keyCode)] = KEY_UP;
 }
 
 /*************************************************************************
