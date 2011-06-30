@@ -147,6 +147,7 @@ Tower.prototype._set_default_color = function() {
 }
 
 Tower.prototype.display_menu = function() {
+  /* May need to move some of this to gameBoard */
   var self = this;
   $(".tower_info").css("display","block");
   var tmRand = Math.floor(Math.random()*10);

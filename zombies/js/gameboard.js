@@ -224,7 +224,6 @@ GameBoard.prototype.place_survivor = function(x,y) {
   var xInd = coord_to_index(cleanX,this.gridSpace);
   var yInd = coord_to_index(cleanY,this.gridSpace);
   
-  //NEED TO VALIDATE THAT XIND AND YIND EXIST
   if(this.is_cell_occupied(xInd,yInd)) {
     this.select_tower(xInd,yInd);
     this.get_tower(xInd,yInd).set_survivor(this.base.survivors[0]);
