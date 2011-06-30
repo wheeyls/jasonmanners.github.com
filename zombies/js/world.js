@@ -26,7 +26,8 @@ World.prototype = {
   currentSelected : undefined,
   currentTower : undefined,
   currentSurvivor : undefined,
-  speed : 1
+  speed : 1,
+  waveTime : 0
 }
 
 World.prototype.initialize = function() {
@@ -36,9 +37,16 @@ World.prototype.initialize = function() {
 }
 
 World.prototype.update = function(delta_time) {
+ 
   //update gameBoard
   if(this.gameState.is_running()) {
     this.gameBoard.update(delta_time);
+    
+    this.waveTime += delta_time;
+    if(this.waveTime > 60) {
+      //this.waves_arr.splice(0,1);
+      this.waveTime = 0;
+    }
   }
   
   $("#score_number").html(this.gameBoard.get_score());
@@ -59,6 +67,8 @@ World.prototype.draw = function(context) {
     context.translate(this.camera.x,this.camera.y);
     this.gameBoard.draw(context); 
   context.restore();
+  
+  this.draw_waves();
 }
 
 World.prototype.clear = function(context) {
@@ -117,6 +127,11 @@ World.prototype._init_world = function() {
       $(this).html("Play");
     }
   });
+  
+  //Change to class and .each with an attribute holding the speed
+  $("#speed_1").click(function() {self.speed = 1;});
+  $("#speed_2").click(function() {self.speed = 2;});
+  $("#speed_3").click(function() {self.speed = 3;});
 }
 
 World.prototype._init_game_objects = function() {
@@ -128,10 +143,19 @@ World.prototype._init_game_objects = function() {
 }
 
 World.prototype._init_waves = function() {
+  this.waves_arr = [];
+  for(var i = 1; i < 10000; i++) {
+    this.waves_arr.push(Math.sin(i/25)*5+ Math.random()*10);
+  }
   $("#wave_rate").attr({ width: 700, height:30 });
+}
+
+World.prototype.draw_waves = function() {
   var tmpContext = $("#wave_rate")[0].getContext("2d");
-  for(var i = 1; i < 700; i++) {
-    var tmpNum = Math.sin(i/25)*5+ Math.random()*10;
-    tmpContext.fillRect(i-1,tmpNum+5,1,20-tmpNum);
+  tmpContext.clearRect(0, 0, 700, 30);
+  tmpContext.fillStyle = "rgba(73,110,28,0.6)";
+  for(var i = 0; i < 700; i++) {
+    tmpContext.fillRect(i-1,this.waves_arr[i]+5,1,20-this.waves_arr[i]);
   }
 }
+

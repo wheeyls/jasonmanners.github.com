@@ -20,6 +20,7 @@ InputManager.prototype.mouse_down = function(event) {
   var boardY = this.mouseY-this.camera.y;
   if(this.mouseActionFunction) {
     if(!this.mouseActionFunction(boardX,boardY)) {
+      this.gameBoard.select_tower(clean_coord_index(boardX,this.gameBoard.gridSpace),clean_coord_index(boardY,this.gameBoard.gridSpace));
       this.mouseActionFunction = undefined;
       this.mouseAction = NOTHING;
     }
