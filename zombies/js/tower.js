@@ -79,6 +79,12 @@ Tower.prototype.update = function(delta_time,enemies) {
     return false;
   }
   
+  if(this.selected) {
+    $("#damage_display").html(this.get_damage());
+    $("#range_display").html(this.get_range());
+    $("#rate_display").html(this.get_rate());
+  }
+  
   //Want to add in priority - if closer to goal and in range shoot at it - otherwise shoot at closest
   var distMin = 10000000;
 
@@ -127,9 +133,25 @@ Tower.prototype.lose_survivor = function() {
 
 
 Tower.prototype.get_damage = function() {
+  if(!this.survivor) {
+    return 0;
+  }
   return this.survivor.get_damage();
 }
 
+Tower.prototype.get_range = function() {
+  if(!this.survivor) {
+    return 0;
+  }
+  return this.survivor.get_range();
+}
+
+Tower.prototype.get_rate = function() {
+  if(!this.survivor) {
+    return 0;
+  }
+  return this.survivor.get_rate();
+}
 Tower.prototype.get_survivor = function() {
   return this.survivor;
 }
@@ -154,11 +176,21 @@ Tower.prototype.set_focus = function() {
 Tower.prototype.display_menu = function() {
   /* May need to move some of this to gameBoard */
   $(".tower_info").css("display","block");
+  $("#damage_display").html(this.get_damage());
+  $("#range_display").html(this.get_range());
+  $("#rate_display").html(this.get_rate());
+  
   var self = this;
   $("#move_survivor").click(function(){self.lose_survivor();});
+  $("#upgrade_damage").click(function(){self.survivor.upgrade_damage(3);});
+  $("#upgrade_range").click(function(){self.survivor.upgrade_range(10);});
+  $("#upgrade_rate").click(function(){self.survivor.upgrade_rate(-25);});
 }
 
 Tower.prototype.hide_menu = function() {
   $("#move_survivor").unbind('click');
+  $("#upgrade_damage").unbind('click');
+  $("#upgrade_range").unbind('click');
+  $("#upgrade_rate").unbind('click');
   $(".tower_info").css("display","none");
 }
