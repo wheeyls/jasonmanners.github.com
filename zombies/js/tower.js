@@ -106,12 +106,7 @@ Tower.prototype.update = function(delta_time,enemies) {
   return false;
 }
 
-Tower.prototype.set_focus = function() {
-  this.selected = true;
-  this.color = "rgba(50,100,255,0.3)";
-  this.display_menu();
-  return this;
-}
+
 
 Tower.prototype.lose_focus = function() {
   this.selected = false;
@@ -124,10 +119,12 @@ Tower.prototype.set_survivor = function(survivor) {
   this.survivor = survivor;
 }
 
+
 Tower.prototype.lose_survivor = function() {
   this._set_default_color();
   this.survivor = undefined;
 }
+
 
 Tower.prototype.get_damage = function() {
   return this.survivor.get_damage();
@@ -146,24 +143,22 @@ Tower.prototype._set_default_color = function() {
   }
 }
 
+
+Tower.prototype.set_focus = function() {
+  this.selected = true;
+  this.color = "rgba(50,100,255,0.3)";
+  this.display_menu();
+  return this;
+}
+
 Tower.prototype.display_menu = function() {
   /* May need to move some of this to gameBoard */
-  var self = this;
   $(".tower_info").css("display","block");
-  var tmRand = Math.floor(Math.random()*10);
-  
-  /* CHANGE */
-  $("#tower_actions").html("<article id='move_survivor"+tmRand+"'><span>Move Survivor</span></article>"+
-                            "<article id='sell_tower"+tmRand+"'><span>Sell</span></article>");
-  $("#move_survivor"+tmRand).click(function() {
-      self.lose_survivor();
-  });
-  
-  $("#sell_tower"+tmRand).click(function() {
-      self.detroy();
-  });
+  var self = this;
+  $("#move_survivor").click(function(){self.lose_survivor();});
 }
 
 Tower.prototype.hide_menu = function() {
+  $("#move_survivor").unbind('click');
   $(".tower_info").css("display","none");
 }

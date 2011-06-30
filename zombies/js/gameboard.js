@@ -225,9 +225,11 @@ GameBoard.prototype.place_survivor = function(x,y) {
   var yInd = coord_to_index(cleanY,this.gridSpace);
   
   if(this.is_cell_occupied(xInd,yInd)) {
+    var tmpSurvivor = new Survivor();
     this.select_tower(xInd,yInd);
-    this.get_tower(xInd,yInd).set_survivor(this.base.survivors[0]);
-    this.base.survivors[0].set_tower(this.get_tower(xInd,yInd));
+    this.get_tower(xInd,yInd).set_survivor(tmpSurvivor);
+    tmpSurvivor.set_tower(this.get_tower(xInd,yInd));
+    this.base.add_survivor(tmpSurvivor);
   }
   
   return false;
@@ -239,5 +241,7 @@ GameBoard.prototype.select_tower = function(xInd,yInd) {
   }
   if(this.is_cell_occupied(xInd,yInd)) {
     this.selected = this.get_tower(xInd,yInd).set_focus();
+    var self = this;
+    //$("#move_survivor").click(function(){self.selected.lose_survivor();});
   }
 }

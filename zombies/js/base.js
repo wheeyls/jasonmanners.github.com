@@ -38,6 +38,7 @@ Base.prototype.is_dead = function() {
 Base.prototype.add_survivor = function(survivor) {
   this.survivors.push(survivor);
   this.unplacedSurvivors.push(survivor);
+  return this.survivors.length-1;
 }
 
 Base.prototype.kill_survivor = function(damage) {
