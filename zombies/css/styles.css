@@ -83,7 +83,7 @@ p {
 }
 
 .td_actions article {
-  height: 25px;
+  height: 20px;
   min-width: 40px;
   border: 1px solid #112233;
   float: left;
@@ -96,7 +96,11 @@ p {
 }
 
 .td_actions article:hover {
-  background: rgba(0,0,0,0.2);
+  color: #e0dfcb;
+  background: rgba(0,0,0,0.4);
+  -webkit-transition: background linear 0.35s, color linear 0.15s;
+  -moz-transition: background linear 0.35s, color linear 0.15s;
+  transition: background linear 0.35s, color linear 0.15s;
   cursor: pointer;
 }
 
