@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          $("#waves").attr({ width: 700, height: 30 });
+          var tmpContext = $("#waves")[0].getContext("2d");
+          /*
+            tmpContext.beginPath();
+            tmpContext.moveTo(0,Math.sin(1/10)+10);
+            for(var i = 1; i < 700; i++) {
+              tmpContext.lineTo(i,Math.sin(i/10)*10+10); //Size of turret is avg of width and length
+            }
+            tmpContext.stroke();
+          */
+          for(var i = 1; i < 700; i++) {
+            var tmpNum = Math.sin(i/10)*5+ Math.random()*10;
+            tmpContext.fillRect(i-1,tmpNum+5,1,20-tmpNum);
+          }
+      });
+    </script>
+  </head>
+  <body>
+    <canvas id="waves"></canvas>
+  </body>
+</html>
