@@ -45,18 +45,22 @@ Tower.prototype.draw = function(context) {
   //Cannon
   if(this.survivor !== undefined) {
     context.save();
-      context.lineWidth = 3;
-      context.strokeStyle = "#000000";
+      context.lineWidth = 4;
+      context.strokeStyle = "rgb(50,50,100)";
       context.translate(this.midX,this.midY);
       context.rotate(this.direction);
       
       context.save();
         context.beginPath();
           context.moveTo(0,0);
-          context.lineTo((this.width+this.height) / 2 ,0); //Size of turret is avg of width and length
+          context.lineTo((this.width+this.height) / 2.5 ,0); //Size of turret is avg of width and length
         context.stroke();
       context.restore();
     context.restore();
+    context.fillStyle = "rgb(50,50,100)";
+    context.beginPath();
+      context.arc(this.midX, this.midY, 6, 0, Math.PI*2, true); //*2
+    context.fill();
   }
   //Line to show engaged enemy
   if(this.target !== undefined && this.survivor !== undefined) {
@@ -143,7 +147,20 @@ Tower.prototype._set_default_color = function() {
 }
 
 Tower.prototype.display_menu = function() {
+  var self = this;
   $(".tower_info").css("display","block");
+  var tmRand = Math.floor(Math.random()*10);
+  
+  /* CHANGE */
+  $("#tower_actions").html("<article id='move_survivor"+tmRand+"'><span>Move Survivor</span></article>"+
+                            "<article id='sell_tower"+tmRand+"'><span>Sell</span></article>");
+  $("#move_survivor"+tmRand).click(function() {
+      self.lose_survivor();
+  });
+  
+  $("#sell_tower"+tmRand).click(function() {
+      self.detroy();
+  });
 }
 
 Tower.prototype.hide_menu = function() {

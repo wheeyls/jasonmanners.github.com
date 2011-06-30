@@ -68,9 +68,9 @@ GameBoard.prototype.draw = function(context){
   context.restore();
   
   this.base.draw(context);
-  this._draw_enemies(context);
-  this._draw_towers(context);
   this._draw_projectiles(context);
+  this._draw_towers(context);
+  this._draw_enemies(context);
 }
 
 GameBoard.prototype._draw_board = function(context){
