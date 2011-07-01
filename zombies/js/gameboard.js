@@ -291,3 +291,10 @@ GameBoard.prototype.upgrade_survivor = function(value,type) {
 GameBoard.prototype.get_survivor_string = function() {
   return this.base.get_current_survivor_num()+" / "+this.base.get_total_survivors();
 }
+
+GameBoard.prototype.get_upgrade_string = function() {
+  if(this.selectedSurvivor) {
+    return this.selectedSurvivor.get_current_upgrades()+" / "+this.selectedSurvivor.get_max_upgrades();
+  }
+  return "";
+}

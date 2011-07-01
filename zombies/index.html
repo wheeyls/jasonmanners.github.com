@@ -43,28 +43,18 @@
         <span>dotZombies</span>
       </div>
       <header class="grid_9 omega">
-        <section class="grid_4 alpha td_actions">
+        <section class="grid_3 alpha td_actions">
           <article id="tower" title="Place Tower">
             <span>Tower</span>
           </article>
           <article id="survivor" title="Place Survivor">
             <span>Survivor</span>
           </article>
-          <article id="pause" title="Pause">
-            <span>Pause</span>
-          </article>
-          <article class="speed_menu">
-            <span>Speed: </span> 
-            <span>
-              <ul>
-                <li id="speed_1">1</li>
-                <li id="speed_2">2</li>
-                <li id="speed_3">3</li>
-              </ul>
-            </span>
+          <article id="search" title="Search for Supplies and Survivors">
+            <span>Search</span>
           </article>
         </section>
-        <section class="grid_5 omega td_info">
+        <section class="grid_6 omega td_info">
           <article class="score">
             <span>Score: </span><span id="score_number">0</span>
           </article>
@@ -88,7 +78,7 @@
               <div><span>Range: </span><span id="range_display"></span></div>
             </article>
             <article>
-              <h3>Upgrades</h3>
+              <h3>Upgrades: <span id="upgrade_status"></span></h3>
               <section class="tower_actions">
                 <article id="upgrade_damage">
                   <span>Damage</span>
@@ -124,11 +114,21 @@
         <canvas id="world"></canvas>
       </section>
       <div class="clear"></div><!-- Used to define rows -- find out why this is necessary -->
-      <div class="grid_1 prefix_2 alpha footer_div">
+      <div class="grid_3 alpha footer_div">
         <section class="td_actions">
-          <article id="search" title="Search for Supplies and Survivors">
-            <span>Search</span>
-          </article>
+          <article id="pause" title="Pause">
+              <span>Pause</span>
+            </article>
+            <article class="speed_menu">
+              <span>Speed: </span> 
+              <span>
+                <ul>
+                  <li id="speed_1">1</li>
+                  <li id="speed_2">2</li>
+                  <li id="speed_3">3</li>
+                </ul>
+              </span>
+            </article>
         </section>
       </div>
       <footer class="grid_9 omega">

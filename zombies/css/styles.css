@@ -157,7 +157,7 @@ p {
 }
 
 .td_info article.score {
-  width:90px;
+  width:100px;
   overflow:hidden;
   text-align: left;
 }
@@ -166,7 +166,7 @@ p {
 }
 
 .td_info article.supplies {
-  width:135px;
+  width:150px;
 }
 
 .speed_menu span {

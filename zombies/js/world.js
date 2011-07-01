@@ -53,6 +53,7 @@ World.prototype.update = function(delta_time) {
   $("#score_number").html(this.gameBoard.get_score());
   $("#health_number").html(this.gameBoard.get_health());
   $("#resources_number").html(this.gameBoard.get_supplies()+" | "+this.gameBoard.get_survivor_string());
+  $("#upgrade_status").html(this.gameBoard.get_upgrade_string());
   if(!this.gameBoard.base.can_search()) {
     $("#search").addClass("red");
     $("#search").removeClass("green");
@@ -97,6 +98,8 @@ World.prototype.run = function(timestep) {
 }
 
 World.prototype.start = function() {
+  startTime = Date.now();
+  this.gameState.run();
   this.run();
 }
 
@@ -121,7 +124,6 @@ World.prototype._init_world = function() {
   $(document).keydown(function(event) {self.inputManager.key_down(event);});
   $(document).keyup(function(event) {self.inputManager.key_up(event);});
   
-  $("#start").click(function() {self.gameState.run(); self.start(); $(this).css("display","none");});
   $("#tower").click(function() {self.inputManager.place_tower();});
   $("#survivor").click(function() {self.inputManager.new_survivor();});
   $("#move_survivor").click(function(){self.inputManager.move_survivor();});

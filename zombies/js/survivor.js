@@ -70,5 +70,13 @@ Survivor.prototype.set_tower = function(tower) {
   this.tower = tower;
 }
 
+Survivor.prototype.get_max_upgrades = function() {
+  return this.max_upgrades;
+}
+
+
+Survivor.prototype.get_current_upgrades = function() {
+  return this.times_upgraded;
+}
 
 
