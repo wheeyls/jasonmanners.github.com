@@ -3,6 +3,7 @@
 **************************************************************************/
 function World(canvas_id) {
   this.canvas_id = "#"+canvas_id; //might change
+  $("#wave_rate").attr({ width: 700, height:30 });
 }
 
 World.prototype = {
@@ -163,7 +164,6 @@ World.prototype._init_waves = function() {
   for(var i = 1; i < 10000; i++) {
     this.waves_arr.push(Math.sin(i/25)*5+ Math.random()*10);
   }
-  $("#wave_rate").attr({ width: 700, height:30 });
 }
 
 World.prototype.draw_waves = function() {
