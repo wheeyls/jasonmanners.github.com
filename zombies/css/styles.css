@@ -80,6 +80,7 @@ p {
 
 .td_info {
   float:left;
+  overflow:hidden;
 }
 
 .td_actions article {
@@ -140,10 +141,6 @@ p {
   text-align: center;
 }
 
-.score {
-  min-width: 100px;
-}
-
 .tower_actions article:hover {
   background: rgba(0,0,0,0.2);
   cursor: pointer;
@@ -153,10 +150,23 @@ p {
   height: 25px;
   border-right: 1px solid #112233;
   float: left;
-  padding: 0 10px;
+  padding: 0 5px;
   margin-top: 5px;
-  min-width: 75px;
+  overflow: hidden;
   text-align:center;
+}
+
+.td_info article.score {
+  width:90px;
+  overflow:hidden;
+  text-align: left;
+}
+.td_info article.health {
+  width:90px;
+}
+
+.td_info article.supplies {
+  width:135px;
 }
 
 .speed_menu span {
