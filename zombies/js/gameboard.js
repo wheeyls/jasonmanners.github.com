@@ -182,10 +182,12 @@ GameBoard.prototype.add_tower = function(x,y){
   var yInd = coord_to_index(cleanY,self.gridSpace);
   if(!self.is_cell_occupied(xInd,yInd)) {
     var tmpTower = new Tower(cleanX,cleanY,self.gridSpace);
-    self.occupiedCells[xInd][yInd] = tmpTower;
-    self.towers.push(tmpTower);
-    this.base.subtract_supplies(tmpTower.cost);
-    return true;
+    if(this.base.is_enough_supplies(tmpTower.cost)){
+      self.occupiedCells[xInd][yInd] = tmpTower;
+      self.towers.push(tmpTower);
+      this.base.subtract_supplies(tmpTower.cost);
+      return true;
+    }
   }
   else {
     return false;
