@@ -10,19 +10,30 @@ Survivor.prototype = {
   range : 125,
   rate : 120,
   velocity: 300,
-  projectile_size : 2
+  projectile_size : 2,
+  times_upgraded: 0,
+  max_upgrades: 5
 }
 
 Survivor.prototype.upgrade_damage = function(damage) {
-  this.damage += damage;
+  if(this.times_upgraded < this.max_upgrades) {
+    this.damage += damage;
+    this.times_upgraded++;
+  }
 }
 
 Survivor.prototype.upgrade_rate = function(rate) {
-  this.rate += rate;
+  if(this.times_upgraded < this.max_upgrades) {
+    this.rate += rate;
+    this.times_upgraded++;
+  }
 }
 
 Survivor.prototype.upgrade_range = function(range) {
-  this.range += range;  
+  if(this.times_upgraded < this.max_upgrades) {
+    this.range += range;  
+    this.times_upgraded++;
+  }
 }
 
 Survivor.prototype.get_damage = function() {
