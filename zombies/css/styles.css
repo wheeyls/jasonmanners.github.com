@@ -49,6 +49,7 @@ p {
 
 .title span {
   /*font-family: 'Permanent Marker', serif;*/
+  text-shadow: 2px 2px 2px rgba(130, 130, 20, 0.3);
 }
 
 .footer_div {
