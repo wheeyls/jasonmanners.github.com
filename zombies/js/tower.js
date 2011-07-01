@@ -179,18 +179,8 @@ Tower.prototype.display_menu = function() {
   $("#damage_display").html(this.get_damage());
   $("#range_display").html(this.get_range());
   $("#rate_display").html(this.get_rate());
-  
-  var self = this;
-  $("#move_survivor").click(function(){self.lose_survivor();});
-  $("#upgrade_damage").click(function(){self.survivor.upgrade_damage(3);});
-  $("#upgrade_range").click(function(){self.survivor.upgrade_range(10);});
-  $("#upgrade_rate").click(function(){self.survivor.upgrade_rate(-25);});
 }
 
 Tower.prototype.hide_menu = function() {
-  $("#move_survivor").unbind('click');
-  $("#upgrade_damage").unbind('click');
-  $("#upgrade_range").unbind('click');
-  $("#upgrade_rate").unbind('click');
   $(".tower_info").css("display","none");
 }

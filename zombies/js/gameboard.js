@@ -22,10 +22,12 @@ function GameBoard(width,height,gridSpace,gridColor,bgColor) {
   
   this.projectiles = [];
   
+  this.selected = undefined;
+  this.selectedSurvivor = undefined;
   
   this.maxX = Math.floor(this.width / this.gridSpace)
   this.maxY = Math.floor(this.height / this.gridSpace);
-  this.occupiedCells = new Array();
+  this.occupiedCells = [];
   this.occupiedList = [];
   
   for(var i = 0; i < this.maxX; i++) {
@@ -218,18 +220,27 @@ GameBoard.prototype.get_tower = function(x,y) {
     return this.occupiedCells[x][y];
 }
 
-GameBoard.prototype.place_survivor = function(x,y) {
-  var cleanX = clean_coord(x,this.gridSpace);
+GameBoard.prototype.new_survivor = function(x,y) {
+  var tmpSurvivor = new Survivor();
+  return this._place_survivor(x,y,tmpSurvivor);
+}
+
+GameBoard.prototype.move_survivor = function(x,y) {
+  var tmpSurvivor = this.selectedSurvivor;
+  return this._place_survivor(x,y,tmpSurvivor);
+}
+
+GameBoard.prototype._place_survivor = function(x,y,survivor) {
+ var cleanX = clean_coord(x,this.gridSpace);
   var cleanY = clean_coord(y,this.gridSpace);
   var xInd = coord_to_index(cleanX,this.gridSpace);
   var yInd = coord_to_index(cleanY,this.gridSpace);
   
   if(this.is_cell_occupied(xInd,yInd)) {
-    var tmpSurvivor = new Survivor();
     this.select_tower(xInd,yInd);
-    this.get_tower(xInd,yInd).set_survivor(tmpSurvivor);
-    tmpSurvivor.set_tower(this.get_tower(xInd,yInd));
-    this.base.add_survivor(tmpSurvivor);
+    this.get_tower(xInd,yInd).set_survivor(survivor);
+    survivor.set_tower(this.get_tower(xInd,yInd));
+    this.base.add_survivor(survivor);
   }
   
   return false;
@@ -238,10 +249,36 @@ GameBoard.prototype.place_survivor = function(x,y) {
 GameBoard.prototype.select_tower = function(xInd,yInd) {
   if(this.selected) {
     this.selected.lose_focus();
+    this.selectedSurvivor = undefined;
   }
   if(this.is_cell_occupied(xInd,yInd)) {
     this.selected = this.get_tower(xInd,yInd).set_focus();
-    var self = this;
-    //$("#move_survivor").click(function(){self.selected.lose_survivor();});
+    if(this.selected.survivor) {
+      this.selectedSurvivor = this.selected.survivor;
+    }
+  }
+}
+
+GameBoard.prototype.upgrade_survivor = function(value,type) {
+  var cost = 10;
+  var did_upgrade = false;
+  if(this.base.is_enough_supplies(cost) && this.selectedSurvivor) {
+    switch(type) {
+      case DAMAGE:
+        did_upgrade = this.selectedSurvivor.upgrade_damage(value);
+        break;
+      case RANGE:
+        did_upgrade = this.selectedSurvivor.upgrade_range(value);
+        break;
+      case RATE:
+        did_upgrade = this.selectedSurvivor.upgrade_rate(value);
+        break;
+      default:
+        break;
+    }
+    
+    if(did_upgrade) {
+      this.base.subtract_supplies(cost);
+    }
   }
 }

@@ -33,6 +33,10 @@ const KEY_DOWN = 248;
 const KEY_UP = 249;
 const PLACING_SURVIVOR = 250;
 const MOVING_SURVIVOR = 251;
+
+const DAMAGE = 342;
+const RANGE = 343;
+const RATE = 344;
 /*************************************************************************
   bind declaration
   - Has caused issues when it is not declared will not run

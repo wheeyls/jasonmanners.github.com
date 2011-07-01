@@ -46,7 +46,10 @@ InputManager.prototype.key_down = function(event) {
       this.place_tower();
       break;
     case 83:
-      this.place_survivor();
+      this.new_survivor();
+      break;
+    case 77:
+      this.move_survivor();
       break;
     default:
       break;
@@ -57,8 +60,14 @@ InputManager.prototype.place_tower = function() {
   this.mouseActionFunction = this.gameBoard.add_tower.bind(this.gameBoard);
 }
 
-InputManager.prototype.place_survivor = function() {
-  this.mouseActionFunction = this.gameBoard.place_survivor.bind(this.gameBoard);
+InputManager.prototype.new_survivor = function() {
+  this.mouseActionFunction = this.gameBoard.new_survivor.bind(this.gameBoard);
+}
+
+InputManager.prototype.move_survivor = function() {
+  this.gameBoard.selected.lose_survivor(); 
+  this.gameBoard.selected.lose_focus(); 
+  this.mouseActionFunction = this.gameBoard.move_survivor.bind(this.gameBoard);
 }
 
 

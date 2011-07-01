@@ -19,21 +19,27 @@ Survivor.prototype.upgrade_damage = function(damage) {
   if(this.times_upgraded < this.max_upgrades) {
     this.damage += damage;
     this.times_upgraded++;
+    return true;
   }
+  return false;
 }
 
 Survivor.prototype.upgrade_rate = function(rate) {
   if(this.times_upgraded < this.max_upgrades) {
     this.rate += rate;
     this.times_upgraded++;
+    return true;
   }
+  return false;
 }
 
 Survivor.prototype.upgrade_range = function(range) {
   if(this.times_upgraded < this.max_upgrades) {
     this.range += range;  
     this.times_upgraded++;
+    return true;
   }
+  return false;
 }
 
 Survivor.prototype.get_damage = function() {

@@ -31,8 +31,9 @@ World.prototype = {
 }
 
 World.prototype.initialize = function() {
-  this._init_world();
   this._init_game_objects();
+  this._init_world();
+  
   this.initialized = true;
 }
 
@@ -103,6 +104,7 @@ World.prototype._init_world = function() {
   
   //Init InputManager
   this.inputManager = new InputManager(this.camera);
+  this.inputManager.set_gameBoard(this.gameBoard);
   
   var self = this;
   $(this.canvas_id).bind("mousedown", function(event) {self.inputManager.mouse_down(event);});
@@ -114,7 +116,12 @@ World.prototype._init_world = function() {
   
   $("#start").click(function() {self.gameState.run(); self.start(); $(this).css("display","none");});
   $("#tower").click(function() {self.inputManager.place_tower();});
-  $("#survivor").click(function() {self.inputManager.place_survivor();});
+  $("#survivor").click(function() {self.inputManager.new_survivor();});
+  $("#move_survivor").click(function(){self.inputManager.move_survivor();});
+  $("#upgrade_damage").click(function(){self.gameBoard.upgrade_survivor(3,DAMAGE);});
+  $("#upgrade_range").click(function(){self.gameBoard.upgrade_survivor(10,RANGE);});
+  $("#upgrade_rate").click(function(){self.gameBoard.upgrade_survivor(-25,RATE);});
+  
   $("#pause").click(function() {
     if(self.gameState.is_paused()) {
       startTime = Date.now();
@@ -137,7 +144,6 @@ World.prototype._init_world = function() {
 World.prototype._init_game_objects = function() {
 //init gameBoard
   this.gameBoard = new GameBoard(640,400,20,"rgba(0,0,0,0.05)","rgba(100,100,0,0.3)");
-  this.inputManager.set_gameBoard(this.gameBoard);
   //init gameState
   this.gameState = new GameStateManager();
 }
