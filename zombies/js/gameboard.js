@@ -243,11 +243,15 @@ GameBoard.prototype._place_survivor = function(x,y,survivor) {
   
   if(this.is_cell_occupied(xInd,yInd)) {
     this.select_tower(xInd,yInd);
-    this.get_tower(xInd,yInd).set_survivor(survivor);
-    survivor.set_tower(this.get_tower(xInd,yInd));
-    this.base.add_survivor(survivor);
+    if(!this.get_tower(xInd,yInd).get_survivor()) {
+      this.get_tower(xInd,yInd).set_survivor(survivor);
+      survivor.set_tower(this.get_tower(xInd,yInd));
+      this.base.add_survivor(survivor);
+    }
+    else {
+      return true;
+    }
   }
-  
   return false;
 }
 
