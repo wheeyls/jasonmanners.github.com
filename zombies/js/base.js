@@ -13,8 +13,10 @@ function Base(x,y,width,height,health) {
   this.supplies = 200;
   this.midX = this.x + (this.width / 2);
   this.midY = this.y + (this.height / 2);
-  
-  this.add_survivor(new Survivor());
+
+  this.totalSurvivors = 5;
+  this.cooldown = 15*MS_IN_SEC;
+  this.timer = 0;
 }
 
 Base.prototype.draw = function(context) {
@@ -29,6 +31,7 @@ Base.prototype.draw = function(context) {
 }
 
 Base.prototype.update = function(delta_time) {
+  this.timer += delta_time;
 }
 
 Base.prototype.is_dead = function() {
@@ -36,9 +39,16 @@ Base.prototype.is_dead = function() {
 }
 
 Base.prototype.add_survivor = function(survivor) {
-  this.survivors.push(survivor);
-  this.unplacedSurvivors.push(survivor);
-  return this.survivors.length-1;
+  if(this.can_add_survivor()) {
+    this.survivors.push(survivor);
+    this.unplacedSurvivors.push(survivor);
+    return this.survivors.length-1;
+  }
+  return false;
+}
+
+Base.prototype.can_add_survivor = function() {
+  return (this.survivors.length+1 <= this.totalSurvivors);
 }
 
 Base.prototype.kill_survivor = function(damage) {
@@ -59,4 +69,24 @@ Base.prototype.subtract_supplies = function(supplies) {
 
 Base.prototype.is_enough_supplies = function(supplies) {
   return ((this.supplies - supplies) >= 0);
+}
+
+Base.prototype.search = function() {
+  if(this.can_search()) {
+    this.timer = 0;
+    this.supplies += 200;
+    this.totalSurvivors++;
+  }
+}
+
+Base.prototype.can_search = function() {
+  return (this.timer >= this.cooldown);
+}
+
+Base.prototype.get_total_survivors = function() {
+  return this.totalSurvivors;
+}
+
+Base.prototype.get_current_survivor_num = function() {
+  return this.survivors.length;
 }

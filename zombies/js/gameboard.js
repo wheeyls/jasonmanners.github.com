@@ -56,7 +56,7 @@ GameBoard.prototype.update = function(delta_time){
     var tmpDir = Math.atan2(this.base.midY-tmpY,this.base.midX-tmpX);
     this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10+10*(this.totalTime / MS_IN_SEC / 5),10,7,0,this.base.midX,this.base.midY));
   }
-  
+  this.base.update(delta_time);
   this._update_enemies(delta_time);
   this._update_towers(delta_time,this.currentEnemies);
   this.score += this._update_projectiles(delta_time);
@@ -223,8 +223,11 @@ GameBoard.prototype.get_tower = function(x,y) {
 }
 
 GameBoard.prototype.new_survivor = function(x,y) {
-  var tmpSurvivor = new Survivor();
-  return this._place_survivor(x,y,tmpSurvivor);
+  if(this.base.can_add_survivor()){
+    var tmpSurvivor = new Survivor();
+    return this._place_survivor(x,y,tmpSurvivor);
+  }
+  return false;
 }
 
 GameBoard.prototype.move_survivor = function(x,y) {
@@ -283,4 +286,8 @@ GameBoard.prototype.upgrade_survivor = function(value,type) {
       this.base.subtract_supplies(cost);
     }
   }
+}
+
+GameBoard.prototype.get_survivor_string = function() {
+  return this.base.get_current_survivor_num()+" / "+this.base.get_total_survivors();
 }

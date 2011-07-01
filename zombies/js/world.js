@@ -52,8 +52,15 @@ World.prototype.update = function(delta_time) {
   
   $("#score_number").html(this.gameBoard.get_score());
   $("#health_number").html(this.gameBoard.get_health());
-  $("#resources_number").html(this.gameBoard.get_supplies());
-  
+  $("#resources_number").html(this.gameBoard.get_supplies()+" | "+this.gameBoard.get_survivor_string());
+  if(!this.gameBoard.base.can_search()) {
+    $("#search").addClass("red");
+    $("#search").removeClass("green");
+  }
+  else {
+    $("#search").addClass("green");
+    $("#search").removeClass("red");
+  }
   //Can this be done with promises
   if(this.gameBoard.base.is_dead()) {
     $("#lose").css("display","block");
@@ -121,6 +128,7 @@ World.prototype._init_world = function() {
   $("#upgrade_damage").click(function(){self.gameBoard.upgrade_survivor(3,DAMAGE);});
   $("#upgrade_range").click(function(){self.gameBoard.upgrade_survivor(10,RANGE);});
   $("#upgrade_rate").click(function(){self.gameBoard.upgrade_survivor(-25,RATE);});
+  $("#search").click(function(){self.gameBoard.base.search();});
   
   $("#pause").click(function() {
     if(self.gameState.is_paused()) {

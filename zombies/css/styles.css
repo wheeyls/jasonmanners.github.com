@@ -1,7 +1,6 @@
 * {
   /*font-family: 'Didact Gothic', serif;*/
   font-family: 'IM Fell DW Pica SC', serif;
-
 }
 
 
@@ -140,6 +139,10 @@ p {
   text-align: center;
 }
 
+.score {
+  min-width: 100px;
+}
+
 .tower_actions article:hover {
   background: rgba(0,0,0,0.2);
   cursor: pointer;
@@ -151,7 +154,7 @@ p {
   float: left;
   padding: 0 10px;
   margin-top: 5px;
-  min-width: 100px;
+  min-width: 75px;
   text-align:center;
 }
 
@@ -242,4 +245,21 @@ p {
   display: none;
   font-size: 45px;
   color:#DDDDDD;
+}
+
+.red {
+  color:#000000;
+  font-weight: 500;
+  background: rgba(130,30,30,0.5);
+  -webkit-transition: background linear 0.35s;
+  -moz-transition: background linear 0.35s;
+  transition: background linear 0.35s;
+}
+.green {
+  color:#000000;
+  font-weight: 500;
+  background: rgba(30,130,30,0.5);
+  -webkit-transition: background linear 0.35s;
+  -moz-transition: background linear 0.35s;
+  transition: background linear 0.35s;
 }
