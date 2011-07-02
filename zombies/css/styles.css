@@ -49,7 +49,7 @@ p {
 
 .title span {
   /*font-family: 'Permanent Marker', serif;*/
-  text-shadow: 2px 2px 2px rgba(130, 130, 20, 0.3);
+ /* text-shadow: 2px 2px 2px rgba(130, 130, 20, 0.3);*/
 }
 
 .footer_div {
@@ -244,7 +244,7 @@ p {
 }
 
 .lose {
-  border: 2px solid rgba(50,50,50,0.8);
+  border: 3px solid rgba(50,50,50,0.8);
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;

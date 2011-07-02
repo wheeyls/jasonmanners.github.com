@@ -55,6 +55,7 @@ World.prototype.update = function(delta_time) {
   $("#health_number").html(this.gameBoard.get_health());
   $("#resources_number").html(this.gameBoard.get_supplies()+" | "+this.gameBoard.get_survivor_string());
   $("#upgrade_status").html(this.gameBoard.get_upgrade_string());
+  $("#health_display").html(this.gameBoard.get_tower_health());
   if(!this.gameBoard.base.can_search()) {
     $("#search").addClass("red");
     $("#search").removeClass("green");

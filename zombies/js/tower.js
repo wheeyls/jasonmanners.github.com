@@ -8,6 +8,7 @@ function Tower(x,y,gridSpace) {
   this.cooldown = 0;
   this.width = gridSpace;
   this.height = gridSpace;
+  this.health = 100;
   
   this.midX = this.x + (this.width / 2);
   this.midY = this.y + (this.height / 2);
@@ -184,3 +185,16 @@ Tower.prototype.display_menu = function() {
 Tower.prototype.hide_menu = function() {
   $(".tower_info").css("display","none");
 }
+
+Tower.prototype.get_health = function() {
+  return this.health;
+}
+
+Tower.prototype.is_dead = function() {
+  return (this.health <= 0);
+}
+
+Tower.prototype.take_damage = function(damage) {
+  this.health -= damage;
+}
+

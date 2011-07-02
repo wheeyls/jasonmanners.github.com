@@ -11,6 +11,11 @@ Survivor.prototype = {
   rate : 120,
   velocity: 300,
   projectile_size : 2,
+  /*damage : 1,
+  range : 150,
+  rate : 10,
+  velocity: 50,
+  projectile_size : 5,*/
   times_upgraded: 0,
   max_upgrades: 5
 }

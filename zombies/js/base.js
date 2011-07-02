@@ -90,3 +90,7 @@ Base.prototype.get_total_survivors = function() {
 Base.prototype.get_current_survivor_num = function() {
   return this.survivors.length;
 }
+
+Base.prototype.decrease_max_survivors = function(num) {
+  this.totalSurvivors--;
+}

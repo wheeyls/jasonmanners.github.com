@@ -133,6 +133,13 @@ GameBoard.prototype._update_towers = function(delta_time){
     if(tmpProjectile !== false) {
       this.add_projectile(tmpProjectile);
     }
+    if(this.towers[i].is_dead()) {
+      if(this.towers[i].survivor) {
+        this.base.survivors.splice(this.base.survivors.indexOf(this.towers[i].survivor),1);
+        this.base.decrease_max_survivors(1);
+      }
+      this.towers.splice(i--,1);
+    }
   }
 }
 
@@ -299,6 +306,13 @@ GameBoard.prototype.get_survivor_string = function() {
 GameBoard.prototype.get_upgrade_string = function() {
   if(this.selectedSurvivor) {
     return this.selectedSurvivor.get_current_upgrades()+" / "+this.selectedSurvivor.get_max_upgrades();
+  }
+  return "";
+}
+
+GameBoard.prototype.get_tower_health = function() {
+  if(this.selected) {
+    return this.selected.get_health();
   }
   return "";
 }
