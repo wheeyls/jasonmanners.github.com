@@ -152,6 +152,9 @@ World.prototype._init_world = function() {
   $(document).keydown(function(event) {self.inputManager.key_down(event);});
   $(document).keyup(function(event) {self.inputManager.key_up(event);});
   
+  $(window).focus(function(){startTime = Date.now();self.gameState.run();});
+  $(window).blur(function(){self.gameState.pause();});
+  
   $("#tower").click(function() {self.inputManager.place_tower();});
   $("#survivor").click(function() {self.inputManager.new_survivor();});
   $("#move_survivor").click(function(){self.inputManager.move_survivor();});
