@@ -150,7 +150,7 @@ GameBoard.prototype._update_projectiles = function(delta_time){
     this.projectiles[i].update(delta_time);
     
     if(this.projectiles[i].x <= 0 || this.projectiles[i].x >= this.width ||
-        this.projectiles[i].y <= 0 || this.projectiles[i].y >= this.height) {
+        this.projectiles[i].y <= 0 || this.projectiles[i].y >= this.height || this.projectiles[i].is_dead()) {
       this.projectiles.splice(i--,1);
       continue;
     }
@@ -313,6 +313,37 @@ GameBoard.prototype.get_upgrade_string = function() {
 GameBoard.prototype.get_tower_health = function() {
   if(this.selected) {
     return this.selected.get_health();
+  }
+  return "";
+}
+
+GameBoard.prototype.upgrade_survivor_type = function(type) {
+  var cost = 10;
+  var did_upgrade = false;
+  if(this.base.is_enough_supplies(cost) && this.selectedSurvivor) {
+    switch(type) {
+      case FLAMETHROWER:
+        did_upgrade = this.selectedSurvivor.upgrade_flamethrower();
+        break;
+      case MACHINEGUN:
+        did_upgrade = this.selectedSurvivor.upgrade_machinegun();
+        break;
+      case CANNON:
+        did_upgrade = this.selectedSurvivor.upgrade_cannon();
+        break;
+      default:
+        break;
+    }
+    
+    if(did_upgrade) {
+      this.base.subtract_supplies(cost);
+    }
+  }
+}
+
+GameBoard.prototype.get_survivor_type = function() {
+ if(this.selectedSurvivor) {
+    return this.selectedSurvivor.get_type();
   }
   return "";
 }

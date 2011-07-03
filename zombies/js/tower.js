@@ -106,14 +106,14 @@ Tower.prototype.update = function(delta_time,enemies) {
         
         var beta = this.target.direction - this.direction;
         var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.target.velocity / this.survivor.get_velocity()));
-        return new Projectile(this.midX,this.midY,this.survivor.get_velocity(),newDirection,this.survivor.get_damage(),this.survivor.get_projectile_size());
+        return new Projectile(this.midX,this.midY,this.survivor.get_velocity(),newDirection,this.survivor.get_damage(),
+                                this.survivor.get_projectile_size(),this.survivor.get_projectile_lifespan(),
+                                this.survivor.get_projectile_angle_variation(),this.survivor.get_projectile_size_increse(),this.survivor.get_type());
       }
     }
   }
   return false;
 }
-
-
 
 Tower.prototype.lose_focus = function() {
   this.selected = false;
