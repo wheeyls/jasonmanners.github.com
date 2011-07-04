@@ -184,6 +184,9 @@ World.prototype._init_world = function() {
   $("#speed_1").click(function() {self.speed = 1;});
   $("#speed_2").click(function() {self.speed = 2;});
   $("#speed_3").click(function() {self.speed = 3;});
+  
+  $("#wave_rate").css("display","none");
+  $("#current_wave").css("display","none");
 }
 
 World.prototype._init_game_objects = function() {
