@@ -50,11 +50,38 @@ World.prototype.update = function(delta_time) {
       this.waveTime = 0;
     }
   }
+  if(this.gameBoard.get_survivor_type() === FLAMETHROWER) {
+    $("#type_upgrades").css("display","none");
+    $("#stat_upgrades").css("display","block");
+    $("#upgrade_rate").css("display","none");
+    $("#upgrade_range").css("display","none");
+  }
+  else if(this.gameBoard.get_survivor_type() === MACHINEGUN) {
+    $("#type_upgrades").css("display","none");
+    $("#stat_upgrades").css("display","block");
+    $("#upgrade_rate").css("display","none");
+    $("#upgrade_range").css("display","block");
+  }
+  else if(this.gameBoard.get_survivor_type() === CANNON) {
+    $("#type_upgrades").css("display","none");
+    $("#stat_upgrades").css("display","block");
+    $("#upgrade_rate").css("display","none");
+    $("#upgrade_range").css("display","block");
+  }
+  else if(this.gameBoard.get_survivor_type() === BASE){
+    $("#stat_upgrades").css("display","none");
+    $("#type_upgrades").css("display","block");
+  }
+  else {
+    $("#stat_upgrades").css("display","none");
+    $("#type_upgrades").css("display","none");
+  }
   
   $("#score_number").html(this.gameBoard.get_score());
   $("#health_number").html(this.gameBoard.get_health());
   $("#resources_number").html(this.gameBoard.get_supplies()+" | "+this.gameBoard.get_survivor_string());
   $("#upgrade_status").html(this.gameBoard.get_upgrade_string());
+  $("#health_display").html(this.gameBoard.get_tower_health());
   if(!this.gameBoard.base.can_search()) {
     $("#search").addClass("red");
     $("#search").removeClass("green");
@@ -125,12 +152,19 @@ World.prototype._init_world = function() {
   $(document).keydown(function(event) {self.inputManager.key_down(event);});
   $(document).keyup(function(event) {self.inputManager.key_up(event);});
   
+  $(window).focus(function(){startTime = Date.now();self.gameState.run();});
+  $(window).blur(function(){self.gameState.pause();});
+  
   $("#tower").click(function() {self.inputManager.place_tower();});
   $("#survivor").click(function() {self.inputManager.new_survivor();});
   $("#move_survivor").click(function(){self.inputManager.move_survivor();});
   $("#upgrade_damage").click(function(){self.gameBoard.upgrade_survivor(3,DAMAGE);});
   $("#upgrade_range").click(function(){self.gameBoard.upgrade_survivor(10,RANGE);});
   $("#upgrade_rate").click(function(){self.gameBoard.upgrade_survivor(-25,RATE);});
+  $("#upgrade_flamethrower").click(function(){self.gameBoard.upgrade_survivor_type(FLAMETHROWER);});
+  $("#upgrade_machinegun").click(function(){self.gameBoard.upgrade_survivor_type(MACHINEGUN);});
+  $("#upgrade_cannon").click(function(){self.gameBoard.upgrade_survivor_type(CANNON);});
+
   $("#search").click(function(){self.gameBoard.base.search();});
   
   $("#pause").click(function() {
@@ -150,6 +184,9 @@ World.prototype._init_world = function() {
   $("#speed_1").click(function() {self.speed = 1;});
   $("#speed_2").click(function() {self.speed = 2;});
   $("#speed_3").click(function() {self.speed = 3;});
+  
+  $("#wave_rate").css("display","none");
+  $("#current_wave").css("display","none");
 }
 
 World.prototype._init_game_objects = function() {

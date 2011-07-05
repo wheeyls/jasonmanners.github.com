@@ -13,6 +13,8 @@ function Enemy(x,y,velocity,direction,health,damage,size,delay,goalX,goalY) {
   this.goalX = goalX;
   this.goalY = goalY;
   this.time_till_release = delay;
+  this.timer = 0;
+  this.cooldown = 500;
 }
 
 Enemy.prototype.draw = function(context) {
@@ -25,6 +27,7 @@ Enemy.prototype.draw = function(context) {
 }
 
 Enemy.prototype.update = function(delta_time,occupiedList) {
+  this.timer += delta_time;
   this.direction = Math.atan2(this.goalY-this.y,this.goalX-this.x);
   
   if(this.time_till_release > 0) {
@@ -43,7 +46,11 @@ Enemy.prototype.update = function(delta_time,occupiedList) {
         this.y+tmpY >= occupiedList[i].y && this.y+tmpY <= occupiedList[i].y+occupiedList[i].height) {
       this.x -= tmpX;
       this.y -= tmpY;
-      this.y += Math.abs(step * this.velocity);
+      //this.y += Math.abs(step * this.velocity);
+      if(this.timer >= this.cooldown) {
+        occupiedList[i].take_damage(this.damage);
+        this.timer = 0;
+      }
       return;
     }
   }

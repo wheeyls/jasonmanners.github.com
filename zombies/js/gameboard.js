@@ -133,6 +133,13 @@ GameBoard.prototype._update_towers = function(delta_time){
     if(tmpProjectile !== false) {
       this.add_projectile(tmpProjectile);
     }
+    if(this.towers[i].is_dead()) {
+      if(this.towers[i].survivor) {
+        this.base.survivors.splice(this.base.survivors.indexOf(this.towers[i].survivor),1);
+        this.base.decrease_max_survivors(1);
+      }
+      this.towers.splice(i--,1);
+    }
   }
 }
 
@@ -143,7 +150,7 @@ GameBoard.prototype._update_projectiles = function(delta_time){
     this.projectiles[i].update(delta_time);
     
     if(this.projectiles[i].x <= 0 || this.projectiles[i].x >= this.width ||
-        this.projectiles[i].y <= 0 || this.projectiles[i].y >= this.height) {
+        this.projectiles[i].y <= 0 || this.projectiles[i].y >= this.height || this.projectiles[i].is_dead()) {
       this.projectiles.splice(i--,1);
       continue;
     }
@@ -299,6 +306,44 @@ GameBoard.prototype.get_survivor_string = function() {
 GameBoard.prototype.get_upgrade_string = function() {
   if(this.selectedSurvivor) {
     return this.selectedSurvivor.get_current_upgrades()+" / "+this.selectedSurvivor.get_max_upgrades();
+  }
+  return "";
+}
+
+GameBoard.prototype.get_tower_health = function() {
+  if(this.selected) {
+    return this.selected.get_health();
+  }
+  return "";
+}
+
+GameBoard.prototype.upgrade_survivor_type = function(type) {
+  var cost = 10;
+  var did_upgrade = false;
+  if(this.base.is_enough_supplies(cost) && this.selectedSurvivor) {
+    switch(type) {
+      case FLAMETHROWER:
+        did_upgrade = this.selectedSurvivor.upgrade_flamethrower();
+        break;
+      case MACHINEGUN:
+        did_upgrade = this.selectedSurvivor.upgrade_machinegun();
+        break;
+      case CANNON:
+        did_upgrade = this.selectedSurvivor.upgrade_cannon();
+        break;
+      default:
+        break;
+    }
+    
+    if(did_upgrade) {
+      this.base.subtract_supplies(cost);
+    }
+  }
+}
+
+GameBoard.prototype.get_survivor_type = function() {
+ if(this.selectedSurvivor) {
+    return this.selectedSurvivor.get_type();
   }
   return "";
 }

@@ -8,6 +8,7 @@ function Tower(x,y,gridSpace) {
   this.cooldown = 0;
   this.width = gridSpace;
   this.height = gridSpace;
+  this.health = 100;
   
   this.midX = this.x + (this.width / 2);
   this.midY = this.y + (this.height / 2);
@@ -105,14 +106,14 @@ Tower.prototype.update = function(delta_time,enemies) {
         
         var beta = this.target.direction - this.direction;
         var newDirection = this.direction + Math.asin(Math.sin(beta) * (this.target.velocity / this.survivor.get_velocity()));
-        return new Projectile(this.midX,this.midY,this.survivor.get_velocity(),newDirection,this.survivor.get_damage(),this.survivor.get_projectile_size());
+        return new Projectile(this.midX,this.midY,this.survivor.get_velocity(),newDirection,this.survivor.get_damage(),
+                                this.survivor.get_projectile_size(),this.survivor.get_projectile_lifespan(),
+                                this.survivor.get_projectile_angle_variation(),this.survivor.get_projectile_size_increse(),this.survivor.get_type());
       }
     }
   }
   return false;
 }
-
-
 
 Tower.prototype.lose_focus = function() {
   this.selected = false;
@@ -184,3 +185,16 @@ Tower.prototype.display_menu = function() {
 Tower.prototype.hide_menu = function() {
   $(".tower_info").css("display","none");
 }
+
+Tower.prototype.get_health = function() {
+  return this.health;
+}
+
+Tower.prototype.is_dead = function() {
+  return (this.health <= 0);
+}
+
+Tower.prototype.take_damage = function(damage) {
+  this.health -= damage;
+}
+

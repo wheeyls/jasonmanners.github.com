@@ -37,6 +37,11 @@ const MOVING_SURVIVOR = 251;
 const DAMAGE = 342;
 const RANGE = 343;
 const RATE = 344;
+
+const BASE = 442;
+const FLAMETHROWER = 443;
+const MACHINEGUN = 444;
+const CANNON = 445;
 /*************************************************************************
   bind declaration
   - Has caused issues when it is not declared will not run
@@ -83,3 +88,4 @@ function clean_coord(x,gridSpace) {
 function clean_coord_index(x,gridSpace) {
   return coord_to_index(clean_coord(x,gridSpace),gridSpace);
 }
+
