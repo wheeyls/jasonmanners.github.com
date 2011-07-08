@@ -47,7 +47,8 @@ Tower.prototype.draw = function(context) {
   if(this.survivor !== undefined) {
     context.save();
       context.lineWidth = 4;
-      context.strokeStyle = "rgb(50,50,100)";
+      context.strokeStyle = this.survivor.strokeStyle;
+
       context.translate(this.midX,this.midY);
       context.rotate(this.direction);
       
