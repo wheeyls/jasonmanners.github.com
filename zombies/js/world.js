@@ -126,6 +126,7 @@ World.prototype.run = function(timestep) {
 }
 
 World.prototype.start = function() {
+  $("#instructions").css("display","none");
   startTime = Date.now();
   this.gameState.run();
   this.run();

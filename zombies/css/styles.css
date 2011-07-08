@@ -108,8 +108,9 @@ p {
 
 .world_actions {
   position: absolute;
-  left: 125px;
-  top: 125px;
+  left: 290px;
+  right: 290px;
+  bottom: 10px;
 }
 
 .world_actions article {
@@ -232,6 +233,8 @@ p {
   height:29px;
   left:0px;
   bottom: 7px;
+  /* CHANGE WHEN YOU HAVE WAVES */
+  display: none;
 }
 
 #wave_rate {
@@ -273,4 +276,20 @@ p {
   -webkit-transition: background linear 0.35s;
   -moz-transition: background linear 0.35s;
   transition: background linear 0.35s;
+}
+
+#instructions {
+  position: absolute;
+  right: 50px;
+  left: 50px;
+  top: 50px;
+  border: 1px solid #112233;
+  padding: 10px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+#instructions ol ol{
+  list-style-type: lower-roman
 }
