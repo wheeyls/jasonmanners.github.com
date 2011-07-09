@@ -65,8 +65,6 @@ InputManager.prototype.new_survivor = function() {
 }
 
 InputManager.prototype.move_survivor = function() {
-  this.gameBoard.selected.lose_survivor(); 
-  this.gameBoard.selected.lose_focus(); 
   this.mouseActionFunction = this.gameBoard.move_survivor.bind(this.gameBoard);
 }
 

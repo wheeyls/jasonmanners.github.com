@@ -238,6 +238,9 @@ GameBoard.prototype.new_survivor = function(x,y) {
 }
 
 GameBoard.prototype.move_survivor = function(x,y) {
+  this.selected.lose_survivor(); 
+  this.selected.lose_focus(); 
+
   var tmpSurvivor = this.selectedSurvivor;
   return this._place_survivor(x,y,tmpSurvivor);
 }
