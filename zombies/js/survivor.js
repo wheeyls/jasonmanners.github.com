@@ -15,6 +15,8 @@ Survivor.prototype = {
   type : BASE,
   angle_variation : 0,
   size_increse : 0,
+	gun_color: "rgb(50,50,100)",
+	color: "rgb(50,50,100)",
   /*damage : 1,
   range : 150,
   rate : 10,
@@ -23,6 +25,26 @@ Survivor.prototype = {
   times_upgraded: 0,
   max_upgrades: 5
 }
+
+Survivor.prototype.draw = function(context) {
+	context.save();
+		context.lineWidth = 4;
+		context.strokeStyle = this.gun_color;
+		context.translate(this.tower.midX,this.tower.midY);
+		context.rotate(this.tower.direction);
+		
+		context.save();
+			context.beginPath();
+				context.moveTo(0,0);
+				context.lineTo((this.tower.width+this.tower.height) / 2.5 ,0); //Size of turret is avg of width and length
+			context.stroke();
+		context.restore();
+	context.restore();
+	context.fillStyle = this.color;
+	context.beginPath();
+		context.arc(this.tower.midX, this.tower.midY, 6, 0, Math.PI*2, true); //*2
+	context.fill();
+};
 
 Survivor.prototype.upgrade_damage = function(damage) {
   if(this.times_upgraded < this.max_upgrades) {
@@ -114,12 +136,14 @@ Survivor.prototype.upgrade_flamethrower = function() {
   this.angle_variation = 1;
   this.size_increse = 2;
   this.type = FLAMETHROWER;
+	this.color = "rgb(100,50,50)";
 }
 
 Survivor.prototype.upgrade_machinegun = function() {
   this.range = 150;
   this.rate = 50;
   this.type = MACHINEGUN;
+	this.color = "rgb(50,100,50)";
 }
 
 Survivor.prototype.upgrade_cannon = function() {
@@ -129,6 +153,7 @@ Survivor.prototype.upgrade_cannon = function() {
   this.velocity = 250;
   this.projectile_size = 8;
   this.type = CANNON;
+	this.color = "rgb(100,100,50)";
 }
 
 

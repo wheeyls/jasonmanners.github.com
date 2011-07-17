@@ -45,24 +45,8 @@ Tower.prototype.draw = function(context) {
   
   //Cannon
   if(this.survivor !== undefined) {
-    context.save();
-      context.lineWidth = 4;
-      context.strokeStyle = "rgb(50,50,100)";
-      context.translate(this.midX,this.midY);
-      context.rotate(this.direction);
-      
-      context.save();
-        context.beginPath();
-          context.moveTo(0,0);
-          context.lineTo((this.width+this.height) / 2.5 ,0); //Size of turret is avg of width and length
-        context.stroke();
-      context.restore();
-    context.restore();
-    context.fillStyle = "rgb(50,50,100)";
-    context.beginPath();
-      context.arc(this.midX, this.midY, 6, 0, Math.PI*2, true); //*2
-    context.fill();
-  }
+		this.survivor.draw(context);
+	}
   //Line to show engaged enemy
   if(this.target !== undefined && this.survivor !== undefined) {
     context.save();
