@@ -33,12 +33,7 @@ Survivor.prototype.draw = function(context) {
 		context.translate(this.tower.midX,this.tower.midY);
 		context.rotate(this.tower.direction);
 		
-		context.save();
-			context.beginPath();
-				context.moveTo(0,0);
-				context.lineTo((this.tower.width+this.tower.height) / 2.5 ,0); //Size of turret is avg of width and length
-			context.stroke();
-		context.restore();
+		this.draw_gun(context);
 	context.restore();
 	context.fillStyle = this.color;
 	context.beginPath();
@@ -137,6 +132,7 @@ Survivor.prototype.upgrade_flamethrower = function() {
   this.size_increse = 2;
   this.type = FLAMETHROWER;
 	this.color = "rgb(100,50,50)";
+  this.draw_gun = this.draw_flamethrower;
 }
 
 Survivor.prototype.upgrade_machinegun = function() {
@@ -144,6 +140,7 @@ Survivor.prototype.upgrade_machinegun = function() {
   this.rate = 50;
   this.type = MACHINEGUN;
 	this.color = "rgb(50,100,50)";
+  this.draw_gun = this.draw_machinegun;
 }
 
 Survivor.prototype.upgrade_cannon = function() {
@@ -154,9 +151,51 @@ Survivor.prototype.upgrade_cannon = function() {
   this.projectile_size = 8;
   this.type = CANNON;
 	this.color = "rgb(100,100,50)";
+  this.draw_gun = this.draw_cannon;
 }
 
+Survivor.prototype.draw_gun = function(context) {
+  context.lineWidth = 4;
+  context.save();
+    context.beginPath();
+      context.moveTo(0,0);
+      context.lineTo((this.tower.width+this.tower.height) / 2.5 ,0); //Size of turret is avg of width and length
+    context.stroke();
+  context.restore();
+}
 
+Survivor.prototype.draw_flamethrower = function(context) {
+  context.lineWidth = 6;
+  context.save();
+    context.fillStyle = this.gun_color;
+    context.beginPath();
+      context.moveTo(0,-2);
+      context.lineTo((this.tower.width+this.tower.height) / 2.5 ,-5); //Size of turret is avg of width and length
+      context.lineTo((this.tower.width+this.tower.height) / 2.5 ,5); //Size of turret is avg of width and length
+      context.lineTo(0,2); //Size of turret is avg of width and length
+    context.fill();
+  context.restore();
+}
+
+Survivor.prototype.draw_machinegun = function(context) {
+  context.lineWidth = 4;
+  context.save();
+    context.beginPath();
+      context.moveTo(0,0);
+      context.lineTo((this.tower.width+this.tower.height) / 2.25 ,0); //Size of turret is avg of width and length
+    context.stroke();
+  context.restore();
+}
+
+Survivor.prototype.draw_cannon = function(context) {
+  context.lineWidth = 5;
+  context.save();
+    context.beginPath();
+      context.moveTo(0,0);
+      context.lineTo((this.tower.width+this.tower.height) / 2.0 ,0); //Size of turret is avg of width and length
+    context.stroke();
+  context.restore();
+}
 
 
 

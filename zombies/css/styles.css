@@ -253,12 +253,24 @@ p {
   border-radius: 5px;
   background: rgba(200,50,50,0.9);
   position:absolute;
-  left:400px;
-  top:200px;
-  padding: 8px;
+  left: 120px;
+  top: 120px;
+  right: 120px;
+  bottom: 120px;
+  padding: 10px;
   display: none;
   font-size: 45px;
   color:#DDDDDD;
+  text-align: center;
+}
+
+.lose p {
+  padding: 0;
+  margin: 2px;
+}
+
+.lose .second_row {
+  font-size: 30px;
 }
 
 .red {

@@ -78,6 +78,7 @@ World.prototype.update = function(delta_time) {
   }
   
   $("#score_number").html(this.gameBoard.get_score());
+  $("#final_score").html(this.gameBoard.get_score());
   $("#health_number").html(this.gameBoard.get_health());
   $("#resources_number").html(this.gameBoard.get_supplies()+" | "+this.gameBoard.get_survivor_string());
   $("#upgrade_status").html(this.gameBoard.get_upgrade_string());
