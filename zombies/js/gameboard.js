@@ -238,11 +238,16 @@ GameBoard.prototype.new_survivor = function(x,y) {
 }
 
 GameBoard.prototype.move_survivor = function(x,y) {
-  this.selected.lose_survivor(); 
-  this.selected.lose_focus(); 
-
+	var origin = this.selected;
   var tmpSurvivor = this.selectedSurvivor;
-  return this._place_survivor(x,y,tmpSurvivor);
+	var placed = this._place_survivor(x,y,tmpSurvivor); 
+
+	if(!placed) {
+		origin.lose_survivor(); 
+		origin.lose_focus(); 
+	}
+
+  return placed;
 }
 
 GameBoard.prototype._place_survivor = function(x,y,survivor) {
