@@ -11,10 +11,13 @@ function Enemy(x,y,velocity,direction,health,damage,size,delay,goalX,goalY) {
   this.damage = damage;
   this.size = size;
   this.goalX = goalX;
+  this.defaultX = goalX;
   this.goalY = goalY;
+  this.defaultY = goalY;
   this.time_till_release = delay;
   this.timer = 0;
   this.cooldown = 500;
+	this.range = 100;
 }
 
 Enemy.prototype.draw = function(context) {
@@ -41,7 +44,19 @@ Enemy.prototype.update = function(delta_time,occupiedList) {
   this.x += tmpX;
   this.y += tmpY;
   
+	var found_collision = false, minRange=this.range;
+	this.set_goal(this.defaultX, this.defaultY);
   for(var i = 0; i < occupiedList.length; i++) {
+		//pick a target
+		var tempDist = distance_between(occupiedList[i].x, occupiedList[i].y, this.x, this.y);
+		if(tempDist < minRange) {
+			this.set_goal(occupiedList[i].midX, occupiedList[i].midY);
+			console.log(occupiedList[i]);
+			minRange = tempDist;
+		} 
+
+		//deal with collisions and damage
+		if(found_collision === true) { continue; }
     if(this.x+tmpX >= occupiedList[i].x && this.x+tmpX <= occupiedList[i].x+occupiedList[i].width && 
         this.y+tmpY >= occupiedList[i].y && this.y+tmpY <= occupiedList[i].y+occupiedList[i].height) {
       this.x -= tmpX;
@@ -51,7 +66,7 @@ Enemy.prototype.update = function(delta_time,occupiedList) {
         occupiedList[i].take_damage(this.damage);
         this.timer = 0;
       }
-      return;
+			found_collision = true;
     }
   }
 }
@@ -62,6 +77,11 @@ Enemy.prototype.take_damage = function(damage) {
 
 Enemy.prototype.is_dead = function() {
   return (this.health <= 0);
+}
+
+Enemy.prototype.set_goal = function( x, y ) {
+	this.goalX = x;
+	this.goalY = y;
 }
 
 Enemy.prototype.is_collision = function(x,y) {
