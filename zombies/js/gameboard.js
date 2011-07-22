@@ -138,7 +138,11 @@ GameBoard.prototype._update_towers = function(delta_time){
         this.base.survivors.splice(this.base.survivors.indexOf(this.towers[i].survivor),1);
         this.base.decrease_max_survivors(1);
       }
+      var xInd = coord_to_index(this.towers[i].x,this.gridSpace);
+      var yInd = coord_to_index(this.towers[i].y,this.gridSpace);
+      
       this.towers.splice(i--,1);
+      this.occupiedCells[xInd][yInd] = false;
     }
   }
 }
