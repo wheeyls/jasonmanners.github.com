@@ -160,9 +160,9 @@ World.prototype._init_world = function() {
   $("#tower").click(function() {self.inputManager.place_tower();});
   $("#survivor").click(function() {self.inputManager.new_survivor();});
   $("#move_survivor").click(function(){self.inputManager.move_survivor();});
-  $("#upgrade_damage").click(function(){self.gameBoard.upgrade_survivor(3,DAMAGE);});
-  $("#upgrade_range").click(function(){self.gameBoard.upgrade_survivor(10,RANGE);});
-  $("#upgrade_rate").click(function(){self.gameBoard.upgrade_survivor(-25,RATE);});
+  $("#upgrade_damage").click(function(){self.gameBoard.upgrade_survivor(DAMAGE);});
+  $("#upgrade_range").click(function(){self.gameBoard.upgrade_survivor(RANGE);});
+  //$("#upgrade_rate").click(function(){self.gameBoard.upgrade_survivor(-25,RATE);});
   $("#upgrade_flamethrower").click(function(){self.gameBoard.upgrade_survivor_type(FLAMETHROWER);});
   $("#upgrade_machinegun").click(function(){self.gameBoard.upgrade_survivor_type(MACHINEGUN);});
   $("#upgrade_cannon").click(function(){self.gameBoard.upgrade_survivor_type(CANNON);});

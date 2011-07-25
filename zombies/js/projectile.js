@@ -40,7 +40,7 @@ function Projectile(x,y,velocity,direction,damage,size,lifespan,angle_var,size_i
     }
   }
   else {
-    this.color = "rgba(255,0,0,0.8)";
+    this.color = "rgba(200,50,25,0.7)"; //255,0,0 too bright of a red for color scheme
   }
 }
 

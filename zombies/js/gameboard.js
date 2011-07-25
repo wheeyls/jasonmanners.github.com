@@ -54,7 +54,8 @@ GameBoard.prototype.update = function(delta_time){
     var tmpX = -10;
     var tmpY = Math.random()*this.height;
     var tmpDir = Math.atan2(this.base.midY-tmpY,this.base.midX-tmpX);
-    this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10,tmpDir,10+10*(this.totalTime / MS_IN_SEC / 5),1,7,0,this.base.midX,this.base.midY));
+    //Velocity should be x + random because we want the min velocity to be higher and 2, 2 seems to be a bit too slow
+    this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*5+3,tmpDir,10+10*(this.totalTime / MS_IN_SEC / 5),1,7,0,this.base.midX,this.base.midY));
   }
   this.base.update(delta_time);
   this._update_enemies(delta_time);
@@ -287,20 +288,22 @@ GameBoard.prototype.select_tower = function(xInd,yInd) {
   }
 }
 
-GameBoard.prototype.upgrade_survivor = function(value,type) {
+GameBoard.prototype.upgrade_survivor = function(type) {
   var cost = 10;
   var did_upgrade = false;
   if(this.base.is_enough_supplies(cost) && this.selectedSurvivor) {
     switch(type) {
       case DAMAGE:
-        did_upgrade = this.selectedSurvivor.upgrade_damage(value);
+        did_upgrade = this.selectedSurvivor.upgrade_damage();
         break;
       case RANGE:
-        did_upgrade = this.selectedSurvivor.upgrade_range(value);
+        did_upgrade = this.selectedSurvivor.upgrade_range();
         break;
+        /* can no longer upgrade rate
       case RATE:
         did_upgrade = this.selectedSurvivor.upgrade_rate(value);
         break;
+        */
       default:
         break;
     }

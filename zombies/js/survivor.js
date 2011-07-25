@@ -9,8 +9,8 @@ Survivor.prototype = {
   damage : 3,
   range : 125,
   rate : 600,
-  velocity: 600,
-  projectile_size : 1,
+  velocity: 300, /* Keep velocity @ 300 - 600 is a little hard to see */
+  projectile_size : 2, /* Want the projectile size to be greater 1...again 1 pixel is a little too hard to see */
   projectile_lifespan : 5000,
   type : BASE,
   angle_variation : 0,
@@ -41,7 +41,30 @@ Survivor.prototype.draw = function(context) {
 	context.fill();
 };
 
-Survivor.prototype.upgrade_damage = function(damage) {
+
+Survivor.prototype.upgrade_damage = function() {
+  var damageIncrease = 3;
+  if(this.type === FLAMETHROWER) {
+    damageIncrease = 1;
+  }
+  else if(this.type === MACHINEGUN) {
+    damageIncrease = 2;
+  }
+  else if(this.type === CANNON) {
+    damageIncrease = 3;
+  }
+  this._upgrade_damage(damageIncrease);
+}
+
+Survivor.prototype.upgrade_range = function() {
+  var rangeIncrease = 3;
+  if(this.type === CANNON) {
+    rangeIncrease = 5;
+  }
+  this._upgrade_range(rangeIncrease);
+}
+
+Survivor.prototype._upgrade_damage = function(damage) {
   if(this.times_upgraded < this.max_upgrades) {
     this.damage += damage;
     this.times_upgraded++;
@@ -50,7 +73,7 @@ Survivor.prototype.upgrade_damage = function(damage) {
   return false;
 }
 
-Survivor.prototype.upgrade_rate = function(rate) {
+Survivor.prototype._upgrade_rate = function(rate) {
   if(this.times_upgraded < this.max_upgrades) {
     this.rate += rate;
     this.times_upgraded++;
@@ -59,7 +82,7 @@ Survivor.prototype.upgrade_rate = function(rate) {
   return false;
 }
 
-Survivor.prototype.upgrade_range = function(range) {
+Survivor.prototype._upgrade_range = function(range) {
   if(this.times_upgraded < this.max_upgrades) {
     this.range += range;  
     this.times_upgraded++;
@@ -122,9 +145,9 @@ Survivor.prototype.get_current_upgrades = function() {
 }
 
 Survivor.prototype.upgrade_flamethrower = function() {
-  this.damage = 3;
+  this.damage = 1;
   this.range = 100;
-  this.rate = 50;
+  this.rate = 20; /* Reduce dmg instead of rate, want more of a constant flow and less dmg */
   this.velocity = 50;
   this.projectile_size = 5;
   this.projectile_lifespan = 2000;
@@ -148,7 +171,7 @@ Survivor.prototype.upgrade_cannon = function() {
   this.rate = 2000;
   this.damage = 30;
   this.velocity = 250;
-  this.projectile_size = 10;
+  this.projectile_size = 8; // 10 seems too large
   this.type = CANNON;
 	this.color = "rgb(100,100,50)";
   this.draw_gun = this.draw_cannon;
