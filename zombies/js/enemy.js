@@ -48,12 +48,14 @@ Enemy.prototype.update = function(delta_time,occupiedList) {
 	this.set_goal(this.defaultX, this.defaultY);
   for(var i = 0; i < occupiedList.length; i++) {
 		//pick a target
-		var tempDist = distance_between(occupiedList[i].x, occupiedList[i].y, this.x, this.y);
-		if(tempDist < minRange) {
-			this.set_goal(occupiedList[i].midX, occupiedList[i].midY);
-			console.log(occupiedList[i]);
-			minRange = tempDist;
-		} 
+		if(occupiedList[i].get_survivor()) {
+			var tempDist = distance_between(occupiedList[i].x, occupiedList[i].y, this.x, this.y);
+			if(tempDist < minRange) {
+				this.set_goal(occupiedList[i].midX, occupiedList[i].midY);
+				console.log(occupiedList[i]);
+				minRange = tempDist;
+			} 
+		}
 
 		//deal with collisions and damage
 		if(found_collision === true) { continue; }

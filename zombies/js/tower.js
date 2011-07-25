@@ -17,6 +17,15 @@ function Tower(x,y,gridSpace) {
   this.selected = false;
   
   this.color = "rgba(0,100,255,0.6)";
+	this.red = "0";
+	//would be nice to abstract these all out
+	this.colors = {
+		empty: "rgba(0,100,255,0.6)",
+		survivor: "rgba(0,100,255,0.6)",
+		selectedSurvivor: "rgba(0,100,255,0.1)",
+		selectedEmpty: "rgba(0,0,0,0.5)",
+		targetLine: "rgba(255,0,0,0.1)",
+	};
 }
 
 Tower.prototype = {
@@ -48,7 +57,7 @@ Tower.prototype.draw = function(context) {
 		this.survivor.draw(context);
 	}
   //Line to show engaged enemy
-  if(this.target !== undefined && this.survivor !== undefined) {
+  if(false && this.target !== undefined && this.survivor !== undefined) {
     context.save();
       context.strokeStyle = "rgba(255,0,0,0.1)";
       context.beginPath();
@@ -179,6 +188,7 @@ Tower.prototype.is_dead = function() {
 }
 
 Tower.prototype.take_damage = function(damage) {
+	this.red += damage;
   this.health -= damage;
 }
 

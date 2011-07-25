@@ -8,9 +8,9 @@ function Survivor() {
 Survivor.prototype = {
   damage : 3,
   range : 125,
-  rate : 200,
-  velocity: 300,
-  projectile_size : 2,
+  rate : 600,
+  velocity: 600,
+  projectile_size : 1,
   projectile_lifespan : 5000,
   type : BASE,
   angle_variation : 0,
@@ -124,7 +124,7 @@ Survivor.prototype.get_current_upgrades = function() {
 Survivor.prototype.upgrade_flamethrower = function() {
   this.damage = 3;
   this.range = 100;
-  this.rate = 10;
+  this.rate = 50;
   this.velocity = 50;
   this.projectile_size = 5;
   this.projectile_lifespan = 2000;
@@ -137,7 +137,7 @@ Survivor.prototype.upgrade_flamethrower = function() {
 
 Survivor.prototype.upgrade_machinegun = function() {
   this.range = 150;
-  this.rate = 50;
+  this.rate = 200;
   this.type = MACHINEGUN;
 	this.color = "rgb(50,100,50)";
   this.draw_gun = this.draw_machinegun;
@@ -145,10 +145,10 @@ Survivor.prototype.upgrade_machinegun = function() {
 
 Survivor.prototype.upgrade_cannon = function() {
   this.range = 200;
-  this.rate = 1000;
+  this.rate = 2000;
   this.damage = 30;
   this.velocity = 250;
-  this.projectile_size = 8;
+  this.projectile_size = 10;
   this.type = CANNON;
 	this.color = "rgb(100,100,50)";
   this.draw_gun = this.draw_cannon;
