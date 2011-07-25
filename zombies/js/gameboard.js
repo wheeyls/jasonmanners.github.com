@@ -54,7 +54,7 @@ GameBoard.prototype.update = function(delta_time){
     var tmpX = -10;
     var tmpY = Math.random()*this.height;
     var tmpDir = Math.atan2(this.base.midY-tmpY,this.base.midX-tmpX);
-    this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10+15,tmpDir,10+10*(this.totalTime / MS_IN_SEC / 5),10,7,0,this.base.midX,this.base.midY));
+    this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*10,tmpDir,10+10*(this.totalTime / MS_IN_SEC / 5),1,7,0,this.base.midX,this.base.midY));
   }
   this.base.update(delta_time);
   this._update_enemies(delta_time);

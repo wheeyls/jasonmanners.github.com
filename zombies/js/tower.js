@@ -16,7 +16,19 @@ function Tower(x,y,gridSpace) {
   this.survivor = undefined;
   this.selected = false;
   
+	this.red = 0;
+	this.green = 100;
+	this.blue = 255;
+	this.alpha = 0.6;
   this.color = "rgba(0,100,255,0.6)";
+	//would be nice to abstract these all out
+	this.colors = {
+		empty: "rgba(0,100,255,0.6)",
+		survivor: "rgba(0,100,255,0.6)",
+		selectedSurvivor: "rgba(0,100,255,0.1)",
+		selectedEmpty: "rgba(0,0,0,0.5)",
+		targetLine: "rgba(255,0,0,0.1)",
+	};
 }
 
 Tower.prototype = {
@@ -27,7 +39,7 @@ Tower.prototype.draw = function(context) {
 
   //Tower and range
   context.save();
-    context.fillStyle = this.color;
+    context.fillStyle = this.color_string();
     context.fillRect (this.x+0.5, this.y+0.5, this.width - 0.5, this.height - 0.5);
     if(this.selected) {
       context.fillStyle = "rgba(0,0,0,0.5)";
@@ -48,7 +60,7 @@ Tower.prototype.draw = function(context) {
 		this.survivor.draw(context);
 	}
   //Line to show engaged enemy
-  if(this.target !== undefined && this.survivor !== undefined) {
+  if(false && this.target !== undefined && this.survivor !== undefined) {
     context.save();
       context.strokeStyle = "rgba(255,0,0,0.1)";
       context.beginPath();
@@ -106,7 +118,7 @@ Tower.prototype.lose_focus = function() {
 }
 
 Tower.prototype.set_survivor = function(survivor) {
-  this.color = "rgba(0,100,255,0.9)";
+  this.alpha = 0.9;
   this.survivor = survivor;
 }
 
@@ -143,17 +155,17 @@ Tower.prototype.get_survivor = function() {
 
 Tower.prototype._set_default_color = function() {
   if(this.selected) {
-    this.color = "rgba(50,100,255,0.3)";
+		this.alpha = 0.3;
   }
   else {
-    this.color = "rgba(0,100,255,0.6)";
+		this.alpha = 0.6;
   }
 }
 
 
 Tower.prototype.set_focus = function() {
   this.selected = true;
-  this.color = "rgba(50,100,255,0.3)";
+	this.alpha = 0.3;
   this.display_menu();
   return this;
 }
@@ -179,6 +191,11 @@ Tower.prototype.is_dead = function() {
 }
 
 Tower.prototype.take_damage = function(damage) {
+	this.red += damage * 2;
+	this.blue -= damage;
   this.health -= damage;
 }
 
+Tower.prototype.color_string = function() {
+	return "rgba("+this.red+","+this.green+","+this.blue+","+this.alpha+")";
+};
