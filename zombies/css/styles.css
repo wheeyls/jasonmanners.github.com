@@ -165,6 +165,9 @@ p {
 .td_info article.health {
   width:90px;
 }
+.td_info article.kills {
+  width:30px;
+}
 
 .td_info article.supplies {
   width:150px;
