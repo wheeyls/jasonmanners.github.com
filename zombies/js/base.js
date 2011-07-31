@@ -14,8 +14,8 @@ function Base(x,y,width,height,health) {
   this.midX = this.x + (this.width / 2);
   this.midY = this.y + (this.height / 2);
 
-  this.totalSurvivors = 5;
-  this.cooldown = 15*MS_IN_SEC;
+  this.totalSurvivors = 3;
+  this.cooldown = 60*MS_IN_SEC;
   this.timer = 0;
 }
 
@@ -75,7 +75,7 @@ Base.prototype.search = function() {
   if(this.can_search()) {
     this.timer = 0;
     this.supplies += 200;
-    this.totalSurvivors++;
+    this.totalSurvivors += 2;
   }
 }
 

@@ -9,6 +9,7 @@ function GameBoard(width,height,gridSpace,gridColor,bgColor) {
   this.bgColor= bgColor;
   
   this.score = 0;
+	this.kills = 0;
   this.base = new Base(600,160,40,80,200);
   
   this.respawnRate = 750;
@@ -48,6 +49,8 @@ GameBoard.prototype.update = function(delta_time){
 
   this.totalTime += delta_time;
   this.respawnCooldown += delta_time;
+
+	this.currentStrength = 10+10*(this.totalTime / MS_IN_SEC / 5);
   
   if(this.respawnCooldown >= this.respawnRate) {
     this.respawnCooldown = 0;
@@ -55,7 +58,7 @@ GameBoard.prototype.update = function(delta_time){
     var tmpY = Math.random()*this.height;
     var tmpDir = Math.atan2(this.base.midY-tmpY,this.base.midX-tmpX);
     //Velocity should be x + random because we want the min velocity to be higher and 2, 2 seems to be a bit too slow
-    this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*5+3,tmpDir,10+10*(this.totalTime / MS_IN_SEC / 5),1,7,0,this.base.midX,this.base.midY));
+    this.add_enemy(new Enemy(tmpX,tmpY,Math.random()*5+3,tmpDir,this.currentStrength,1,7,0,this.base.midX,this.base.midY));
   }
   this.base.update(delta_time);
   this._update_enemies(delta_time);
@@ -168,6 +171,7 @@ GameBoard.prototype._update_projectiles = function(delta_time){
 
         if(this.enemies[j].is_dead()) {
           this.enemies.splice(j--,1);
+					this.add_kill();
           break;
         }
         
@@ -216,6 +220,14 @@ GameBoard.prototype.is_on_board = function(x,y) {
 
 GameBoard.prototype.is_cell_occupied = function(x,y) {
   return (this.occupiedCells[x][y] !== false);
+}
+
+GameBoard.prototype.add_kill = function() {
+	this.kills += 1;
+}
+
+GameBoard.prototype.get_kills = function() {
+	return this.kills;
 }
 
 GameBoard.prototype.get_score = function() {

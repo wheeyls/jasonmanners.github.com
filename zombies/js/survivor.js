@@ -9,11 +9,11 @@ Survivor.prototype = {
   damage : 3,
   range : 125,
   rate : 600,
-  velocity: 300, /* Keep velocity @ 300 - 600 is a little hard to see */
+  velocity: 600, /* Keep velocity @ 300 - 600 is a little hard to see */
   projectile_size : 2, /* Want the projectile size to be greater 1...again 1 pixel is a little too hard to see */
   projectile_lifespan : 5000,
   type : BASE,
-  angle_variation : 0,
+	angle_variation : 0.1,
   size_increse : 0,
 	gun_color: "rgb(50,50,100)",
 	color: "rgb(50,50,100)",
@@ -164,6 +164,7 @@ Survivor.prototype.upgrade_machinegun = function() {
   this.type = MACHINEGUN;
 	this.color = "rgb(50,100,50)";
   this.draw_gun = this.draw_machinegun;
+	this.angle_variation = 0.2;
 }
 
 Survivor.prototype.upgrade_cannon = function() {

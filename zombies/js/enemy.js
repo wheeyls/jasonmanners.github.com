@@ -52,7 +52,6 @@ Enemy.prototype.update = function(delta_time,occupiedList) {
 			var tempDist = distance_between(occupiedList[i].x, occupiedList[i].y, this.x, this.y);
 			if(tempDist < minRange) {
 				this.set_goal(occupiedList[i].midX, occupiedList[i].midY);
-				console.log(occupiedList[i]);
 				minRange = tempDist;
 			} 
 		}
